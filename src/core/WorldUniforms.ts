@@ -41,6 +41,8 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
   float mu = max(dot(rd, ld), 0.0);
   float sunW = pow(mu, uFogSunPow);
   vec3 inscatter = mix(uFogSky, uFogSun, sunW);
+  // the bank is cooler and a touch darker near the water, warmer where it thins with height
+  inscatter *= mix(vec3(0.82, 0.86, 0.92), vec3(1.0), smoothstep(0.0, 35.0, wpos.y));
   return mix(color, inscatter, clamp(fog, 0.0, 1.0));
 }
 `;

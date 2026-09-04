@@ -151,7 +151,7 @@ export class Ocean {
           vec2 guv = (P.xz - uGrid.xy) / uGrid.z + 0.5; float gs = 2.5 / uGrid.z;
           float gx = texture2D(tHeight, guv + vec2(gs, 0.0)).r - texture2D(tHeight, guv - vec2(gs, 0.0)).r; float gz = texture2D(tHeight, guv + vec2(0.0, gs)).r - texture2D(tHeight, guv - vec2(0.0, gs)).r;
           float steep = smoothstep(1.2, 3.5, length(vec2(gx, gz)));
-          shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 6.0, depth)) * smoothstep(0.3, 0.7, foamTex + 0.25 * surge) * 0.95);
+          shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 3.0, depth)) * smoothstep(0.4, 0.75, foamTex + 0.25 * surge) * 0.6);
           vec4 fs = texture2D(tFoam, (toWind * P.xz) / vec2(24.0, 4.0) + vec2(t * 0.06, 0.0));
           float crest = (1.0 - smoothstep(0.2, 0.42, vJ)) * smoothstep(0.6, 0.88, fs.r * 0.7 + foamTex * 0.3 + vCrest * 0.2) * 0.7;
           vec2 hd = vec2(sin(uHull.w), -cos(uHull.w));

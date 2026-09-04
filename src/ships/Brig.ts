@@ -92,7 +92,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const sparMat = pbr(planksSet, { color: 0x6e5236, repeat: [0.4, 1] });
   const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xd9ccb2, repeat: [1, 1] });
   canvasMat.shadowSide = THREE.DoubleSide; canvasMat.normalScale.set(1.6, 1.6);
-  const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0xa08a68 });
+  const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0x6a5a48 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2a2724, roughness: 0.55, metalness: 0.85, roughnessMap: noise });
   injectWorld(ironMat);
   const flagMat = pbr(canvasSet, { color: 0xb3282d, side: THREE.DoubleSide, roughness: 1 }); flagMat.shadowSide = THREE.DoubleSide;

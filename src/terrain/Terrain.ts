@@ -99,7 +99,7 @@ export class Terrain {
           float slope = 1.0 - N.y;
           float rockW = smoothstep(0.16, 0.42, slope + (nz2.g - 0.5) * 0.25 + macro * 0.08);
           // outcrops: patches of bare rock on the ridges and shoulders, from a low-frequency cell field
-          float outcrop = smoothstep(0.66, 0.78, nz.a * 0.6 + nz3.b * 0.4 + macro * 0.15) * smoothstep(0.03, 0.1, slope + (nz2.r - 0.5) * 0.1) * smoothstep(4.0, 12.0, P.y);
+          float outcrop = smoothstep(0.56, 0.72, nz.a * 0.6 + nz3.b * 0.4 + macro * 0.15) * smoothstep(0.03, 0.1, slope + (nz2.r - 0.5) * 0.1) * smoothstep(4.0, 12.0, P.y);
           rockW = max(rockW, outcrop);
           rockW = max(rockW, smoothstep(26.0, 40.0, P.y + (nz2.g - 0.5) * 10.0) * smoothstep(0.02, 0.08, slope));
           // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline

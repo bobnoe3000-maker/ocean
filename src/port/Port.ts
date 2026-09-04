@@ -79,7 +79,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         iron.geo(new THREE.CylinderGeometry(0.07, 0.12, 3.6, 7).translate(lw.x, y1 + 1.8, lw.z));
         iron.geo(new THREE.CylinderGeometry(0.22, 0.26, 0.25, 8).translate(lw.x, y1 + 0.12, lw.z));
         iron.geo(box(0.5, 0.08, 0.08, lw.x + 0.2, y1 + 3.5, lw.z, 1)); iron.geo(box(0.08, 0.5, 0.08, lw.x + 0.45, y1 + 3.3, lw.z, 1));
-        paint.geo(new THREE.ConeGeometry(0.4, 0.3, 4).rotateY(Math.PI / 4).translate(lw.x + 0.45, y1 + 3.75, lw.z), hexc(0x3e5a4c)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
+        iron.geo(new THREE.ConeGeometry(0.42, 0.32, 4).rotateY(Math.PI / 4).translate(lw.x + 0.45, y1 + 3.75, lw.z)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
         glass.geo(box(0.3, 0.5, 0.3, lw.x + 0.45, y1 + 3.3, lw.z, 1));
         if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x + 0.45, y1 + 3.2, lw.z); lights.push(l); }
       }
@@ -200,7 +200,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       stone.quad(P(t, -4.2, 0.4), P(t, -7.5, -4), P(t1, -7.5, -4), P(t1, -4.2, 0.4), [[uu, 1.1], [uu, 0], [uu1, 0], [uu1, 1.1]], [0.5, 0.55, 0.5]);
       stone.quad(P(t, 3, 2.0), P(t1, 3, 2.0), P(t1, 4.2, 0.4), P(t, 4.2, 0.4), [[uu, 1.6], [uu1, 1.6], [uu1, 1.1], [uu, 1.1]]);
       stone.quad(P(t, 4.2, 0.4), P(t1, 4.2, 0.4), P(t1, 7.5, -4), P(t, 7.5, -4), [[uu, 1.1], [uu1, 1.1], [uu1, 0], [uu, 0]], [0.5, 0.55, 0.5]);
-      for (let k = 0; k < 5; k++) { const sd = rng.next() > 0.5 ? 1 : -1; const bp = P(t + rng.range(0, 6), sd * rng.range(3.6, 6.5), rng.range(-0.6, 1.2)); const r = rng.range(0.6, 1.4); { const rg = new THREE.IcosahedronGeometry(r, 1); const pa = rg.attributes.position as THREE.BufferAttribute; for (let vi = 0; vi < pa.count; vi++) { const f = 0.75 + rng.next() * 0.5; pa.setXYZ(vi, pa.getX(vi) * f, pa.getY(vi) * (0.5 + rng.next() * 0.3), pa.getZ(vi) * f); } rg.computeVertexNormals(); stone.geo(rg.rotateY(rng.range(0, 3)).translate(bp.x, bp.y, bp.z), [0.72, 0.72, 0.7]); } }
+      for (let k = 0; k < 5; k++) { const sd = rng.next() > 0.5 ? 1 : -1; const bp = P(t + rng.range(0, 6), sd * rng.range(3.6, 6.5), rng.range(-0.6, 1.2)); const r = rng.range(0.6, 1.4); { const rg = new THREE.IcosahedronGeometry(r, 1); const pa = rg.attributes.position as THREE.BufferAttribute; for (let vi = 0; vi < pa.count; vi++) { const f = 0.75 + rng.next() * 0.5; pa.setXYZ(vi, pa.getX(vi) * f, pa.getY(vi) * (0.5 + rng.next() * 0.3), pa.getZ(vi) * f); } rg.computeVertexNormals(); const wetc = bp.y < 0.9 ? [0.42, 0.45, 0.42] : [0.72, 0.72, 0.7]; stone.geo(rg.rotateY(rng.range(0, 3)).translate(bp.x, bp.y, bp.z), wetc); } }
       if (t + 6 >= len) stone.quad(P(t1, -3, 2.0), P(t1, -7.5, -4), P(t1, 7.5, -4), P(t1, 3, 2.0), [[0, 1.6], [0, 0], [3, 0], [3, 1.6]]);
     }
     // lighthouse
@@ -232,7 +232,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   // ------------------------------------------------------------ materials + meshes
   const plasterMat = pbr(plasterSet, { vertexColors: true, side: THREE.DoubleSide }); const tilesMat = pbr(tilesSet, { vertexColors: true, side: THREE.DoubleSide });
   const planksMat = pbr(planksSet, { vertexColors: true, side: THREE.DoubleSide }); const stoneMat = pbr(stoneSet, { vertexColors: true, side: THREE.DoubleSide });
-  const ropeMat = pbr(ropeSet, { vertexColors: true, color: 0xa08a68 });
+  const ropeMat = pbr(ropeSet, { vertexColors: true, color: 0x6f6050 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2b2926, roughness: 0.6, metalness: 0.8, roughnessMap: noise, vertexColors: true }); injectWorld(ironMat);
   const paintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.75, vertexColors: true, roughnessMap: noise }); injectWorld(paintMat);
   const glassMat = new THREE.MeshStandardMaterial({ color: 0x2a3038, roughness: 0.12, metalness: 0.1, emissive: 0xffb257, emissiveIntensity: 0, vertexColors: true, transparent: true, opacity: 0.55, side: THREE.DoubleSide }); injectWorld(glassMat);

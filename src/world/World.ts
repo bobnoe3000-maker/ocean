@@ -126,7 +126,7 @@ export class World {
     this.renderer.info.reset();
     this.post.render(dt);
     // reflection for the next frame: after the main pass so the shadow map is already built this frame (one frame of lag on a fixed camera is invisible)
-    if (this.reflection) { const hide: THREE.Object3D[] = [this.ocean.group]; this.reflection.render(this.scene, this.camera, hide); }
+    if (this.reflection) { const hide: THREE.Object3D[] = [this.ocean.group, this.terrain.group, ...this.extras.filter((e) => e.group.name === 'palms' || e.group.name === 'scrub').map((e) => e.group)]; this.reflection.render(this.scene, this.camera, hide); }
     this.frameTimes.push(performance.now() - now);
     if (this.frameTimes.length > 240) this.frameTimes.shift();
   }
