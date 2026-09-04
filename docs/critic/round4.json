@@ -1,0 +1,112 @@
+{
+  "round": 4,
+  "scores": {
+    "materials": 5.5,
+    "light": 6.5,
+    "atmosphere": 4.5,
+    "water": 4.5,
+    "scale_motion": 6.0,
+    "composition": 6.0,
+    "budget_errors": 8.5,
+    "programmer_art": 4.0
+  },
+  "pass": false,
+  "console_errors": 0,
+  "programmer_art_hits": [
+    "Flat or untextured surfaces: sails, pennant, windows, doors, balcony rails, lamp head, contour-line hillside (shots/critic4/zoom60_brig_crop_sail.png, shots/critic4/zoom60_town_crop_windows.png, shots/critic4/zoom60_town_crop_quay.png, shots/critic4/hero_phone_crop_hill.png)",
+    "Visible tiling or stretched UVs: far-water cross-hatch lattice at 300 m, uniform beach grain (shots/critic4/zoom300_crop_top.png, shots/critic4/zoom60_beach.png)",
+    "Uniform water plane / white-stripe foam: uniform foam stipple over the whole basin at every zoom, noon foam comet off the mole (shots/critic4/hero_phone_crop_water.png, shots/critic4/contact_clear_12_crop_glitter.png, shots/critic4/zoom300.png)",
+    "Placeholder primitives: fog-night lighthouse beam is a flat hard-edged trapezoid quad; lamp-post head is a black box (shots/critic4/contact_fog_22_crop_beam.png, shots/critic4/zoom60_town_crop_quay.png)"
+  ],
+  "screenshots": [
+    "shots/critic4/hero_phone.png",
+    "shots/critic4/hero_phone_crop_town.png",
+    "shots/critic4/hero_phone_crop_hill.png",
+    "shots/critic4/hero_phone_crop_brig.png",
+    "shots/critic4/hero_phone_crop_mole.png",
+    "shots/critic4/hero_phone_crop_water.png",
+    "shots/critic4/hero_phone_crop_east_shore.png",
+    "shots/critic4/contact.png",
+    "shots/critic4/contact_clear_12.png",
+    "shots/critic4/contact_clear_12_crop_glitter.png",
+    "shots/critic4/contact_clear_22.png",
+    "shots/critic4/contact_clear_22_crop_mole.png",
+    "shots/critic4/contact_fog_12.png",
+    "shots/critic4/contact_fog_175.png",
+    "shots/critic4/contact_fog_22.png",
+    "shots/critic4/contact_fog_22_crop_beam.png",
+    "shots/critic4/zoom60_town.png",
+    "shots/critic4/zoom60_town_crop_windows.png",
+    "shots/critic4/zoom60_town_crop_quay.png",
+    "shots/critic4/zoom60_brig.png",
+    "shots/critic4/zoom60_brig_crop_sail.png",
+    "shots/critic4/zoom60_beach.png",
+    "shots/critic4/zoom300.png",
+    "shots/critic4/zoom300_crop_top.png",
+    "shots/critic4/zoom300_crop_island.png",
+    "shots/critic4/night_phone.png",
+    "shots/critic4/night_phone_crop_mole.png",
+    "shots/critic4/night_phone_crop_town.png",
+    "shots/critic4/night_phone_crop_brig.png",
+    "shots/critic4/fog_phone.png",
+    "shots/critic4/fog_phone_crop_town.png",
+    "shots/critic4/fog_phone_crop_near_water.png"
+  ],
+  "not_taken": ["landscape", "sun_check"],
+  "top_issues": [
+    "Foam is a uniform tan-pink stipple over the whole basin at every zoom, no swell shape, no daylight reflections, noon glitter confetti with a foam comet (shots/critic4/hero_phone_crop_water.png, shots/critic4/contact_clear_12_crop_glitter.png)",
+    "Hillside is a flat gradient with painted contour lines that reads as a topographic map; no north cliff (shots/critic4/hero_phone_crop_hill.png, shots/critic4/zoom300_crop_island.png)",
+    "Fog-night lighthouse beam is a flat hard-edged trapezoid quad with a bright blob, larger than round 3 (shots/critic4/contact_fog_22_crop_beam.png)",
+    "Sails are flat quads with seam stripes and a light-leak smear; pennant is a flat unlit red quad (shots/critic4/zoom60_brig_crop_sail.png)",
+    "Fog is one grey-blue tone with inverted depth at 17:30 and an opaque white sheet at 12:00 (shots/critic4/fog_phone_crop_town.png, shots/critic4/fog_phone_crop_near_water.png, shots/critic4/contact_fog_12.png)",
+    "No sky, sun disc, horizon gradient or aerial perspective in any frame; far water is a cross-hatch lattice (shots/critic4/zoom300_crop_top.png, shots/critic4/hero_phone.png)",
+    "Windows flat decals or black rectangles, doors black rectangles, rails bar cages, lamp heads black boxes (shots/critic4/zoom60_town_crop_windows.png, shots/critic4/zoom60_town_crop_quay.png)",
+    "17:30 shade is neutral tan-grey with no sky fill or bounce (shots/critic4/zoom60_town.png, shots/critic4/hero_phone_crop_town.png)",
+    "Quay and mole are a flat flagstone grid with no wet band and a hard step to the cobble apron (shots/critic4/zoom60_town_crop_quay.png, shots/critic4/hero_phone_crop_mole.png)",
+    "Moon glitter blankets the whole basin as uniform speckle (shots/critic4/night_phone.png)",
+    "Noon reads as dim overcast dusk (shots/critic4/contact_clear_12.png)",
+    "Chimney smoke is flat white blotches painted over roofs (shots/critic4/hero_phone_crop_east_shore.png)",
+    "Beach is one uniform grain with pink blotches and no debris; palms grey-blue (shots/critic4/zoom60_beach.png)",
+    "A crate floats in open water off the beach (shots/critic4/zoom60_beach.png)",
+    "Hero lower 40% is empty stippled water; landscape framing and motion unverified (shots/critic4/hero_phone.png)"
+  ],
+  "round3_status": {
+    "fixed": [
+      "6 East shore sawtooth staircase (shots/critic4/hero_phone_crop_east_shore.png, shots/critic4/zoom300_crop_island.png)"
+    ],
+    "improved": [
+      "2 Lighthouse beam quad: cleared in clear night (shots/critic4/night_phone_crop_mole.png), remains in fog night (shots/critic4/contact_fog_22_crop_beam.png)",
+      "4 Sails/sail shadow/flag: sail shadow on water now soft (shots/critic4/zoom60_brig.png); sails and flag unchanged (shots/critic4/zoom60_brig_crop_sail.png)",
+      "5 Far water lattice/sky/aerial perspective: faint haze on far island (shots/critic4/zoom300_crop_island.png); lattice unchanged (shots/critic4/zoom300_crop_top.png); sky unverified",
+      "8 Windows/doors/rails/chimney caps: chimneys now plastered stacks (shots/critic4/zoom60_town_crop_windows.png); windows, doors, rails unchanged",
+      "10 Quay/mole slab, hard edge, sphere boulders: polyhedral boulders and sand apron (shots/critic4/hero_phone_crop_mole.png); no wet band, hard cobble step (shots/critic4/zoom60_town_crop_quay.png)",
+      "12 Beach uniform grain: wet band and wet line added (shots/critic4/zoom60_beach.png); grain still uniform, no debris",
+      "13 Floating props: basin props read as moored dinghies (shots/critic4/hero_phone_crop_town.png); one crate still afloat (shots/critic4/zoom60_beach.png)",
+      "15 Smoke barely visible: now visible as flat white blotches (shots/critic4/hero_phone_crop_east_shore.png); motion unverified"
+    ],
+    "unchanged": [
+      "1 Foam stipple, no swell, no daylight reflections, noon confetti and comet (shots/critic4/hero_phone_crop_water.png, shots/critic4/contact_clear_12_crop_glitter.png)",
+      "3 Hillside: zig-zag terraces replaced by painted contour lines, same severity, no cliff (shots/critic4/hero_phone_crop_hill.png)",
+      "7 Fog one tone, inverted depth, 12:00 sheet (shots/critic4/fog_phone_crop_town.png, shots/critic4/fog_phone_crop_near_water.png, shots/critic4/contact_fog_12.png)",
+      "9 17:30 shade neutral (shots/critic4/zoom60_town.png)",
+      "11 Moon glitter blankets basin (shots/critic4/night_phone.png)"
+    ],
+    "unverified": [
+      "14 Landscape preset framing: shot not taken this round"
+    ]
+  },
+  "budget": {
+    "draw_calls": {"min": 82, "max": 114, "limit": 300},
+    "triangles": {"medium": 811875, "high_max": 1218187, "limit": 1500000},
+    "texture_mb": {"value": 45.3, "limit": 256},
+    "device_fps": "not measured",
+    "warning": "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported (environment, every shot)"
+  },
+  "limitations": [
+    "Phone shots at --dpr 2, not the 3x preset",
+    "landscape and sun_check shots not taken (shooting halted by coordinator); sun disc, horizon gradient, glitter path and landscape framing unverified",
+    "No round-4 frame contains sky (all at pitch 52)",
+    "Motion unverifiable from stills",
+    "Working tree had uncommitted edits to src/terrain/Heightfield.ts and src/world/World.ts and a concurrent session was shooting; served build may differ from 2f856e8"
+  ]
+}
