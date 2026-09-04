@@ -17,10 +17,11 @@ export interface SceneSpec {
   lu: number; lw: number; // camera target offset from the hero target, vista metres (right, forward)
   pitch: number;       // camera pitch from horizontal, degrees (hero 52)
   yaw: number;         // camera yaw offset from the hero direction, degrees (positive turns right)
+  style: 'real' | 'stylized'; // look comparison: physically based vs stylised realism
 }
 
 export const HERO: SceneSpec = {
-  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0, pitch: 52, yaw: 0,
+  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0, pitch: 52, yaw: 0, style: 'real',
 };
 
 export function specFromURL(): SceneSpec {
@@ -45,5 +46,6 @@ export function specFromURL(): SceneSpec {
     lu: num('lu', 0), lw: num('lw', 0),
     pitch: Math.min(80, Math.max(10, num('pitch', HERO.pitch))),
     yaw: num('yaw', 0),
+    style: str('style', HERO.style, ['real', 'stylized'] as const),
   };
 }

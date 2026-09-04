@@ -281,6 +281,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       glassMat.emissiveIntensity = 3.2 * night;
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
+      { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }
       smoke.material.uniforms.uLight.value.copy(L.sunE).multiplyScalar(0.7).add(L.skyE.clone().multiplyScalar(0.6)).add(L.moonE.clone().multiplyScalar(0.5));
       void spec;
     },

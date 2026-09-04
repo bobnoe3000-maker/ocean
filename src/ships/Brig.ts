@@ -296,8 +296,8 @@ export async function buildBrig(seed: number): Promise<Extra> {
     },
     apply(spec: SceneSpec, L: Lighting) {
       const night = L.night;
+      const k = spec.style === 'stylized' ? 1.7 : 1; ship.scale.set(k, k, k);
       lanternLight.userData.base = 6 * night; (lantern.material as THREE.MeshStandardMaterial).emissiveIntensity = 4 * night;
-      void spec;
     },
   };
 }

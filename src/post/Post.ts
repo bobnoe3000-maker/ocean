@@ -28,8 +28,9 @@ export class Post {
     void KernelSize;
   }
   setSize(w: number, h: number): void { this.composer.setSize(w, h); }
-  setNight(night: number): void { this.grade.saturation = 0.18 - 0.42 * night; this.contrast.contrast = 0.04 + 0.06 * night; }
+  setNight(night: number): void { this.grade.saturation -= 0.42 * night; this.contrast.contrast += 0.06 * night; }
   // golden hour: a touch of warm tint that fades out by mid-morning and at night
+  setStyle(stylized: boolean): void { this.grade.saturation = stylized ? 0.36 : 0.18; this.contrast.contrast = stylized ? 0.1 : 0.04; this.bloom.intensity = stylized ? 0.55 : 0.32; this.bloom.luminanceMaterial.threshold = stylized ? 0.85 : 1.0; }
   setGolden(g: number): void { this.warm.blendMode.opacity.value = 0.16 * g; this.grade.saturation += 0.1 * g; }
   render(dt: number): void { this.composer.render(dt); }
 }

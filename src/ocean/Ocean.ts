@@ -18,6 +18,7 @@ export class Ocean {
     tRefl: { value: null as THREE.Texture | null },
     uReflMatrix: { value: new THREE.Matrix4() },
     uReflF: { value: 0 },
+    uStyle: { value: 0 },
     tFoam: { value: null as THREE.Texture | null },
     tNoise: { value: null as THREE.Texture | null },
     uGrid: { value: new THREE.Vector4(GRID.cx, GRID.cz, GRID.size, 0) },
@@ -106,7 +107,7 @@ export class Ocean {
         ['#include <beginnormal_vertex>', 'vec3 objectNormal = vec3(0.0, 1.0, 0.0);'],
       ],
       fragmentPars: /* glsl */ `
-        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF; uniform mat4 uReflMatrix;
+        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;
         float sdCapsule(vec2 p, vec2 a, vec2 b, float r) { vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
@@ -135,7 +136,7 @@ export class Ocean {
           float glassy = smoothstep(1500.0, 6000.0, length(P - cameraPosition));
           vec2 nx = (n0.xy * (0.35 + 0.35 * farF) + n1.xy * 0.5 * (1.0 - 0.6 * farF) + n2.xy * 0.45 * nearF + n3.xy * 0.2 * nearF * nearF) * (1.0 - 0.85 * glassy) * (1.0 - 0.7 * uNightF);
           nx = fromWind * nx;
-          vec3 dn = normalize(vec3(nx.x * 0.9, 1.6, nx.y * 0.9));
+          vec3 dn = normalize(vec3(nx.x * 0.9 * (1.0 - 0.45 * uStyle), 1.6, nx.y * 0.9 * (1.0 - 0.45 * uStyle)));
           vec3 Nw = normalize(vWN);
           vec3 T = normalize(cross(vec3(0.0, 0.0, 1.0), Nw)); vec3 B = cross(Nw, T);
           vec3 wN = normalize(T * dn.x + Nw * dn.y + B * dn.z);
@@ -165,11 +166,24 @@ export class Ocean {
           float alpha = 1.0 - exp(-depth * 0.55);
           alpha = mix(alpha, 1.0, foam * 0.9);
           alpha = mix(alpha, 1.0, distF * 0.3);
-          diffuseColor.rgb = mix(body * 0.5, vec3(0.92), foam);
+          vec3 styleEmis = vec3(0.0);
+          if (uStyle > 0.5) {
+            // stylised realism: banded depth gradient, painted foam rims, opaque saturated body
+            float d1 = smoothstep(0.0, 2.5, depth), d2 = smoothstep(2.5, 9.0, depth), d3 = smoothstep(9.0, 26.0, depth);
+            vec3 c0 = vec3(0.32, 0.78, 0.70), c1 = vec3(0.04, 0.42, 0.50), c2 = vec3(0.015, 0.16, 0.36), c3 = vec3(0.006, 0.06, 0.22);
+            body = mix(mix(mix(c0, c1, d1), c2, d2), c3, d3);
+            float rim1 = 1.0 - smoothstep(0.0, 0.45 + 0.35 * surge, abs(depth - 0.35));
+            float rim2 = (1.0 - smoothstep(0.0, 0.8, abs(depth - 1.9 - surge * 0.9))) * 0.75;
+            float rims = max(rim1, rim2) * smoothstep(0.15, 0.5, foamTex + 0.2);
+            foam = clamp(max(foam, rims), 0.0, 1.0);
+            alpha = max(alpha, 0.72);
+            styleEmis = body * 0.35;
+          }
+          diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25, 0.85, foam);
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25 + uStyle * 0.22, 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
-          float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN;
+          float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN; vec3 waterStyleEmis = styleEmis;
         `],
         ['#include <map_fragment>', ''],
         ['#include <roughnessmap_fragment>', 'float roughnessFactor = roughness;'],
@@ -190,6 +204,7 @@ export class Ocean {
           }
         `],
         ['#include <emissivemap_fragment>', /* glsl */ `
+          totalEmissiveRadiance += waterStyleEmis * (1.0 - waterFoam) * 1.3;
           // sub-surface light through the wave backs, lit from behind by the sun
           vec3 V = normalize(cameraPosition - vWPos);
           float back = pow(clamp(dot(V, -uSunDir + waterN * 0.35), 0.0, 1.0), 4.0);

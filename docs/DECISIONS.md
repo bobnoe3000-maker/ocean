@@ -119,3 +119,10 @@ Recorded as they were made. Newest at the bottom.
     mirror image, perturbed by the surface normal, wherever the image has
     content; halved at night so the moon glow does not blotch. Roughly +50
     draw calls; the low tier keeps the sky-only reflection.
+29. **Style switch for the look comparison.** `style=stylized` changes only
+    three things on top of the same scene and lighting: the water becomes a
+    banded depth gradient with painted foam rims and a mostly opaque body,
+    the brig and gulls scale 1.7x and 1.6x, and the grade adds saturation,
+    contrast and bloom. Everything else (PBR materials, PCSS shadows, IBL,
+    town, terrain) is untouched, so the side-by-side isolates the art
+    direction question from the tech.

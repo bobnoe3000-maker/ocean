@@ -102,10 +102,13 @@ export class World {
     this.lighting.fitShadow(this.target, spec.zoom, this.lighting.keyDir);
     // looking into the sun: the eye stops down (about -1.5 EV when the disc is in frame)
     { const fwd = new THREE.Vector3(); this.camera.getWorldDirection(fwd); const k = THREE.MathUtils.smoothstep(fwd.dot(W.uSunDir.value), 0.55, 0.9) * Math.max(0, 1 - this.lighting.night); this.renderer.toneMappingExposure = this.lighting.exposure * (1 - 0.62 * k); }
+    this.post.setStyle(spec.style === 'stylized');
     this.post.setNight(this.lighting.night);
     { const el = Math.asin(Math.max(-1, Math.min(1, W.uSunDir.value.y))) * 180 / Math.PI; this.post.setGolden(THREE.MathUtils.smoothstep(el, -2, 6) * (1 - THREE.MathUtils.smoothstep(el, 14, 32))); }
     this.ocean.uniforms.uNightF.value = this.lighting.night;
     this.ocean.uniforms.uFogF.value = spec.weather === 'fog' ? 1 : 0;
+    this.ocean.uniforms.uStyle.value = spec.style === 'stylized' ? 1 : 0;
+    { const [bx, bz] = vistaToWorld(LAYOUT.brig[0], LAYOUT.brig[1]); const k = spec.style === 'stylized' ? 1.7 : 1; this.ocean.setHull(bx, bz, LAYOUT.brigHeading * Math.PI / 180, 14 * k, 3.4 * k); }
     if (this.reflection) this.ocean.uniforms.uReflF.value = 1 - 0.55 * this.lighting.night;
     this.sky.uniforms.uIncludeSun.value = spec.sun ? 1 : 0;
     const hide = spec.hide.split(',').filter(Boolean);
