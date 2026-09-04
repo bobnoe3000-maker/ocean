@@ -1,5 +1,19 @@
 # Ocean — Look Bible (phase 1 look test)
 
+## 0. Direction (revised after six physically-based rounds)
+
+The target is **stylised realism** in the manner of Sea of Conquest: real
+lighting, real shadows and PBR response, but shapes, colours and water
+authored for readability from a tilted top-down phone camera. Concretely:
+water is a banded turquoise-to-cobalt gradient with painted foam collars and
+lace, the ship and props are 1.7x their real scale against the island,
+vegetation is sculpted volumes rather than cards, textures are painted-look
+(soft albedo, colour-baked highlights, half-strength normals) and the grade
+adds saturation and bloom. R1 and R2 are now the primary references; R5 is
+the palette reference; R3 and R4 keep their role for night and fog mood.
+The physically based look survives behind `style=real` for comparison.
+
+
 This document stands alone. It describes the target look in words, names the
 five reference frames the critic scores against, fixes the hero vista, and
 lists the materials. Copyrighted reference frames, when present, live in

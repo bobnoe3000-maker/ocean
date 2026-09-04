@@ -126,3 +126,14 @@ Recorded as they were made. Newest at the bottom.
     contrast and bloom. Everything else (PBR materials, PCSS shadows, IBL,
     town, terrain) is untouched, so the side-by-side isolates the art
     direction question from the tech.
+30. **Direction changed to stylised realism** after six physically based
+    rounds plateaued at 4.5 to 6.5. The user chose it on the side-by-side
+    frame (`shots/compare/side_by_side.png`). What changes: painted-look
+    texture sets (`TEX_STYLE=painted`: albedo softened and saturated, normals
+    at half strength), a banded water gradient with an authored foam collar
+    and lace, sails as curved cloth meshes with the belly baked into the
+    geometry, sculpted ribbon fronds and blob bushes instead of cards, 1.7x
+    ship scale, a lighter cooler haze instead of a fog bank, and a saturated
+    grade. What does not change: the atmosphere model, PCSS shadows,
+    image-based lighting, the town, the terrain and the harness. `style=real`
+    keeps the old look for comparison.

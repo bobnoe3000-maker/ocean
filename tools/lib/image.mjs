@@ -62,6 +62,17 @@ export function aoFromHeight(height, w, h, scale) {
 }
 
 export function packSet(dir, name, w, h, { albedo, height, rough, aoScale = 6, normalStrength = 1, metal = null, extraAO = null }) {
+  const painted = process.env.TEX_STYLE === 'painted';
+  if (painted) {
+    // painterly: soften fine albedo noise, lift saturation, keep large shapes; normals at half strength
+    const r = Math.max(1, Math.round(w / 512));
+    const ch = [0, 1, 2].map((c) => { const src = new Float32Array(w * h); for (let i = 0; i < w * h; i++) src[i] = albedo[i * 3 + c]; return blur(src, w, h, r); });
+    for (let i = 0; i < w * h; i++) {
+      const rr = ch[0][i], gg = ch[1][i], bb = ch[2][i]; const l = 0.3 * rr + 0.59 * gg + 0.11 * bb;
+      albedo[i * 3] = l + (rr - l) * 1.25; albedo[i * 3 + 1] = l + (gg - l) * 1.25; albedo[i * 3 + 2] = l + (bb - l) * 1.25;
+    }
+    normalStrength *= 0.5; aoScale *= 0.8;
+  }
   const alb = new Uint8Array(w * h * 4);
   for (let i = 0; i < w * h; i++) { alb[i * 4] = to8(albedo[i * 3]); alb[i * 4 + 1] = to8(albedo[i * 3 + 1]); alb[i * 4 + 2] = to8(albedo[i * 3 + 2]); alb[i * 4 + 3] = 255; }
   writePNG(path.join(dir, `${name}_albedo.png`), w, h, alb);

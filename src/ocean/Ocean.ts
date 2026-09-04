@@ -172,10 +172,15 @@ export class Ocean {
             float d1 = smoothstep(0.0, 2.5, depth), d2 = smoothstep(2.5, 9.0, depth), d3 = smoothstep(9.0, 26.0, depth);
             vec3 c0 = vec3(0.32, 0.78, 0.70), c1 = vec3(0.04, 0.42, 0.50), c2 = vec3(0.015, 0.16, 0.36), c3 = vec3(0.006, 0.06, 0.22);
             body = mix(mix(mix(c0, c1, d1), c2, d2), c3, d3);
-            float rim1 = 1.0 - smoothstep(0.0, 0.45 + 0.35 * surge, abs(depth - 0.35));
-            float rim2 = (1.0 - smoothstep(0.0, 0.8, abs(depth - 1.9 - surge * 0.9))) * 0.75;
-            float rims = max(rim1, rim2) * smoothstep(0.15, 0.5, foamTex + 0.2);
-            foam = clamp(max(foam, rims), 0.0, 1.0);
+            // painted foam: a solid collar along every shore whose inner edge is scalloped by a lace texture,
+            // then sparse lace streaks fading out over the next few metres, all breathing with the swell
+            vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
+            vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
+            float collarEdge = 0.9 + 0.9 * surge + (lace.g - 0.5) * 1.6;
+            float collar = 1.0 - smoothstep(collarEdge - 0.35, collarEdge + 0.35, depth);
+            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 3.5, depth)) * smoothstep(0.55, 0.75, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
+            float hullWake = (1.0 - smoothstep(0.3, 2.2, dh)) * smoothstep(0.35, 0.65, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
+            foam = clamp(max(max(collar, laceBand * 0.85), max(foam * 0.6, hullWake)), 0.0, 1.0);
             alpha = max(alpha, 0.72);
             styleEmis = body * 0.35;
           }

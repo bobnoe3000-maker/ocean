@@ -67,20 +67,28 @@ function bulwarkGeometry(): THREE.BufferGeometry {
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return g;
 }
 
-function sailGeometry(w: number, h: number, segs = 10, shape: 'square' | 'tri' | 'gaff' = 'square'): THREE.BufferGeometry {
+function sailGeometry(w: number, h: number, segs = 14, shape: 'square' | 'tri' | 'gaff' = 'square'): THREE.BufferGeometry {
+  // cloth surface with the belly baked into the geometry so it shades and silhouettes as a filled sail
   const g = new THREE.PlaneGeometry(w, h, segs, segs);
   const pos = g.attributes.position as THREE.BufferAttribute;
-  // uv2-like tiling for the cloth set (0.6 m panels): keep uv in 0..1 for the billow, tile via aCloth
-  const cloth = new Float32Array(pos.count * 2); const uvA = g.attributes.uv as THREE.BufferAttribute;
-  for (let i = 0; i < pos.count; i++) { cloth[i * 2] = uvA.getX(i) * w / 1.8; cloth[i * 2 + 1] = uvA.getY(i) * h / 1.8; }
-  g.setAttribute('aCloth', new THREE.BufferAttribute(cloth, 2));
+  const uvA = g.attributes.uv as THREE.BufferAttribute;
+  const belly = Math.min(w, h) * 0.16;
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), y = pos.getY(i); const u = x / w + 0.5, v = y / h + 0.5;
-    if (shape === 'tri') pos.setX(i, (x + w / 2) * v - w / 2); // triangle: top edge collapses
-    if (shape === 'gaff') pos.setX(i, x * (0.55 + 0.45 * (1 - v)));
-    if (shape === 'square') pos.setY(i, y - 0.35 * Math.sin(Math.PI * u) * v); // curved foot
+    let px = x, py = y;
+    if (shape === 'tri') px = (x + w / 2) * v - w / 2;
+    if (shape === 'gaff') px = x * (0.55 + 0.45 * (1 - v));
+    // curved leeches and foot: the cloth bulges outward at the free edges
+    const edge = Math.sin(Math.PI * u);
+    if (shape === 'square') { py = y - 0.5 * edge * (1 - v) - 0.12 * edge * v; px = x * (1 + 0.06 * Math.sin(Math.PI * v)); }
+    const bz = Math.sin(Math.PI * u) * Math.sin(Math.PI * Math.min(1, v * 1.15)) * belly;
+    pos.setXYZ(i, px, py, bz);
   }
-  g.computeVertexNormals(); return g;
+  g.computeVertexNormals();
+  const cloth = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) { cloth[i * 2] = uvA.getX(i) * w / 1.8; cloth[i * 2 + 1] = uvA.getY(i) * h / 1.8; }
+  g.setAttribute('aCloth', new THREE.BufferAttribute(cloth, 2));
+  return g;
 }
 
 export async function buildBrig(seed: number): Promise<Extra> {
@@ -90,7 +98,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const hullMat = pbr(hullSet, { vertexColors: true, repeat: [1, 1] });
   const deckMat = pbr(planksSet, { color: 0xb8a58a });
   const sparMat = pbr(planksSet, { color: 0x6e5236, repeat: [0.4, 1] });
-  const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xd9ccb2, repeat: [1, 1] });
+  const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xe8dcc0, repeat: [1, 1] });
   canvasMat.shadowSide = THREE.DoubleSide; canvasMat.normalScale.set(1.6, 1.6);
   const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0x6a5a48 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2a2724, roughness: 0.55, metalness: 0.85, roughnessMap: noise });
@@ -179,7 +187,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
       rig.push(tube(a, new THREE.Vector3(0.1, Math.min(top, y + m.h * 0.22), m.z), 0.025, 0.025, 4, 12), tube(b, new THREE.Vector3(0.1, Math.min(top, y + m.h * 0.22), m.z), 0.025, 0.025, 4, 12));
       if (yi === 1) {
         // topsail set, hanging from the yard, sheeted to the lower yard
-        addSail(sailGeometry(yl * 0.96, m.h * 0.28, 10, 'square'), 0, y - m.h * 0.14 - 0.1, m.z + 0.25, yaw, 0.9);
+        addSail(sailGeometry(yl * 0.98, m.h * 0.34, 14, 'square'), 0, y - m.h * 0.17 - 0.1, m.z + 0.25, yaw, 0.9);
       } else {
         // furled: bundle along the yard
         add(tube(a.clone().add(new THREE.Vector3(0, -0.2, 0)), b.clone().add(new THREE.Vector3(0, -0.2, 0)), 0.22 + yi * 0.02, 0.22 + yi * 0.02, 8, 6), canvasMat);
@@ -201,11 +209,11 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const bsA = new THREE.Vector3(0, DECK + 1.0, L / 2 - 0.5), bsB = new THREE.Vector3(0, DECK + 3.4, L / 2 + 8.5);
   add(tube(bsA, bsB, 0.2, 0.1, 8, 4), sparMat);
   rig.push(tube(bsB, new THREE.Vector3(0, KEEL + 1.2, L / 2 + 0.3), 0.03, 0.03, 4, 12)); // bobstay
-  { const jib = addSail(sailGeometry(6.5, 9.5, 8, 'tri'), 0, DECK + 8.5, L / 2 + 3.6, Math.PI / 2 + 0.25, 0.6); jib.rotation.z = -0.55; }
+  { const jib = addSail(sailGeometry(7.5, 11.0, 12, 'tri'), 0, DECK + 9.2, L / 2 + 3.6, Math.PI / 2 + 0.25, 0.6); jib.rotation.z = -0.55; }
   // spanker (gaff sail) on the mainmast
   { const gaffA = new THREE.Vector3(0, DECK + 13.5, masts[1].z - 0.3), gaffB = new THREE.Vector3(0, DECK + 15.5, masts[1].z - 8.5); add(tube(gaffA, gaffB, 0.1, 0.07, 6, 3), sparMat);
     const boomA = new THREE.Vector3(0, DECK + 3.2, masts[1].z - 0.3), boomB = new THREE.Vector3(0, DECK + 3.2, masts[1].z - 10.5); add(tube(boomA, boomB, 0.12, 0.09, 6, 3), sparMat);
-    const sp = addSail(sailGeometry(8.5, 10.5, 8, 'gaff'), 0, DECK + 8.5, masts[1].z - 4.8, Math.PI / 2, 0.5); sp.rotation.z = 0.0; }
+    const sp = addSail(sailGeometry(9.5, 11.5, 12, 'gaff'), 0, DECK + 9.0, masts[1].z - 5.0, Math.PI / 2, 0.5); sp.rotation.z = 0.0; }
   add(mergeGeometries(rig)!, ropeMat, false);
   add(mergeGeometries(ratl)!, ropeMat, false);
   // anchor cable to the water ahead
@@ -222,12 +230,6 @@ export async function buildBrig(seed: number): Promise<Extra> {
   injectWorld(canvasMat, { uniforms: { uBillow: { value: 1 } }, vertexPars: 'attribute vec2 aCloth; varying vec2 vCloth; varying vec2 vSailUv;', fragmentPars: 'varying vec2 vCloth; varying vec2 vSailUv;', replace: [
     ['#include <beginnormal_vertex>', /* glsl */ `
     vec3 objectNormal = vec3( normal );
-    #ifdef USE_UV
-    { vec2 st = uv; float g = uWindSpeed / 6.0; float A = (1.1 + 0.5 * g);
-      // slope of the belly: tilts the normal so the curvature shades
-      vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 1.1;
-      objectNormal = normalize(vec3(-slope.x, -slope.y, 1.0) * sign(normal.z + 0.001)); }
-    #endif
     vCloth = aCloth;
     #ifdef USE_UV
     vSailUv = uv;
@@ -239,9 +241,8 @@ export async function buildBrig(seed: number): Promise<Extra> {
     #ifdef USE_UV
     { vec2 st = uv; float g = uWindSpeed / 6.0;
       float belly = sin(3.14159 * st.x) * sin(3.14159 * st.y);
-      float flutter = sin(uTime * 4.0 + st.y * 9.0 + st.x * 3.0) * 0.06 * (1.0 - st.x) * g + sin(uTime * 6.3 + st.x * 12.0) * 0.03 * g;
-      transformed.z += belly * (1.1 + 0.5 * g) * (0.9 + 0.1 * sin(uTime * 0.8)) + flutter;
-      transformed.y += belly * -0.12; }
+      float flutter = sin(uTime * 4.0 + st.y * 9.0 + st.x * 3.0) * 0.05 * (1.0 - st.x) * g + sin(uTime * 6.3 + st.x * 12.0) * 0.025 * g;
+      transformed.z += belly * 0.12 * sin(uTime * 0.8) * g + flutter; }
     #endif
   `],
     ['#include <map_fragment>', /* glsl */ `

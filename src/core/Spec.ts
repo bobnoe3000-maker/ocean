@@ -21,7 +21,7 @@ export interface SceneSpec {
 }
 
 export const HERO: SceneSpec = {
-  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0, pitch: 52, yaw: 0, style: 'real',
+  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0, pitch: 52, yaw: 0, style: 'stylized',
 };
 
 export function specFromURL(): SceneSpec {

@@ -17,7 +17,7 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
   const tp: number[] = [], tn: number[] = [], tu: number[] = [], ts: number[] = [], ti: number[] = [];
   for (let j = 0; j <= LS; j++) {
     const t = j / LS; const c = trunkAt(t);
-    const r = 0.13 + 0.16 * Math.pow(1 - t, 1.6) + (t < 0.08 ? 0.12 * (1 - t / 0.08) : 0);
+    const r = 0.2 + 0.22 * Math.pow(1 - t, 1.6) + (t < 0.08 ? 0.14 * (1 - t / 0.08) : 0);
     const tang = trunkAt(Math.min(1, t + 0.01)).sub(trunkAt(Math.max(0, t - 0.01))).normalize();
     const ax = new THREE.Vector3(1, 0, 0).cross(tang).normalize(); const az = tang.clone().cross(ax).normalize();
     for (let i = 0; i <= RS; i++) {
@@ -42,33 +42,35 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
     s.setAttribute('color', new THREE.Float32BufferAttribute(new Array(s.attributes.position.count * 3).fill(0.7), 3));
     barkParts.push(s);
   }
-  // fronds: alpha-card strips (3 segments along the rachis so they arc and droop)
+  // fronds: chunky sculpted ribbons (stylised realism): a thick curved blade with a rounded tip, lighter toward the tip
   const fp: number[] = [], fn: number[] = [], fu: number[] = [], fs: number[] = [], fc: number[] = [], fi: number[] = [];
-  const N = 13 + rng.int(5);
+  const N = 9 + rng.int(4);
   const a0 = rng.range(0, 6.28);
   for (let f = 0; f < N; f++) {
     const age = f / (N - 1);
     const az = a0 + f * 2.399963;
-    const el = THREE.MathUtils.degToRad(58 - 115 * Math.pow(age, 1.15) + rng.range(-8, 8));
-    const L = rng.range(2.8, 3.9) * (1 - 0.15 * age);
+    const el = THREE.MathUtils.degToRad(55 - 105 * Math.pow(age, 1.1) + rng.range(-8, 8));
+    const L = rng.range(3.0, 4.2) * (1 - 0.12 * age);
     const dir = new THREE.Vector3(Math.cos(az) * Math.cos(el), Math.sin(el), Math.sin(az) * Math.cos(el));
-    const droop = rng.range(0.6, 1.2) + age * 0.8;
+    const droop = rng.range(0.7, 1.3) + age * 0.8;
     const ph = rng.range(0, 6.28);
-    const dead = age > 0.86;
-    const tint: [number, number, number] = dead ? [0.7, 0.5, 0.28] : [0.85 + 0.3 * (1 - age) * rng.range(0.5, 1), 0.92 + 0.15 * rng.range(0, 1), 0.85];
+    const dead = age > 0.88;
+    const base: [number, number, number] = dead ? [0.62, 0.44, 0.22] : [0.30 + 0.1 * rng.next(), 0.55 + 0.12 * rng.next(), 0.22];
+    const tip: [number, number, number] = dead ? [0.7, 0.55, 0.3] : [0.62 + 0.1 * rng.next(), 0.78, 0.3];
     const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.0 : 1), 0));
-    const half = L * 0.24;
-    const SEG = 3; const base = fp.length / 3;
+    const SEG = 7; const b0 = fp.length / 3;
     for (let sgi = 0; sgi <= SEG; sgi++) {
       const t = sgi / SEG; const c = rachis(t); const tang = rachis(Math.min(1, t + 0.02)).sub(rachis(Math.max(0, t - 0.02))).normalize();
       const side = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
-      // the card folds slightly into a V so leaflets catch light differently on each side
-      const up = new THREE.Vector3(0, 1, 0);
-      const l = c.clone().addScaledVector(side, -half).addScaledVector(up, -0.12 * half), r = c.clone().addScaledVector(side, half).addScaledVector(up, -0.12 * half);
-      const nrm = side.clone().cross(tang).normalize().lerp(new THREE.Vector3(0, 1, 0), 0.75).normalize();
+      // blade width: narrow at the stem, widest at 40%, rounded tip
+      const wdt = L * 0.13 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.03;
+      const sag = 0.18 * wdt; // edges fold down into a V
+      const l = c.clone().addScaledVector(side, -wdt).add(new THREE.Vector3(0, -sag, 0)), r = c.clone().addScaledVector(side, wdt).add(new THREE.Vector3(0, -sag, 0));
+      const nrm = side.clone().cross(tang).normalize().lerp(new THREE.Vector3(0, 1, 0), 0.7).normalize();
       const flex = 0.7 + t * 1.3;
-      for (const [pt, v] of [[l, 0], [r, 1]] as [THREE.Vector3, number][]) { fp.push(pt.x, pt.y, pt.z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(t, v); fs.push(flex, ph); fc.push(tint[0], tint[1], tint[2]); }
-      if (sgi > 0) { const k = base + sgi * 2; fi.push(k - 2, k, k - 1, k - 1, k, k + 1); }
+      const col = [base[0] + (tip[0] - base[0]) * t, base[1] + (tip[1] - base[1]) * t, base[2] + (tip[2] - base[2]) * t];
+      for (const [pt, v] of [[l, 0], [c.clone().add(new THREE.Vector3(0, 0.02, 0)), 0.5], [r, 1]] as [THREE.Vector3, number][]) { fp.push(pt.x, pt.y, pt.z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(t, v); fs.push(flex, ph); fc.push(col[0] * (v === 0.5 ? 1.12 : 1), col[1] * (v === 0.5 ? 1.12 : 1), col[2]); }
+      if (sgi > 0) { const k = b0 + sgi * 3; fi.push(k - 3, k, k - 2, k - 2, k, k + 1, k - 2, k + 1, k - 1, k - 1, k + 1, k + 2); }
     }
   }
   const frond = new THREE.BufferGeometry();
@@ -81,10 +83,10 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
 
 export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> {
   const group = new THREE.Group(); group.name = 'palms';
-  const [barkSet, frondCard] = await Promise.all([loadSet('bark'), loadTex('frondcard.png', { srgb: true, repeat: false })]);
+  const [barkSet, noiseTex] = await Promise.all([loadSet('bark'), loadTex('noise')]);
   const rng = new Rng(seed * 31 + 5);
   const barkMat = pbr(barkSet, { vertexColors: true });
-  const frondMat = new THREE.MeshStandardMaterial({ map: frondCard, side: THREE.DoubleSide, vertexColors: true, alphaTest: 0.45, roughness: 0.55, metalness: 0 });
+  const frondMat = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, vertexColors: true, roughness: 0.6, metalness: 0, roughnessMap: noiseTex });
   // leaf translucency: sunlight through the fronds keeps them green under a low sun
   injectWorld(frondMat, { fragmentPars: 'uniform vec3 uSunColor;', replace: [['#include <emissivemap_fragment>', 'totalEmissiveRadiance += diffuseColor.rgb * vec3(0.9, 1.1, 0.6) * uSunColor * 0.2 * max(uSunDir.y, 0.0) * 4.0;']] });
   for (const m of [barkMat, frondMat]) {
@@ -115,7 +117,7 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
       m4.compose(new THREE.Vector3(x, y, z), q, sc); mesh.setMatrixAt(k, m4);
     });
     mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false;
-    { const d = makeDepthMaterial(frondMat); d.map = frondCard; d.alphaTest = 0.45; mesh.customDepthMaterial = d; }
+    mesh.customDepthMaterial = makeDepthMaterial(frondMat);
     group.add(mesh);
   });
   return { group };
