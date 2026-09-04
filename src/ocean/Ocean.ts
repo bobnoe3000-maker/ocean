@@ -7,7 +7,7 @@ import { GRID } from '../terrain/Heightfield';
 // depth-based colour, shore and crest foam, detail normals and SSS.
 export class Ocean {
   mesh!: THREE.Mesh;
-  material!: THREE.MeshStandardMaterial;
+  material!: THREE.MeshPhysicalMaterial;
   readonly group = new THREE.Group();
   readonly uniforms = {
     tHeight: { value: null as THREE.Texture | null },
@@ -50,8 +50,8 @@ export class Ocean {
     geo.setIndex(new THREE.BufferAttribute(idx, 1));
     geo.computeBoundingSphere();
 
-    const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.08, metalness: 0, transparent: true, depthWrite: true, side: THREE.FrontSide });
-    mat.envMapIntensity = 1;
+    const mat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.08, metalness: 0, transparent: true, depthWrite: true, side: THREE.FrontSide, ior: 1.7, specularIntensity: 1.0 });
+    mat.envMapIntensity = 1.9;
     this.material = mat;
     injectWorld(mat, {
       uniforms: this.uniforms,
@@ -76,14 +76,14 @@ export class Ocean {
             vec2 p = position.xz; float t = uTime;
             float th = terrainH(p);
             float depth = clamp(-th, 0.0, 30.0);
-            float shoal = smoothstep(0.0, 6.0, depth);           // waves shrink in the shallows
+            float shoal = smoothstep(0.0, 7.0, depth);           // waves shrink in the shallows
             vec2 wd = normalize(uWindDir);
             mat2 rot = mat2(0.96, 0.28, -0.28, 0.96);
             vec3 disp = vec3(0.0), dPx = vec3(0.0), dPz = vec3(0.0);
             float sw = uSwell * (0.35 + 0.65 * shoal);
-            gerstner(wd, 46.0, 0.55 * sw, 0.35, 1.0, p, t, disp, dPx, dPz);
-            gerstner(rot * wd, 31.0, 0.32 * sw, 0.4, 1.0, p, t, disp, dPx, dPz);
-            gerstner(wd * mat2(0.94, -0.34, 0.34, 0.94), 19.0, 0.18 * sw, 0.45, 1.0, p, t, disp, dPx, dPz);
+            gerstner(wd, 52.0, 0.85 * sw, 0.5, 1.0, p, t, disp, dPx, dPz);
+            gerstner(rot * wd, 33.0, 0.45 * sw, 0.55, 1.0, p, t, disp, dPx, dPz);
+            gerstner(wd * mat2(0.94, -0.34, 0.34, 0.94), 20.0, 0.24 * sw, 0.55, 1.0, p, t, disp, dPx, dPz);
             // Jacobian from the swell only: whitecaps come from the long waves, not the chop
             float Jswell = (1.0 + dPx.x) * (1.0 + dPz.z) - dPx.z * dPz.x;
             float ch = uChop * (0.5 + 0.5 * shoal);
@@ -133,14 +133,14 @@ export class Ocean {
           vec4 fo = texture2D(tFoam, P.xz / 9.0 + wd * t * 0.03);
           vec4 fo2 = texture2D(tFoam, P.xz / 3.1 - wd * t * 0.05 + 0.3);
           float foamTex = fo.r * 0.6 + fo2.r * 0.4;
-          float shoreLine = 1.0 - smoothstep(0.0, 1.3 + fo.g * 1.2, depth);
-          float surge = 0.5 + 0.5 * sin(t * 0.55 + P.x * 0.03 - P.z * 0.04 + fo.g * 4.0);
-          float shoreFoam = shoreLine * smoothstep(0.55 - shoreLine * 0.25 - surge * 0.15, 0.9, foamTex);
+          float shoreLine = 1.0 - smoothstep(0.0, 1.0 + fo.g * 1.0 + surge * 1.4, depth);
+          float kph = 6.2831853 / 52.0; float surge = 0.5 + 0.5 * sin(kph * dot(wd, P.xz) - sqrt(9.81 / kph) * kph * t + fo.g * 3.0);
+          float shoreFoam = shoreLine * smoothstep(0.5 - shoreLine * 0.3 - surge * 0.25, 0.9, foamTex) * (0.55 + 0.45 * surge);
           float crest = (1.0 - smoothstep(0.45, 0.72, vJ)) * smoothstep(0.5, 0.85, foamTex + vCrest * 0.25) * 0.8;
           vec2 hd = vec2(sin(uHull.w), -cos(uHull.w));
           float dh = sdCapsule(P.xz, uHull.xz + hd * uHull.y, uHull.xz - hd * uHull.y, uHullW);
           float hullFoam = (1.0 - smoothstep(-0.2, 1.0 + fo.g * 0.6, dh)) * smoothstep(0.35, 0.75, foamTex + 0.12 * sin(t * 1.3 + fo.g * 6.0)) * 0.85;
-          float foam = clamp(shoreFoam * 0.75 + crest + hullFoam, 0.0, 1.0);
+          float foam = clamp(shoreFoam * 0.9 + crest + hullFoam, 0.0, 1.0);
           // water body colour: absorption with depth, sky-lit scatter in shallows
           float k = 1.0 - exp(-depth * 0.16);
           vec3 body = mix(uShallow, uDeep, k);
@@ -165,7 +165,7 @@ export class Ocean {
           // sun glitter: extra sharp specular lobe from the finest normals
           vec3 Hh = normalize(V + uSunDir);
           float glit = pow(clamp(dot(waterN, Hh), 0.0, 1.0), 900.0) * smoothstep(0.0, 0.05, uSunDir.y);
-          totalEmissiveRadiance += uSunColor * glit * mix(0.9, 0.08, uNightF) * (1.0 - waterFoam) * (1.0 - distF);
+          totalEmissiveRadiance += uSunColor * glit * mix(0.5, 0.08, uNightF) * (1.0 - 0.6 * smoothstep(0.5, 0.9, uSunDir.y)) * (1.0 - waterFoam) * (1.0 - distF);
         `],
     ] });
     const mesh = new THREE.Mesh(geo, mat);

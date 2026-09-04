@@ -81,7 +81,8 @@ export class Heightfield {
     let h: number;
     if (sd > 0) {
       const inland = smooth(0, 200, sd);
-      h = 1.2 + sd * 0.11 + 28 * smooth(50, 190, sd) + this.n.fbm(u * 0.008, w * 0.008, 4) * (2 + 12 * inland) + this.n.fbm(u * 0.05, w * 0.05, 3) * 0.6;
+      h = 1.2 + sd * 0.11 + 28 * smooth(50, 190, sd) + this.n.fbm(u * 0.008, w * 0.008, 4) * (2 + 12 * inland) + this.n.fbm(u * 0.05, w * 0.05, 3) * 0.6
+        + this.n2.ridged(u * 0.014 + 3, w * 0.014, 4) * 9 * smooth(30, 120, sd) + this.n.fbm(u * 0.025 + 5, w * 0.025 + 2, 3) * 2.5 * smooth(20, 80, sd);
     } else {
       const inBay = Math.hypot(u - L.bayC[0], w - L.bayC[1]) < L.bayR + 5 ? 1 : 0;
       const slope = mix(0.26, 0.13, inBay);
@@ -94,7 +95,7 @@ export class Heightfield {
     // rounded plateau: superellipse falloff with noisy edge
     const cu = (u - (c.u0 + c.u1) / 2) / ((c.u1 - c.u0) / 2), cw = (w - (c.w0 + c.w1) / 2) / ((c.w1 - c.w0) / 2);
     const rr = Math.pow(Math.pow(Math.abs(cu), 3) + Math.pow(Math.abs(cw), 3), 1 / 3);
-    const plateau = c.h * (1 - smooth(0.55 + (edgeN + edgeN2) / 120, 1.0 + (edgeN + edgeN2) / 120, rr)) * smooth(c.w0 - 5, c.w0 + 25 + edgeN2, w);
+    const plateau = c.h * (1 - smooth(0.55 + (edgeN + edgeN2) / 120, 1.0 + (edgeN + edgeN2) / 120, rr)) * smooth(c.w0 - 5, c.w0 + 42 + edgeN2, w);
     if (plateau > 0.01) {
       const rid = this.n2.ridged(u * 0.03, w * 0.03, 4) * 4 + this.n.fbm(u * 0.1, w * 0.1, 3) * 0.8;
       const ph = plateau + rid * smooth(2, 12, plateau);
@@ -108,6 +109,13 @@ export class Heightfield {
       const rad = smooth(74, 80, r) * (1 - smooth(112, 135, r));
       const terr = ang * rad;
       if (terr > 0) h = mix(h, 1.7 + Math.max(0, r - 80) * 0.045 + this.n.fbm(u * 0.05, w * 0.05, 2) * 0.15, terr);
+      // agricultural terraces climbing the slope behind the town: stepped contours with soft risers
+      const tmask = ang * smooth(132, 150, r) * (1 - smooth(240, 290, r));
+      if (tmask > 0 && h > 2) {
+        const step = 2.6; const q = Math.floor(h / step) * step; const f = (h - q) / step;
+        const stepped = q + step * smooth(0.72, 1.0, f) + 0.4 * f;
+        h = mix(h, stepped, tmask * 0.85);
+      }
     }
     // beach shelf: low sand foreshore and a shallow bar
     const bu = (u - L.beachC[0]) / L.beachR[0], bw = (w - L.beachC[1]) / L.beachR[1];

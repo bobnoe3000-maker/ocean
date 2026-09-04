@@ -15,10 +15,11 @@ export interface SceneSpec {
   sun: boolean;        // debug: draw sun disc
   hide: string;        // debug: comma list of groups to hide (ocean,terrain,sky,...)
   lu: number; lw: number; // camera target offset from the hero target, vista metres (right, forward)
+  pitch: number;       // camera pitch from horizontal, degrees (hero 52)
 }
 
 export const HERO: SceneSpec = {
-  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0,
+  time: 17.5, weather: 'clear', zoom: 120, quality: 'high', seed: 1, device: 'phone', t: 12, pause: false, hud: false, sun: true, hide: '', lu: 0, lw: 0, pitch: 52,
 };
 
 export function specFromURL(): SceneSpec {
@@ -41,5 +42,6 @@ export function specFromURL(): SceneSpec {
     sun: bool('sun', HERO.sun),
     hide: q.get('hide') || '',
     lu: num('lu', 0), lw: num('lw', 0),
+    pitch: Math.min(80, Math.max(20, num('pitch', HERO.pitch))),
   };
 }

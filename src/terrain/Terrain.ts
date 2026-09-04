@@ -119,16 +119,22 @@ export class Terrain {
           }
           wN = normalize(wN);
           // macro colour variation (kills tiling, adds patchiness)
-          albedo *= 0.86 + 0.28 * nz.a;
+          vec4 nz3 = texture2D(tNoise, P.xz * 0.0012 + 0.61);
+          albedo *= (0.86 + 0.28 * nz.a) * (0.9 + 0.2 * nz3.g);
+          albedo = mix(albedo, albedo * vec3(0.93, 0.9, 0.86), sandW * smoothstep(0.45, 0.7, nz3.r) * 0.6);
           albedo = mix(albedo, albedo * vec3(1.06, 1.0, 0.92), macro * 0.5 + 0.5);
           // scree and darker damp sand at the cliff foot
           albedo = mix(albedo, albedo * 0.8, rockW * (1.0 - smoothstep(0.0, 6.0, h)) * 0.6);
           // wet band along the waterline
           float wave = (nz2.b - 0.5) * 0.5 + sin(uTime * 0.7 + P.x * 0.05) * 0.15;
-          float wet = 1.0 - smoothstep(-0.2, 0.9, h + wave);
-          wet = max(wet, 1.0 - smoothstep(-0.05, 0.35, h)) * (1.0 - rockW * 0.4);
-          albedo *= mix(1.0, 0.55, wet);
-          rough = mix(rough, 0.22, wet * 0.9);
+          float wet = 1.0 - smoothstep(-0.2, 1.4, h + wave);
+          wet = max(wet, 1.0 - smoothstep(-0.05, 0.5, h)) * (1.0 - rockW * 0.4);
+          albedo *= mix(1.0, 0.5, wet);
+          rough = mix(rough, 0.12, wet * 0.95);
+          // wrack line: dark weed and debris left at the high-tide mark
+          float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;
+          albedo = mix(albedo, vec3(0.22, 0.17, 0.11), wrack * 0.8);
+          rough = mix(rough, 0.6, wrack * 0.5);
           // underwater: darker, smoother, slightly green
           float under = 1.0 - smoothstep(-0.3, 0.05, h);
           albedo = mix(albedo, albedo * vec3(0.7, 0.8, 0.75), under);

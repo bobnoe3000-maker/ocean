@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { EffectComposer, RenderPass, EffectPass, BloomEffect, ToneMappingEffect, ToneMappingMode, VignetteEffect, NoiseEffect, BlendFunction, SMAAEffect, HueSaturationEffect, BrightnessContrastEffect, KernelSize } from 'postprocessing';
+import { EffectComposer, RenderPass, EffectPass, BloomEffect, ToneMappingEffect, ToneMappingMode, VignetteEffect, NoiseEffect, BlendFunction, SMAAEffect, HueSaturationEffect, BrightnessContrastEffect, KernelSize, SepiaEffect } from 'postprocessing';
 
 export class Post {
   readonly composer: EffectComposer;
@@ -9,6 +9,7 @@ export class Post {
   readonly vignette: VignetteEffect;
   readonly grade: HueSaturationEffect;
   readonly contrast: BrightnessContrastEffect;
+  readonly warm: SepiaEffect;
 
   constructor(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera, quality: 'low' | 'medium' | 'high') {
     this.composer = new EffectComposer(renderer, { frameBufferType: THREE.HalfFloatType, multisampling: 0 });
@@ -20,12 +21,15 @@ export class Post {
     this.noise.blendMode.opacity.value = 0.045;
     this.grade = new HueSaturationEffect({ saturation: 0.18 });
     this.contrast = new BrightnessContrastEffect({ brightness: 0.0, contrast: 0.04 });
+    this.warm = new SepiaEffect({ intensity: 1 }); this.warm.blendMode.opacity.value = 0;
     const smaa = new SMAAEffect();
-    const effects = quality === 'low' ? [this.bloom, this.tone, this.vignette] : [smaa, this.bloom, this.tone, this.grade, this.contrast, this.vignette, this.noise];
+    const effects = quality === 'low' ? [this.bloom, this.tone, this.vignette] : [smaa, this.bloom, this.tone, this.warm, this.grade, this.contrast, this.vignette, this.noise];
     this.composer.addPass(new EffectPass(camera, ...effects));
     void KernelSize;
   }
   setSize(w: number, h: number): void { this.composer.setSize(w, h); }
   setNight(night: number): void { this.grade.saturation = 0.18 - 0.42 * night; this.contrast.contrast = 0.04 + 0.06 * night; }
+  // golden hour: a touch of warm tint that fades out by mid-morning and at night
+  setGolden(g: number): void { this.warm.blendMode.opacity.value = 0.16 * g; this.grade.saturation += 0.1 * g; }
   render(dt: number): void { this.composer.render(dt); }
 }

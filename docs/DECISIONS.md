@@ -48,3 +48,16 @@ Recorded as they were made. Newest at the bottom.
     uncompressed textures; render targets are not included.
 11. **Shadows**: one 4096² PCF cascade fitted to the visible footprint (2048²
     medium, 1024² low). No PCSS yet; "softer with distance" is on the open list.
+12. **Fog is a bank, not a veil.** With the camera 240 m above the water, a
+    uniform layer reads as a flat sheet from above. The fog preset is a shallow
+    (16 m scale height), dense layer whose density is modulated by a wind-drifted
+    noise field, so mist pools over the basin, thins over the town and leaves
+    the hills and mast tops clear (R4 layering). Exposure in fog keys on the
+    clear-sky sun so the bank stays luminous without blowing out.
+13. **Headless shots read the canvas directly** (`toDataURL` in the same task as
+    the render) because Playwright's compositor capture exceeded ten minutes at
+    3× DPR on SwiftShader. Critic shots run against a static `vite build`
+    served on port 5174 so builder edits on the dev server never reload a page
+    mid-capture.
+14. **Whitecaps come from the swell Jacobian only.** Including the chop waves in
+    the Jacobian made foam speckle the whole basin at 6 m/s.

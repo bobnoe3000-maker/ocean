@@ -1,0 +1,78 @@
+{
+  "round": 1,
+  "scores": {
+    "materials": 4.5,
+    "light": 5.0,
+    "atmosphere": 4.0,
+    "water": 3.5,
+    "scale_motion": 5.0,
+    "composition": 4.5,
+    "budget_errors": 8.5,
+    "programmer_art": 3.0
+  },
+  "pass": false,
+  "console_errors": 0,
+  "console_warnings": [
+    "PCSS: shadow chunk layout unexpected, keeping PCF",
+    "THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported."
+  ],
+  "budget": {
+    "draw_calls_max": 158,
+    "triangles_max": 1159425,
+    "texture_mb": 41.8,
+    "device_fps": "not measured (headless SwiftShader)"
+  },
+  "environment_limitations": [
+    "phone shots at --dpr 2 instead of the 390x844 @3 preset (render time)",
+    "device fps not measured",
+    "motion not verifiable from stills",
+    "no preset shows sky or horizon, so sun disc and horizon gradient could not be assessed"
+  ],
+  "programmer_art_hits": [
+    "flat or untextured surfaces: sails, lighthouse stripes, quay slab (shots/critic1/zoom60_brig.png, shots/critic1/hero_phone_crop_mole.png)",
+    "visible tiling: sand micro-grain and quay herringbone (shots/critic1/zoom60_beach.png, shots/critic1/zoom60_town.png)",
+    "uniform water plane / white-band foam (shots/critic1/hero_phone_crop_shore.png, shots/critic1/contact_clear_12.png)",
+    "identical vegetation instances: hillside bush blobs (shots/critic1/hero_phone.png, shots/critic1/zoom300.png)",
+    "placeholder primitives: white block tower, box chimney, pin lamp posts (shots/critic1/hero_phone.png, shots/critic1/zoom60_town.png)",
+    "recognisable low-poly kit: identical box houses, serrated-strip palms (shots/critic1/hero_phone_crop_town.png, shots/critic1/zoom60_beach.png)"
+  ],
+  "screenshots": [
+    "shots/critic1/hero_phone.png",
+    "shots/critic1/hero_phone_crop_town.png",
+    "shots/critic1/hero_phone_crop_brig.png",
+    "shots/critic1/hero_phone_crop_mole.png",
+    "shots/critic1/hero_phone_crop_shore.png",
+    "shots/critic1/contact.png",
+    "shots/critic1/contact_clear_12.png",
+    "shots/critic1/contact_clear_175.png",
+    "shots/critic1/contact_clear_22.png",
+    "shots/critic1/contact_fog_12.png",
+    "shots/critic1/contact_fog_175.png",
+    "shots/critic1/contact_fog_22.png",
+    "shots/critic1/zoom60_town.png",
+    "shots/critic1/zoom60_brig.png",
+    "shots/critic1/zoom60_beach.png",
+    "shots/critic1/zoom300.png",
+    "shots/critic1/night_phone.png",
+    "shots/critic1/fog_phone.png",
+    "shots/critic1/landscape.png",
+    "shots/critic1/noon_desktop_water.png"
+  ],
+  "top_issues": [
+    "Water is a static noise field: no swell, chop, crest foam, shore foam, wet sand or sun reflection; shadowed water is a flat dark stain (shots/critic1/hero_phone_crop_shore.png, shots/critic1/zoom60_brig.png, shots/critic1/zoom60_beach.png)",
+    "Shadows hard, aliased and stair-stepped at every scale; PCSS silently falls back to PCF (shots/critic1/zoom60_beach.png, shots/critic1/hero_phone.png)",
+    "Sails, hull and flags are flat untextured planes (shots/critic1/zoom60_brig.png)",
+    "17:30 is not golden hour: pale walls, neutral shade, no bounce, no glitter path (shots/critic1/zoom60_town.png, shots/critic1/hero_phone.png)",
+    "Framing reads as a near-nadir map with no sky in any preset (shots/critic1/hero_phone.png, shots/critic1/zoom300.png, shots/critic1/landscape.png)",
+    "Buildings are an identical kit with a placeholder white block tower (shots/critic1/zoom60_town.png, shots/critic1/hero_phone_crop_town.png)",
+    "Terrain is flat mottled ochre with a stair-stepped east shore and no aerial perspective at 300 m (shots/critic1/zoom300.png, shots/critic1/night_phone.png)",
+    "Fog only exists at 17:30; 12:00 and 22:00 fog cells nearly match clear (shots/critic1/contact_fog_12.png, shots/critic1/contact_fog_22.png)",
+    "Noon glitter is uniform white confetti and shore foam a white smear band (shots/critic1/noon_desktop_water.png, shots/critic1/contact_clear_12.png)",
+    "Night: identical windows, lighthouse bloom pool, blanket moon glitter, orphan floating light (shots/critic1/night_phone.png)",
+    "Palms are a low-poly kit with pixelated shadows (shots/critic1/zoom60_beach.png)",
+    "Quay and mole flat grey with no props or wet edge (shots/critic1/zoom60_town.png, shots/critic1/hero_phone_crop_mole.png)",
+    "No chimney smoke visible; dock is a sliver (shots/critic1/hero_phone.png)",
+    "Sand micro-tiling and blurred shore gradient (shots/critic1/zoom60_beach.png)",
+    "Moire striping in ship shadow on water (shots/critic1/zoom60_brig.png)"
+  ]
+}

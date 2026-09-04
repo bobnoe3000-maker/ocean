@@ -7,10 +7,15 @@ import { W } from '../core/WorldUniforms';
 // for the high quality tier before any program compiles.
 export function installPCSS(): void {
   const chunk = THREE.ShaderChunk.shadowmap_pars_fragment;
-  const start = chunk.indexOf('#else // SHADOWMAP_TYPE_BASIC');
-  const end = chunk.indexOf('#endif', start);
-  if (start < 0 || end < 0) { console.warn('PCSS: shadow chunk layout unexpected, keeping PCF'); return; }
-  const pcss = /* glsl */ `#else // SHADOWMAP_TYPE_BASIC -> PCSS override
+  // The basic (depth-read) getShadow is the last overload taking sampler2D; comments are
+  // stripped in production bundles, so locate it by signature, not by marker.
+  const sig = /float\s+getShadow\(\s*sampler2D\s+shadowMap\b/g;
+  let m: RegExpExecArray | null, start = -1;
+  while ((m = sig.exec(chunk))) start = m.index;
+  const ret = start >= 0 ? chunk.indexOf('return mix( 1.0, shadow, shadowIntensity );', start) : -1;
+  const end = ret >= 0 ? chunk.indexOf('}', ret) + 1 : -1;
+  if (start < 0 || end <= 0) { console.error('PCSS: shadow chunk layout unexpected, keeping PCF'); return; }
+  const pcss = /* glsl */ `
     uniform float uPcssPenumbra; uniform float uPcssMin; uniform float uPcssSearch;
     float pcssIgn( vec2 p ) { return fract( 52.9829189 * fract( dot( p, vec2( 0.06711056, 0.00583715 ) ) ) ); }
     vec2 pcssVogel( int i, int n, float phi ) { float r = sqrt( ( float( i ) + 0.5 ) / float( n ) ); float th = float( i ) * 2.399963229728653 + phi; return vec2( cos( th ), sin( th ) ) * r; }
@@ -46,6 +51,7 @@ export function installPCSS(): void {
     }
   `;
   THREE.ShaderChunk.shadowmap_pars_fragment = chunk.slice(0, start) + pcss + chunk.slice(end);
+  if (!THREE.ShaderChunk.shadowmap_pars_fragment.includes('uPcssPenumbra')) console.error('PCSS: patch did not apply');
 }
 
 export const PCSS_UNIFORMS = { uPcssPenumbra: { value: 100 }, uPcssMin: { value: 1.2 }, uPcssSearch: { value: 14 } };

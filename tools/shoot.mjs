@@ -14,7 +14,7 @@ const DEVICES = {
   'phone-landscape': { width: 844, height: 390, dpr: 3 },
   desktop: { width: 1920, height: 1080, dpr: 1 },
 };
-const SPEC_KEYS = ['time', 'weather', 'zoom', 'quality', 'seed', 't', 'pause', 'hud', 'sun', 'hide', 'lu', 'lw'];
+const SPEC_KEYS = ['time', 'weather', 'zoom', 'quality', 'seed', 't', 'pause', 'hud', 'sun', 'hide', 'lu', 'lw', 'pitch'];
 
 async function portOpen(port) { return new Promise((r) => { const s = net.connect(port, '127.0.0.1'); s.on('connect', () => { s.end(); r(true); }); s.on('error', () => r(false)); }); }
 

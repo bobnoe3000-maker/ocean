@@ -53,7 +53,7 @@ export class World {
     const q = this.spec.quality;
     await this.sky.load();
     W.tFogNoise.value = await loadTex('noise');
-    this.terrain = new Terrain(this.hf, q === 'low' ? 192 : q === 'medium' ? 288 : 384);
+    this.terrain = new Terrain(this.hf, q === 'low' ? 224 : q === 'medium' ? 352 : 512);
     await this.terrain.build();
     this.scene.add(this.terrain.group);
     this.ocean = new Ocean(this.terrain.depthTexture, q === 'low' ? 160 : q === 'medium' ? 240 : 320);
@@ -78,7 +78,7 @@ export class World {
   }
 
   placeCamera(): void {
-    const pitch = 58 * Math.PI / 180;
+    const pitch = this.spec.pitch * Math.PI / 180;
     const [tx, tz] = vistaToWorld(TARGET[0] + this.spec.lu, TARGET[1] + this.spec.lw); this.target.set(tx, 0, tz);
     const aspect = Math.max(this.camera.aspect, 390 / 844);
     const halfH = Math.tan(this.camera.fov * Math.PI / 360);
@@ -99,6 +99,7 @@ export class World {
     this.lighting.fitShadow(this.target, spec.zoom, this.lighting.keyDir);
     this.renderer.toneMappingExposure = this.lighting.exposure;
     this.post.setNight(this.lighting.night);
+    { const el = Math.asin(Math.max(-1, Math.min(1, W.uSunDir.value.y))) * 180 / Math.PI; this.post.setGolden(THREE.MathUtils.smoothstep(el, -2, 6) * (1 - THREE.MathUtils.smoothstep(el, 14, 32))); }
     this.ocean.uniforms.uNightF.value = this.lighting.night;
     this.sky.uniforms.uIncludeSun.value = spec.sun ? 1 : 0;
     const hide = spec.hide.split(',').filter(Boolean);

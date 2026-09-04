@@ -186,7 +186,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
     ['#include <beginnormal_vertex>', /* glsl */ `
     vec3 objectNormal = vec3( normal );
     #ifdef USE_UV
-    { vec2 st = uv; float g = uWindSpeed / 6.0; float A = (0.7 + 0.4 * g);
+    { vec2 st = uv; float g = uWindSpeed / 6.0; float A = (1.1 + 0.5 * g);
       // slope of the belly: tilts the normal so the curvature shades
       vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 0.35;
       objectNormal = normalize(vec3(-slope.x, -slope.y, 1.0) * sign(normal.z + 0.001)); }
@@ -198,7 +198,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
     { vec2 st = uv; float g = uWindSpeed / 6.0;
       float belly = sin(3.14159 * st.x) * sin(3.14159 * st.y);
       float flutter = sin(uTime * 4.0 + st.y * 9.0 + st.x * 3.0) * 0.06 * (1.0 - st.x) * g + sin(uTime * 6.3 + st.x * 12.0) * 0.03 * g;
-      transformed.z += belly * (0.7 + 0.4 * g) * (0.9 + 0.1 * sin(uTime * 0.8)) + flutter;
+      transformed.z += belly * (1.1 + 0.5 * g) * (0.9 + 0.1 * sin(uTime * 0.8)) + flutter;
       transformed.y += belly * -0.12; }
     #endif
   `],

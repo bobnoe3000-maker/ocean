@@ -41,7 +41,7 @@ export class Lighting {
     cam.left = -half; cam.right = half; cam.top = half; cam.bottom = -half; cam.near = 200; cam.far = 1800;
     cam.updateProjectionMatrix();
     this.key.shadow.normalBias = 0.03 + zoom * 0.0009;
-    this.key.shadow.bias = -0.00025;
+    this.key.shadow.bias = -0.0005;
     setPCSSParams(cam.far - cam.near, half * 2, this.key.shadow.mapSize.x);
   }
 
@@ -93,12 +93,16 @@ export class Lighting {
     const horizonSide = skyCol(hz(perp, 0.14)).add(skyCol(hz(perp.clone().negate(), 0.14))).multiplyScalar(0.5);
     const horizonSun = skyCol(hz(dir, 0.10));
     const zenith = skyCol(new THREE.Vector3(0, 1, 0));
+    const avgUnused = zenith;
     if (spec.weather === 'fog') {
       // mist: bright, desaturated, lit by the whole sky and the sun
-      const avg = horizonSide.clone().multiplyScalar(0.55).add(zenith.multiplyScalar(0.25)).add(horizonSun.clone().multiplyScalar(0.2));
-      const l = 0.2126 * avg.x + 0.7152 * avg.y + 0.0722 * avg.z;
-      W.uFogSky.value.copy(avg).lerp(new THREE.Vector3(l, l, l), 0.4).multiplyScalar(0.42);
-      W.uFogSun.value.copy(horizonSun).multiplyScalar(0.7).add(E.clone().multiplyScalar(0.015));
+      // a sunlit bank: droplets are lit by the clear sun from above plus the whole sky, like a white cloud top
+      const sunClear = this.sunE.clone().multiplyScalar(1 / fogMul);
+      const bank = sunClear.multiplyScalar(0.55 * Math.max(sunDir.y, 0.12)).add(this.skyE).add(this.moonE.clone().multiplyScalar(1.5)).multiplyScalar(0.85 / Math.PI);
+      const l = 0.2126 * bank.x + 0.7152 * bank.y + 0.0722 * bank.z;
+      W.uFogSky.value.copy(bank).lerp(new THREE.Vector3(l, l, l), 0.35);
+      W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
+      void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
       W.uFogDensity.value = 0.05; W.uFogHeight.value = 16; W.uFogSunPow.value = 3; W.uFogPatch.value = 1;
     } else {
@@ -110,7 +114,7 @@ export class Lighting {
     const white = (v: THREE.Vector3) => (0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z) / Math.PI;
     // fog dims the sun but the eye does not fully compensate: key on the clear-sky sun
     const keyLum = white(this.sunE) / fogMul * (0.6 + 0.4 * fogMul) * Math.max(sunDir.y, 0.12) + white(this.moonE) * 2.5 + white(this.skyE) * 1.0 + 0.0004;
-    this.exposure = THREE.MathUtils.clamp(0.48 / keyLum, 0.05, 80);
+    this.exposure = THREE.MathUtils.clamp(0.38 / keyLum, 0.05, 80);
 
     // scotopic night: the eye trades brightness for sensitivity, the scene stays dark
     this.exposure *= 1 - 0.45 * this.night;

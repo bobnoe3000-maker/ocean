@@ -70,7 +70,7 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
       pushQuad([p0.clone().sub(side), p1.clone().sub(side), p1.clone().add(side), p0.clone().add(side)], [[0, 0], [0, 0.2], [0.1, 0.2], [0.1, 0]], [0.6, 0.55, 0.35], [0.6 + s / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + s / RSEG * 0.8], ph);
     }
     // leaflets
-    const LEAF = 20;
+    const LEAF = 30;
     for (let s = 1; s <= LEAF; s++) {
       const t = s / (LEAF + 1); const p = rachis(t); const tang = rachis(t + 0.01).sub(rachis(t - 0.01)).normalize();
       const sideV = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
@@ -79,7 +79,7 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
         const sweep = tang.clone().multiplyScalar(0.55).add(sideV.clone().multiplyScalar(sg)).normalize();
         const down = new THREE.Vector3(0, -1, 0).multiplyScalar(0.55 + (dead ? 0.4 : 0));
         const tipDir = sweep.clone().add(down).normalize();
-        const w = 0.055;
+        const w = 0.04;
         const across = sweep.clone().cross(tipDir).normalize().multiplyScalar(w);
         const tip = p.clone().addScaledVector(tipDir, len);
         const mid = p.clone().addScaledVector(tipDir, len * 0.5).add(across.clone().multiplyScalar(0.3));
