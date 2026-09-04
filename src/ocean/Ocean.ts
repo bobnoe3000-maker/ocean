@@ -122,14 +122,15 @@ export class Ocean {
           mat2 toWind = mat2(wd.x, -wd.y, wd.y, wd.x);   // rotates so x runs along the wind
           mat2 fromWind = mat2(wd.x, wd.y, -wd.y, wd.x);
           vec2 pw = toWind * P.xz;
-          float nearF = 1.0 - distF;
+          float dcam = length(P - cameraPosition);
+          float nearF = 1.0 - smoothstep(80.0, 260.0, dcam);
           float farF = smoothstep(0.35, 1.0, distF);
           vec3 n0 = texture2D(tWaterN, pw / vec2(140.0, 60.0) + vec2(t * 0.01, 0.0)).xyz * 2.0 - 1.0;
           vec3 n1 = texture2D(tWaterN, pw / vec2(26.0, 11.0) + vec2(t * 0.05, 0.0) + 0.3).xyz * 2.0 - 1.0;
           vec3 n2 = texture2D(tRipple, pw / vec2(7.5, 3.2) + vec2(t * 0.14, 0.02 * sin(t * 0.3))).xyz * 2.0 - 1.0;
           vec3 n3 = texture2D(tRipple, pw / vec2(2.4, 1.1) + vec2(t * 0.3, 0.0) + 0.6).xyz * 2.0 - 1.0;
           float glassy = smoothstep(1500.0, 6000.0, length(P - cameraPosition));
-          vec2 nx = (n0.xy * (0.5 + 0.5 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.55 * nearF + n3.xy * 0.25 * nearF * nearF) * (1.0 - 0.85 * glassy);
+          vec2 nx = (n0.xy * (0.5 + 0.5 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.5 * nearF + n3.xy * 0.22 * nearF * nearF) * (1.0 - 0.85 * glassy) * (1.0 - 0.5 * uNightF);
           nx = fromWind * nx;
           vec3 dn = normalize(vec3(nx.x * 1.3, 1.6, nx.y * 1.3));
           vec3 Nw = normalize(vWN);
@@ -149,7 +150,7 @@ export class Ocean {
           float steep = smoothstep(1.2, 3.5, length(vec2(gx, gz)));
           shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 6.0, depth)) * smoothstep(0.3, 0.7, foamTex + 0.25 * surge) * 0.95);
           vec4 fs = texture2D(tFoam, (toWind * P.xz) / vec2(24.0, 4.0) + vec2(t * 0.06, 0.0));
-          float crest = (1.0 - smoothstep(0.3, 0.58, vJ)) * smoothstep(0.55, 0.85, fs.r * 0.7 + foamTex * 0.3 + vCrest * 0.2) * 0.7;
+          float crest = (1.0 - smoothstep(0.2, 0.42, vJ)) * smoothstep(0.6, 0.88, fs.r * 0.7 + foamTex * 0.3 + vCrest * 0.2) * 0.7;
           vec2 hd = vec2(sin(uHull.w), -cos(uHull.w));
           float dh = sdCapsule(P.xz, uHull.xz + hd * uHull.y, uHull.xz - hd * uHull.y, uHullW);
           float hullFoam = (1.0 - smoothstep(-0.2, 1.0 + fo.g * 0.6, dh)) * smoothstep(0.35, 0.75, foamTex + 0.12 * sin(t * 1.3 + fo.g * 6.0)) * 0.85;
@@ -174,7 +175,7 @@ export class Ocean {
           vec3 V = normalize(cameraPosition - vWPos);
           float back = pow(clamp(dot(V, -uSunDir + waterN * 0.35), 0.0, 1.0), 4.0);
           float thick = smoothstep(0.0, 1.2, vCrest + 0.3) * smoothstep(0.0, 4.0, waterDepth);
-          totalEmissiveRadiance += uSSS * uSunColor * back * thick * 0.045 * (1.0 - waterFoam);
+          totalEmissiveRadiance += uSSS * uSunColor * back * thick * 0.02 * (1.0 - waterFoam);
           // sun glitter: extra sharp specular lobe from the finest normals
           vec3 Hh = normalize(V + uSunDir);
           float glit = pow(clamp(dot(waterN, Hh), 0.0, 1.0), 900.0) * smoothstep(0.0, 0.05, uSunDir.y);

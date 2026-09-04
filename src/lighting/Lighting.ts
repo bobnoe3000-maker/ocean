@@ -104,11 +104,11 @@ export class Lighting {
       W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
       void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
-      W.uFogDensity.value = 0.05; W.uFogHeight.value = 16; W.uFogSunPow.value = 3; W.uFogPatch.value = 1;
+      W.uFogDensity.value = 0.042; W.uFogHeight.value = 16; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = 0.0035;
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
-      W.uFogDensity.value = 0.00009; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0;
+      W.uFogDensity.value = 0.00009; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0; W.uFogHaze.value = 0.0;
     }
     // exposure: key on the brightest lambertian white in the scene
     const white = (v: THREE.Vector3) => (0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z) / Math.PI;
@@ -134,7 +134,7 @@ export class Lighting {
     if (this.envRT) this.envRT.dispose();
     this.envRT = this.pmrem.fromScene(s, 0.02, 1, 12000);
     this.scene.environment = this.envRT.texture;
-    this.scene.environmentIntensity = 1.6;
+    this.scene.environmentIntensity = 1.9;
     this.sky.uniforms.uIncludeSun.value = 1; this.sky.uniforms.uStars.value = 1;
     this.scene.add(this.sky.mesh);
   }

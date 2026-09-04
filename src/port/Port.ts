@@ -84,10 +84,10 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     }
     // cargo on the quay: barrels and crates in stacks, a fishing net heap, a hand cart
     for (const [deg, n] of [[44, 6], [70, 4], [108, 5], [126, 3]] as [number, number][]) {
-      for (let i = 0; i < n; i++) { const p = bayPt(deg + rng.range(-1.5, 1.5), R + 3 + rng.range(0, 3)); const wp = toW(p[0], p[1]); wp.y = y1 + 0.35;
+      for (let i = 0; i < n; i++) { const p = bayPt(deg + rng.range(-1.5, 1.5), R + 3 + rng.range(0, 3)); if (hf.height(p[0], p[1]) < 1.2) continue; const wp = toW(p[0], p[1]); wp.y = y1 + 0.35;
         if (rng.next() < 0.5) barrel(planks, iron, wp, rng); else { const s = rng.range(0.7, 1.1); planks.geo(box(s, s * 0.8, s, wp.x, wp.y + s * 0.4, wp.z, 1.2).rotateY(rng.range(0, 1.5)), [0.85, 0.8, 0.7]); } }
     }
-    for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
+    for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); if (hf.height(p[0], p[1]) < 1.2) continue; const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
     { const p = bayPt(38, R + 6); const wp = toW(p[0], p[1]); planks.geo(box(1.2, 0.6, 2.0, wp.x, y1 + 1.0, wp.z, 1), [0.6, 0.5, 0.4]); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x - 0.7, y1 + 0.85, wp.z)); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x + 0.7, y1 + 0.85, wp.z)); }
     // moored rowing boats along the quay
     for (const d of [58, 96, 124]) {
@@ -198,7 +198,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       stone.quad(P(t, -4.2, 0.4), P(t, -7.5, -4), P(t1, -7.5, -4), P(t1, -4.2, 0.4), [[uu, 1.1], [uu, 0], [uu1, 0], [uu1, 1.1]], [0.5, 0.55, 0.5]);
       stone.quad(P(t, 3, 2.0), P(t1, 3, 2.0), P(t1, 4.2, 0.4), P(t, 4.2, 0.4), [[uu, 1.6], [uu1, 1.6], [uu1, 1.1], [uu, 1.1]]);
       stone.quad(P(t, 4.2, 0.4), P(t1, 4.2, 0.4), P(t1, 7.5, -4), P(t, 7.5, -4), [[uu, 1.1], [uu1, 1.1], [uu1, 0], [uu, 0]], [0.5, 0.55, 0.5]);
-      for (let k = 0; k < 5; k++) { const sd = rng.next() > 0.5 ? 1 : -1; const bp = P(t + rng.range(0, 6), sd * rng.range(3.6, 6.5), rng.range(-0.6, 1.2)); const r = rng.range(0.6, 1.4); stone.geo(new THREE.IcosahedronGeometry(r, 1).scale(1, 0.6, 0.85).rotateY(rng.range(0, 3)).translate(bp.x, bp.y, bp.z), [0.72, 0.72, 0.7]); }
+      for (let k = 0; k < 5; k++) { const sd = rng.next() > 0.5 ? 1 : -1; const bp = P(t + rng.range(0, 6), sd * rng.range(3.6, 6.5), rng.range(-0.6, 1.2)); const r = rng.range(0.6, 1.4); { const rg = new THREE.IcosahedronGeometry(r, 1); const pa = rg.attributes.position as THREE.BufferAttribute; for (let vi = 0; vi < pa.count; vi++) { const f = 0.75 + rng.next() * 0.5; pa.setXYZ(vi, pa.getX(vi) * f, pa.getY(vi) * (0.5 + rng.next() * 0.3), pa.getZ(vi) * f); } rg.computeVertexNormals(); stone.geo(rg.rotateY(rng.range(0, 3)).translate(bp.x, bp.y, bp.z), [0.72, 0.72, 0.7]); } }
       if (t + 6 >= len) stone.quad(P(t1, -3, 2.0), P(t1, -7.5, -4), P(t1, 7.5, -4), P(t1, 3, 2.0), [[0, 1.6], [0, 0], [3, 0], [3, 1.6]]);
     }
     // lighthouse
@@ -275,10 +275,10 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     },
     apply(spec: SceneSpec, L: Lighting) {
       night = L.night;
-      lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 28 : 7) * night; });
+      lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 12 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night;
       const fogF = spec.weather === 'fog' ? 1 : 0;
-      haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.006 + 0.03 * fogF);
+      haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
       smoke.material.uniforms.uLight.value.copy(L.sunE).multiplyScalar(0.7).add(L.skyE.clone().multiplyScalar(0.6)).add(L.moonE.clone().multiplyScalar(0.5));
       void spec;
     },
@@ -386,16 +386,17 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         iron.geo(tube(P(bx0, q.y0 + 0.95, -bd / depth), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx0, q.y0 + 0.95, 0), P(bx0, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx1, q.y0 + 0.95, 0), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5));
       }
       if (q.door) {
-        planks.quad(P(q.x0, q.y0, 0.9), P(q.x1, q.y0, 0.9), P(q.x1, q.y1, 0.9), P(q.x0, q.y1, 0.9), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], [0.45, 0.35, 0.28]);
+        { const dc = rng.pick([[0.55, 0.42, 0.3], [0.32, 0.45, 0.42], [0.5, 0.52, 0.5], [0.42, 0.3, 0.22], [0.28, 0.36, 0.5]]); planks.quad(P(q.x0, q.y0, 0.6), P(q.x1, q.y0, 0.6), P(q.x1, q.y1, 0.6), P(q.x0, q.y1, 0.6), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], dc);
+          stone.quad(P(q.x0 - 0.12, q.y1, -0.05), P(q.x1 + 0.12, q.y1, -0.05), P(q.x1 + 0.12, q.y1 + 0.2, -0.05), P(q.x0 - 0.12, q.y1 + 0.2, -0.05), [[0, 0], [0.4, 0], [0.4, 0.06], [0, 0.06]], [0.78, 0.76, 0.72]); }
         // step
         plaster.quad(P(q.x0 - 0.3, -0.02, -1.6), P(q.x1 + 0.3, -0.02, -1.6), P(q.x1 + 0.3, 0.16, -1.6), P(q.x0 - 0.3, 0.16, -1.6), [[0, 0.6], [0.3, 0.6], [0.3, 0.62], [0, 0.62]], [0.75, 0.73, 0.68]);
         plaster.quad(P(q.x0 - 0.3, 0.16, -1.6), P(q.x1 + 0.3, 0.16, -1.6), P(q.x1 + 0.3, 0.16, 0), P(q.x0 - 0.3, 0.16, 0), [[0, 0.6], [0.3, 0.6], [0.3, 0.65], [0, 0.65]], [0.75, 0.73, 0.68]);
       } else {
         { const on = rng.next() < 0.62; const warm = rng.range(0.7, 1.15); glass.quad(P(q.x0, q.y0, 0.85), P(q.x1, q.y0, 0.85), P(q.x1, q.y1, 0.85), P(q.x0, q.y1, 0.85), [[0, 0], [1, 0], [1, 1], [0, 1]], on ? [warm, warm * rng.range(0.85, 1.0), warm * 0.9] : [0.05, 0.05, 0.06]); }
-        // mullions
+        // mullions on some houses only
         const mx = (q.x0 + q.x1) / 2, my = (q.y0 + q.y1) / 2;
-        paint.quad(P(mx - 0.03, q.y0, 0.8), P(mx + 0.03, q.y0, 0.8), P(mx + 0.03, q.y1, 0.8), P(mx - 0.03, q.y1, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
-        paint.quad(P(q.x0, my - 0.03, 0.8), P(q.x1, my - 0.03, 0.8), P(q.x1, my + 0.03, 0.8), P(q.x0, my + 0.03, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
+        if (style.winW > 1.0) paint.quad(P(mx - 0.03, q.y0, 0.8), P(mx + 0.03, q.y0, 0.8), P(mx + 0.03, q.y1, 0.8), P(mx - 0.03, q.y1, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
+        if (style.winW > 1.0) paint.quad(P(q.x0, my - 0.03, 0.8), P(q.x1, my - 0.03, 0.8), P(q.x1, my + 0.03, 0.8), P(q.x0, my + 0.03, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
         // sill
         plaster.quad(P(q.x0 - 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 + 0.02, 0.0), P(q.x0 - 0.08, q.y0 + 0.02, 0.0), [[0, 0.6], [0.2, 0.6], [0.2, 0.62], [0, 0.62]], [0.8, 0.78, 0.72]);
         // shutters: open, angled slightly off the wall; some closed; some houses have none
@@ -440,7 +441,8 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
     const cx = rng.range(-w / 2 + 1.2, w / 2 - 1.2); const cz = rng.range(-0.8, 0.8);
     const chTop = ridgeY + 1.3;
     plaster.geo(box(0.7, 2.6, 0.7, cx, chTop - 1.3, cz, 0.3).rotateY(rot).translate(c.x, 0, c.z), wallTint);
-    iron.geo(box(0.9, 0.12, 0.9, cx, chTop + 0.06, cz, 1).rotateY(rot).translate(c.x, 0, c.z));
+    tiles.geo(box(0.9, 0.14, 0.9, cx, chTop + 0.06, cz, 0.6).rotateY(rot).translate(c.x, 0, c.z), [0.9, 0.85, 0.8]);
+    plaster.geo(box(0.5, 0.3, 0.5, cx, chTop + 0.28, cz, 1).rotateY(rot).translate(c.x, 0, c.z), [0.35, 0.3, 0.28]);
     if (rng.next() < 0.7) emitters.push(RR(cx, chTop + 0.2, cz));
   }
 }
@@ -463,10 +465,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.5 + a * 2.6;
+        float size = 0.7 + a * 3.6;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.42;
+        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.5;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `

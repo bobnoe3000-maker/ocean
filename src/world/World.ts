@@ -80,7 +80,7 @@ export class World {
   placeCamera(): void {
     const pitch = this.spec.pitch * Math.PI / 180;
     const [tx, tz] = vistaToWorld(TARGET[0] + this.spec.lu, TARGET[1] + this.spec.lw); this.target.set(tx, 0, tz);
-    const aspect = Math.max(this.camera.aspect, 390 / 844);
+    const aspect = this.spec.device === 'phone-landscape' ? 390 / 844 : Math.max(this.camera.aspect, 390 / 844);
     const halfH = Math.tan(this.camera.fov * Math.PI / 360);
     const D = this.spec.zoom / (2 * halfH * aspect);
     const f = new THREE.Vector3(FORWARD[0], 0, FORWARD[1]).applyAxisAngle(new THREE.Vector3(0, 1, 0), -this.spec.yaw * Math.PI / 180);

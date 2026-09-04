@@ -220,7 +220,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const ensign = new THREE.Mesh(sailGeometry(1.9, 1.2, 10, 'square').translate(0.95, 0, 0), flagMat); ensign.position.set(0, DECK + 15.6, masts[1].z - 8.5);
   for (const f of [pennant, ensign]) { f.castShadow = true; ship.add(f); }
   // cloth animation: sails billow to leeward and flutter; flags stream downwind
-  injectWorld(canvasMat, { uniforms: { uBillow: { value: 1 } }, vertexPars: 'attribute vec2 aCloth; varying vec2 vCloth;', fragmentPars: 'varying vec2 vCloth;', replace: [
+  injectWorld(canvasMat, { uniforms: { uBillow: { value: 1 } }, vertexPars: 'attribute vec2 aCloth; varying vec2 vCloth; varying vec2 vSailUv;', fragmentPars: 'varying vec2 vCloth; varying vec2 vSailUv;', replace: [
     ['#include <beginnormal_vertex>', /* glsl */ `
     vec3 objectNormal = vec3( normal );
     #ifdef USE_UV
@@ -229,7 +229,12 @@ export async function buildBrig(seed: number): Promise<Extra> {
       vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 1.1;
       objectNormal = normalize(vec3(-slope.x, -slope.y, 1.0) * sign(normal.z + 0.001)); }
     #endif
-    vCloth = aCloth;`],
+    vCloth = aCloth;
+    #ifdef USE_UV
+    vSailUv = uv;
+    #else
+    vSailUv = vec2(0.5);
+    #endif`],
     ['#include <begin_vertex>', /* glsl */ `
     vec3 transformed = vec3(position);
     #ifdef USE_UV
@@ -248,7 +253,8 @@ export async function buildBrig(seed: number): Promise<Extra> {
       float panel = 1.0 - 0.14 * smoothstep(0.93, 1.0, abs(fract(vCloth.x * 3.0) - 0.5) * 2.0);
       float reef = 1.0 - 0.1 * (smoothstep(0.02, 0.0, abs(fract(vCloth.y * 0.45 + 0.2) - 0.5) - 0.44));
       float foot = 1.0 - 0.12 * (1.0 - smoothstep(0.0, 0.35, vCloth.y / max(vCloth.y + 0.001, 1.0)));
-      diffuseColor *= sampledDiffuseColor * mix(vec4(1.0), stain * 1.15, 0.6) * panel * reef * foot;
+      float cloth_ao = 1.0 - 0.28 * (1.0 - smoothstep(0.0, 0.12, vSailUv.x)) - 0.22 * smoothstep(0.9, 1.0, vSailUv.y) - 0.1 * (1.0 - smoothstep(0.0, 0.08, vSailUv.y));
+      diffuseColor *= sampledDiffuseColor * mix(vec4(1.0), stain * 1.15, 0.6) * panel * reef * foot * cloth_ao;
     #endif`],
     ['#include <normal_fragment_maps>', /* glsl */ `
     #ifdef USE_NORMALMAP

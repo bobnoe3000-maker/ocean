@@ -101,6 +101,7 @@ export class Terrain {
           // outcrops: patches of bare rock on the ridges and shoulders, from a low-frequency cell field
           float outcrop = smoothstep(0.66, 0.78, nz.a * 0.6 + nz3.b * 0.4 + macro * 0.15) * smoothstep(0.03, 0.1, slope + (nz2.r - 0.5) * 0.1) * smoothstep(4.0, 12.0, P.y);
           rockW = max(rockW, outcrop);
+          rockW = max(rockW, smoothstep(26.0, 40.0, P.y + (nz2.g - 0.5) * 10.0) * smoothstep(0.02, 0.08, slope));
           // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
@@ -146,7 +147,7 @@ export class Terrain {
           albedo *= 1.0 - wallShade * 0.35;
           // wrack line: dark weed and debris left at the high-tide mark
           float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;
-          albedo = mix(albedo, vec3(0.22, 0.17, 0.11), wrack * 0.8);
+          albedo = mix(albedo, vec3(0.2, 0.15, 0.1), wrack * 0.95);
           rough = mix(rough, 0.6, wrack * 0.5);
           // underwater: darker, smoother, slightly green
           float under = 1.0 - smoothstep(-0.3, 0.05, h);

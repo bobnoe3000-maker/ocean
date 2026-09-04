@@ -96,3 +96,12 @@ Recorded as they were made. Newest at the bottom.
     keeps a fixed yaw, but the atmosphere lines (sun disc, horizon gradient,
     glitter path) can only be judged looking toward the sun, e.g.
     `pitch=14 yaw=135 zoom=300` at 17:30.
+24. **The cliff rises behind a shore apron.** Any slope steeper than the mesh
+    can resolve (about 1:1.5 at 2.2 m vertices) crosses the water plane as a
+    sawtooth. The plateau term is now masked to zero within 34 m of the coast,
+    so the shore is always a gentle rock-and-sand apron and the cliff face
+    starts inland. Geometric terrace steps were removed for the same reason.
+25. **Fog bank plus haze.** The patchy bank alone made the far hills sharper
+    than the near water (critic round 3 read it as inverted depth). A uniform
+    haze term (0.0035/m, about 850 m visibility) restores distance fall-off
+    underneath the bank.
