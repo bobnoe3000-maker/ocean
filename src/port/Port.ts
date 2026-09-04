@@ -74,10 +74,12 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       iron.geo(new THREE.SphereGeometry(0.2, 8, 6).translate(wp.x, y1 + 0.75, wp.z));
       if ((d - 40) % 20 === 0) {
         const lp = bayPt(d, R + 5.5); const lw = toW(lp[0], lp[1]);
-        iron.geo(new THREE.CylinderGeometry(0.06, 0.09, 3.4, 6).translate(lw.x, y1 + 1.7, lw.z));
-        iron.geo(box(0.34, 0.5, 0.34, lw.x, y1 + 3.6, lw.z, 1));
-        glass.geo(box(0.26, 0.34, 0.26, lw.x, y1 + 3.55, lw.z, 1));
-        if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x, y1 + 3.4, lw.z); lights.push(l); }
+        iron.geo(new THREE.CylinderGeometry(0.07, 0.12, 3.6, 7).translate(lw.x, y1 + 1.8, lw.z));
+        iron.geo(new THREE.CylinderGeometry(0.22, 0.26, 0.25, 8).translate(lw.x, y1 + 0.12, lw.z));
+        iron.geo(box(0.5, 0.08, 0.08, lw.x + 0.2, y1 + 3.5, lw.z, 1)); iron.geo(box(0.08, 0.5, 0.08, lw.x + 0.45, y1 + 3.3, lw.z, 1));
+        iron.geo(box(0.46, 0.14, 0.46, lw.x + 0.45, y1 + 3.62, lw.z, 1)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
+        glass.geo(box(0.3, 0.5, 0.3, lw.x + 0.45, y1 + 3.3, lw.z, 1));
+        if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x + 0.45, y1 + 3.2, lw.z); lights.push(l); }
       }
     }
     // cargo on the quay: barrels and crates in stacks, a fishing net heap, a hand cart
@@ -99,7 +101,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   // ------------------------------------------------------------ dock
   {
     const root = bayPt(112, 78.5); const dir = new THREE.Vector2(-Math.cos(112 * Math.PI / 180), -Math.sin(112 * Math.PI / 180)); // toward the bay centre
-    const len = 22, wid = 4.2, y = 1.35;
+    const len = 34, wid = 4.4, y = 1.35;
     const side = new THREE.Vector2(-dir.y, dir.x);
     const P = (t: number, s: number, yy: number) => { const u = root[0] + dir.x * t + side.x * s, w = root[1] + dir.y * t + side.y * s; const v = toW(u, w); v.y = yy; return v; };
     // deck planks (crosswise), gaps included via uv
@@ -111,6 +113,9 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       planks.geo(tube(P(0, s, y - 0.2), P(len, s, y - 0.2), 0.16, 0.16, 5, 6), [0.7, 0.7, 0.7]);
       for (let t = 1; t < len; t += 3.5) { const top = P(t, s + (s < 0 ? -0.1 : 0.1), y + 0.5), bot = P(t, s + (s < 0 ? -0.1 : 0.1), -6); planks.geo(tube(bot, top, 0.24, 0.2, 7, 4), [0.55, 0.5, 0.45]); }
     }
+    // T head: a cross piece at the end so a boat can lie alongside
+    planks.quad(P(len - 0.5, -wid / 2 - 5, y), P(len + 3.5, -wid / 2 - 5, y), P(len + 3.5, wid / 2 + 5, y), P(len - 0.5, wid / 2 + 5, y), [[0, 0], [0, 2.7], [wid / 1.5 + 6.6, 2.7], [wid / 1.5 + 6.6, 0]], [1.05, 1.02, 0.95]);
+    for (const sPos of [-wid / 2 - 4.6, wid / 2 + 4.6]) for (const tt of [len + 0.2, len + 3.0]) planks.geo(tube(P(tt, sPos, -6), P(tt, sPos, y + 0.5), 0.24, 0.2, 7, 4), [0.55, 0.5, 0.45]);
     // cross braces near the end, bollards, lantern, barrels, crates, rope coils
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, 1.4, y + 0.3).x, y + 0.3, P(len - 1, 1.4, y + 0.3).z));
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, -1.4, y + 0.3).x, y + 0.3, P(len - 1, -1.4, y + 0.3).z));
@@ -140,7 +145,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       const [u, ww] = bayPt(d + dd / 2, r); const c = toW(u, ww);
       const toCentre = toW(LAYOUT.bayC[0], LAYOUT.bayC[1]).sub(c); const rot = Math.atan2(toCentre.x, toCentre.z) + rng.range(-0.03, 0.03);
       const floors = row.floorsMin + rng.int(row.floorsMax - row.floorsMin + 1);
-      house(plaster, tiles, planks, glass, paint, iron, hf, c, rot, w, rng.range(row.depth[0], row.depth[1]), floors, hexc(rng.pick(tints)), rng, emitters, windows);
+      house(plaster, tiles, planks, glass, paint, iron, stone, hf, c, rot, w, rng.range(row.depth[0], row.depth[1]), floors, hexc(rng.pick(tints)), rng, emitters, windows);
       inBlock++;
       d += dd + 0.15;
       if (inBlock >= 2 + rng.int(3)) { d += (2.2 + rng.range(0, 2)) / (row.r * Math.PI / 180); inBlock = 0; } // lane
@@ -149,7 +154,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   // quay warehouse: long, low, few windows, big doors, at the west end of the quay
   {
     const [u, w] = bayPt(36, 95); const c = toW(u, w); const toCentre = toW(LAYOUT.bayC[0], LAYOUT.bayC[1]).sub(c); const rot = Math.atan2(toCentre.x, toCentre.z);
-    house(plaster, tiles, planks, glass, paint, iron, hf, c, rot, 16, 9, 2, hexc(0xd9cbb0), rng, emitters, windows);
+    house(plaster, tiles, planks, glass, paint, iron, stone, hf, c, rot, 16, 9, 2, hexc(0xd9cbb0), rng, emitters, windows);
   }
   // campanile behind the town: square tower, string courses, arched belfry openings, tiled pyramid, cross
   {
@@ -189,8 +194,11 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     for (let t = 0; t < len; t += 6) {
       const t1 = Math.min(len, t + 6); const uu = t / 4, uu1 = t1 / 4;
       stone.quad(P(t, -3, 2.0), P(t1, -3, 2.0), P(t1, 3, 2.0), P(t, 3, 2.0), [[uu * 2.5, 0.5], [uu1 * 2.5, 0.5], [uu1 * 2.5, 4.2], [uu * 2.5, 4.2]], [0.85, 0.85, 0.83]);
-      stone.quad(P(t, -3, 2.0), P(t, -7.5, -4), P(t1, -7.5, -4), P(t1, -3, 2.0), [[uu, 1.6], [uu, 0], [uu1, 0], [uu1, 1.6]]);
-      stone.quad(P(t, 3, 2.0), P(t1, 3, 2.0), P(t1, 7.5, -4), P(t, 7.5, -4), [[uu, 1.6], [uu1, 1.6], [uu1, 0], [uu, 0]]);
+      stone.quad(P(t, -3, 2.0), P(t, -4.2, 0.4), P(t1, -4.2, 0.4), P(t1, -3, 2.0), [[uu, 1.6], [uu, 1.1], [uu1, 1.1], [uu1, 1.6]]);
+      stone.quad(P(t, -4.2, 0.4), P(t, -7.5, -4), P(t1, -7.5, -4), P(t1, -4.2, 0.4), [[uu, 1.1], [uu, 0], [uu1, 0], [uu1, 1.1]], [0.5, 0.55, 0.5]);
+      stone.quad(P(t, 3, 2.0), P(t1, 3, 2.0), P(t1, 4.2, 0.4), P(t, 4.2, 0.4), [[uu, 1.6], [uu1, 1.6], [uu1, 1.1], [uu, 1.1]]);
+      stone.quad(P(t, 4.2, 0.4), P(t1, 4.2, 0.4), P(t1, 7.5, -4), P(t, 7.5, -4), [[uu, 1.1], [uu1, 1.1], [uu1, 0], [uu, 0]], [0.5, 0.55, 0.5]);
+      for (let k = 0; k < 5; k++) { const sd = rng.next() > 0.5 ? 1 : -1; const bp = P(t + rng.range(0, 6), sd * rng.range(3.6, 6.5), rng.range(-0.6, 1.2)); const r = rng.range(0.6, 1.4); stone.geo(new THREE.IcosahedronGeometry(r, 1).scale(1, 0.6, 0.85).rotateY(rng.range(0, 3)).translate(bp.x, bp.y, bp.z), [0.72, 0.72, 0.7]); }
       if (t + 6 >= len) stone.quad(P(t1, -3, 2.0), P(t1, -7.5, -4), P(t1, 7.5, -4), P(t1, 3, 2.0), [[0, 1.6], [0, 0], [3, 0], [3, 1.6]]);
     }
     // lighthouse
@@ -238,6 +246,16 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   const mk = (gb: GB, mat: THREE.Material, shadow = true) => { const g = gb.build(); if (!g) return; const m = new THREE.Mesh(g, mat); m.castShadow = shadow; m.receiveShadow = true; m.frustumCulled = false; if (mat === clothMat) m.customDepthMaterial = makeDepthMaterial(clothMat); group.add(m); };
   mk(plaster, plasterMat); mk(tiles, tilesMat); mk(planks, planksMat); mk(stone, stoneMat); mk(iron, ironMat); mk(paint, paintMat); mk(glass, glassMat, false); mk(rope, ropeMat, false); mk(cloth, clothMat);
   for (const l of lights) group.add(l);
+  const haloTex = smokeTex;
+  const haloMat = new THREE.SpriteMaterial({ map: haloTex, color: 0xffb45a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0 });
+  const halos: THREE.Sprite[] = lights.map((l, i) => { const sp = new THREE.Sprite(haloMat.clone()); sp.position.copy(l.position); const sc = i === lights.length - 1 ? 14 : 4; sp.scale.set(sc, sc, 1); group.add(sp); return sp; });
+  // lighthouse beam: a long translucent wedge that sweeps
+  // beam alpha falls off along its length and toward its edges (a 1D gradient in uv.y drives opacity)
+  const grad = new Uint8Array(256 * 4); for (let i = 0; i < 256; i++) { const t = i / 255; const a = Math.pow(1 - t, 2.2) * 255; grad.set([255, 255, 255, Math.round(a)], i * 4); }
+  const gradTex = new THREE.DataTexture(grad, 1, 256, THREE.RGBAFormat); gradTex.needsUpdate = true;
+  const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff2c8, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, alphaMap: gradTex });
+  const beamGeo = new THREE.CylinderGeometry(0.6, 12, 160, 14, 1, true).rotateX(-Math.PI / 2).translate(0, 0, -80);
+  const beam = new THREE.Mesh(beamGeo, beamMat); beam.position.copy(lights[lights.length - 1].position); group.add(beam);
 
   // ------------------------------------------------------------ smoke
   const smoke = makeSmoke(emitters, smokeTex); group.add(smoke.points);
@@ -245,19 +263,22 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   const gulls = makeGulls(rng); group.add(gulls.group);
 
   void windows;
-  let night = 0;
+  let night = 0; let haloBase = 0; let beamBase = 0;
   return {
     group,
     update(t) {
       smoke.update(t);
       gulls.update(t);
       lights.forEach((l, i) => { l.intensity = l.userData.base * (0.9 + 0.1 * Math.sin(t * (9 + i) + i * 2) * Math.sin(t * 5.3 + i)); });
+      beam.rotation.y = t * 0.5; beamMat.opacity = beamBase; halos.forEach((h, i) => { (h.material as THREE.SpriteMaterial).opacity = haloBase * (i === halos.length - 1 ? 0.6 : 1) * (0.9 + 0.1 * Math.sin(t * 7 + i)); });
       void night;
     },
     apply(spec: SceneSpec, L: Lighting) {
       night = L.night;
       lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 28 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night;
+      const fogF = spec.weather === 'fog' ? 1 : 0;
+      haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.006 + 0.03 * fogF);
       smoke.material.uniforms.uLight.value.copy(L.sunE).multiplyScalar(0.7).add(L.skyE.clone().multiplyScalar(0.6)).add(L.moonE.clone().multiplyScalar(0.5));
       void spec;
     },
@@ -297,13 +318,14 @@ function flag(cloth: GB, at: THREE.Vector3, w: number, h: number, col: number[],
 }
 
 // A plastered house: walls with real window recesses, shutters, door, sill, gabled tile roof with eaves, chimney.
-function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: GB, hf: Heightfield, c: THREE.Vector3, rot: number, w: number, d: number, floors: number, tint: number[], rng: Rng, emitters: THREE.Vector3[], windows: number[]): void {
+function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: GB, stone: GB, hf: Heightfield, c: THREE.Vector3, rot: number, w: number, d: number, floors: number, tint: number[], rng: Rng, emitters: THREE.Vector3[], windows: number[]): void {
   const R = (x: number, y: number, z: number) => { const p = V(x, y, z); p.applyAxisAngle(V(0, 1, 0), rot); return p.add(c); };
   const corners = [R(-w / 2, 0, -d / 2), R(w / 2, 0, -d / 2), R(w / 2, 0, d / 2), R(-w / 2, 0, d / 2)];
   const gh = corners.map((p) => hf.heightWorld(p.x, p.z)); const floorY = Math.max(...gh) + 0.12, minY = Math.min(...gh) - 1.5;
   const H = floors * 3.1; const top = floorY + H;
   const shutterCol = hexc(rng.pick([0x3f6b5a, 0x5a6f8c, 0x7a4a3a, 0x8a8f7a, 0x2f4f6f]));
   const wallTint = tint;
+  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.45, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
   // foundation (stone-ish tint plaster)
   plaster.geo(box(w + 0.1, floorY - minY, d + 0.1, 0, (floorY + minY) / 2, 0, 0.25).rotateY(rot).translate(c.x, 0, c.z), [0.7, 0.68, 0.62]);
   // walls with windows
@@ -321,7 +343,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
     for (let f = 0; f < floors; f++) for (let k = 0; k < nWin; k++) {
       if (rng.next() < 0.15 && !(wl.front && f === 0)) continue;
       const cx = spacing * (k + 0.5); const door = wl.front && f === 0 && k === Math.floor(nWin / 2);
-      const ww = door ? 1.1 : 0.95, wh = door ? 2.2 : 1.35, wy = door ? 0 : f * 3.1 + 1.0;
+      const ww = door ? 1.1 : style.winW, wh = door ? 2.2 : style.winH, wy = door ? 0 : f * 3.1 + (style.balconies && f > 0 ? 0.3 : 1.0);
       cuts.push({ x0: cx - ww / 2, x1: cx + ww / 2, y0: wy, y1: wy + wh, door });
     }
     // wall panels: strips between cuts (column split), simple and robust
@@ -346,6 +368,23 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
       plaster.quad(P(q.x0, q.y0, 0), P(q.x0, q.y1, 0), P(q.x0, q.y1, 1), P(q.x0, q.y0, 1), [[0, 0.5], [0.1, 0.5], [0.1, 0.55], [0, 0.55]], wallTint);
       plaster.quad(P(q.x1, q.y0, 1), P(q.x1, q.y1, 1), P(q.x1, q.y1, 0), P(q.x1, q.y0, 0), [[0, 0.5], [0.1, 0.5], [0.1, 0.55], [0, 0.55]], wallTint);
       plaster.quad(P(q.x0, q.y1, 0), P(q.x1, q.y1, 0), P(q.x1, q.y1, 1), P(q.x0, q.y1, 1), [[0, 0.5], [0.2, 0.5], [0.2, 0.55], [0, 0.55]], wallTint);
+      if (style.arched && !q.door) {
+        // arched head: a half-disc of plaster over the opening and a stone keystone line
+        const mx = (q.x0 + q.x1) / 2, rr = (q.x1 - q.x0) / 2;
+        for (let k = 0; k < 6; k++) { const a0 = Math.PI * k / 6, a1 = Math.PI * (k + 1) / 6;
+          plaster.tri(P(mx, q.y1, 0.02), P(mx + Math.cos(a1) * rr, q.y1 + Math.sin(a1) * rr, 0.02), P(mx + Math.cos(a0) * rr, q.y1 + Math.sin(a0) * rr, 0.02), [[0.5, 0.5], [0.5, 0.5], [0.5, 0.5]], [0.2, 0.18, 0.16]); }
+        stone.quad(P(mx - rr - 0.1, q.y1 + rr, -0.06), P(mx + rr + 0.1, q.y1 + rr, -0.06), P(mx + rr + 0.1, q.y1 + rr + 0.18, -0.06), P(mx - rr - 0.1, q.y1 + rr + 0.18, -0.06), [[0, 0], [0.5, 0], [0.5, 0.05], [0, 0.05]], [0.8, 0.78, 0.74]);
+      }
+      if (style.balconies && !q.door && q.y0 > 2.0) {
+        // balcony: stone slab, iron rail with balusters
+        const bx0 = q.x0 - 0.35, bx1 = q.x1 + 0.35, bd = 0.9;
+        stone.quad(P(bx0, q.y0 - 0.02, 0), P(bx1, q.y0 - 0.02, 0), P(bx1, q.y0 - 0.02, -bd / depth), P(bx0, q.y0 - 0.02, -bd / depth), [[0, 0], [0.6, 0], [0.6, 0.4], [0, 0.4]], [0.82, 0.8, 0.76]);
+        stone.quad(P(bx0, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.02, -bd / depth), P(bx0, q.y0 - 0.02, -bd / depth), [[0, 0], [0.6, 0], [0.6, 0.05], [0, 0.05]], [0.7, 0.68, 0.64]);
+        const rail = (x: number, zf: number) => { const a = P(x, q.y0, zf), b = P(x, q.y0 + 0.95, zf); iron.geo(tube(a, b, 0.02, 0.02, 4)); };
+        for (let k = 0; k <= 6; k++) rail(bx0 + (bx1 - bx0) * k / 6, -bd / depth);
+        rail(bx0, -bd / depth * 0.5); rail(bx1, -bd / depth * 0.5);
+        iron.geo(tube(P(bx0, q.y0 + 0.95, -bd / depth), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx0, q.y0 + 0.95, 0), P(bx0, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx1, q.y0 + 0.95, 0), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5));
+      }
       if (q.door) {
         planks.quad(P(q.x0, q.y0, 0.9), P(q.x1, q.y0, 0.9), P(q.x1, q.y1, 0.9), P(q.x0, q.y1, 0.9), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], [0.45, 0.35, 0.28]);
         // step
@@ -359,8 +398,9 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         paint.quad(P(q.x0, my - 0.03, 0.8), P(q.x1, my - 0.03, 0.8), P(q.x1, my + 0.03, 0.8), P(q.x0, my + 0.03, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
         // sill
         plaster.quad(P(q.x0 - 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 + 0.02, 0.0), P(q.x0 - 0.08, q.y0 + 0.02, 0.0), [[0, 0.6], [0.2, 0.6], [0.2, 0.62], [0, 0.62]], [0.8, 0.78, 0.72]);
-        // shutters: open, angled slightly off the wall; some closed
+        // shutters: open, angled slightly off the wall; some closed; some houses have none
         const closed = rng.next() < 0.25;
+        if (style.noShutters) { windows.push(1); continue; }
         const sw = (q.x1 - q.x0) / 2;
         for (const side of [-1, 1]) {
           const hx = side < 0 ? q.x0 : q.x1;

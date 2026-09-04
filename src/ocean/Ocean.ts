@@ -103,7 +103,7 @@ export class Ocean {
         ['#include <beginnormal_vertex>', 'vec3 objectNormal = vec3(0.0, 1.0, 0.0);'],
       ],
       fragmentPars: /* glsl */ `
-        uniform sampler2D tWaterN, tRipple, tFoam, tNoise; uniform vec4 uHull; uniform float uHullW; uniform float uNightF, uFogF;
+        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;
         float sdCapsule(vec2 p, vec2 a, vec2 b, float r) { vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
@@ -116,16 +116,21 @@ export class Ocean {
           vec2 wd = normalize(uWindDir);
           float depth = max(vDepth, 0.0);
           // detail normals: two scales scrolled with the wind, weaker in the far field
-          float distF = clamp(length(P - cameraPosition) / 900.0, 0.0, 1.0);
+          float distF = clamp((length(P - cameraPosition) - 120.0) / 700.0, 0.0, 1.0);
           // four octaves from two textures, rotated against each other so no direction repeats
-          mat2 r1 = mat2(0.82, 0.57, -0.57, 0.82), r2 = mat2(0.31, -0.95, 0.95, 0.31);
-          vec3 n1 = texture2D(tWaterN, P.xz / 17.0 + wd * t * 0.035).xyz * 2.0 - 1.0;
-          vec3 n2 = texture2D(tWaterN, r1 * P.xz / 5.3 + wd * t * 0.09).xyz * 2.0 - 1.0;
-          vec3 n3 = texture2D(tRipple, r2 * P.xz / 2.1 + wd * t * 0.16).xyz * 2.0 - 1.0;
-          vec3 n4 = texture2D(tRipple, r1 * P.xz / 0.62 + wd * t * 0.28).xyz * 2.0 - 1.0;
+          // wind-aligned frame: detail ripples are stretched along the wind (streaks), never a lattice
+          mat2 toWind = mat2(wd.x, -wd.y, wd.y, wd.x);   // rotates so x runs along the wind
+          mat2 fromWind = mat2(wd.x, wd.y, -wd.y, wd.x);
+          vec2 pw = toWind * P.xz;
           float nearF = 1.0 - distF;
-          vec2 nx = n1.xy * 1.2 + (r1 * n2.xy) * 0.9 + (r2 * n3.xy) * 0.45 * nearF + (r1 * n4.xy) * 0.18 * nearF;
-          vec3 dn = normalize(vec3(nx.x * 1.35, (n1.z + n2.z + n3.z + n4.z) * 1.25, nx.y * 1.35));
+          float farF = smoothstep(0.35, 1.0, distF);
+          vec3 n0 = texture2D(tWaterN, pw / vec2(140.0, 60.0) + vec2(t * 0.01, 0.0)).xyz * 2.0 - 1.0;
+          vec3 n1 = texture2D(tWaterN, pw / vec2(26.0, 11.0) + vec2(t * 0.05, 0.0) + 0.3).xyz * 2.0 - 1.0;
+          vec3 n2 = texture2D(tRipple, pw / vec2(7.5, 3.2) + vec2(t * 0.14, 0.02 * sin(t * 0.3))).xyz * 2.0 - 1.0;
+          vec3 n3 = texture2D(tRipple, pw / vec2(2.4, 1.1) + vec2(t * 0.3, 0.0) + 0.6).xyz * 2.0 - 1.0;
+          vec2 nx = n0.xy * (0.5 + 1.2 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.55 * nearF + n3.xy * 0.25 * nearF * nearF;
+          nx = fromWind * nx;
+          vec3 dn = normalize(vec3(nx.x * 1.3, 1.6, nx.y * 1.3));
           vec3 Nw = normalize(vWN);
           vec3 T = normalize(cross(vec3(0.0, 0.0, 1.0), Nw)); vec3 B = cross(Nw, T);
           vec3 wN = normalize(T * dn.x + Nw * dn.y + B * dn.z);
@@ -137,7 +142,13 @@ export class Ocean {
           float kph = 6.2831853 / 52.0; float surge = 0.5 + 0.5 * sin(kph * dot(wd, P.xz) - sqrt(9.81 / kph) * kph * t + fo.g * 3.0);
           float shoreLine = 1.0 - smoothstep(0.0, 1.0 + fo.g * 1.0 + surge * 1.4, depth);
           float shoreFoam = shoreLine * smoothstep(0.5 - shoreLine * 0.3 - surge * 0.25, 0.9, foamTex) * (0.55 + 0.45 * surge);
-          float crest = (1.0 - smoothstep(0.45, 0.72, vJ)) * smoothstep(0.5, 0.85, foamTex + vCrest * 0.25) * 0.8;
+          // wash against steep shores: the seabed gradient from the heightfield
+          vec2 guv = (P.xz - uGrid.xy) / uGrid.z + 0.5; float gs = 2.5 / uGrid.z;
+          float gx = texture2D(tHeight, guv + vec2(gs, 0.0)).r - texture2D(tHeight, guv - vec2(gs, 0.0)).r; float gz = texture2D(tHeight, guv + vec2(0.0, gs)).r - texture2D(tHeight, guv - vec2(0.0, gs)).r;
+          float steep = smoothstep(1.2, 3.5, length(vec2(gx, gz)));
+          shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 6.0, depth)) * smoothstep(0.3, 0.7, foamTex + 0.25 * surge) * 0.95);
+          vec4 fs = texture2D(tFoam, (toWind * P.xz) / vec2(24.0, 4.0) + vec2(t * 0.06, 0.0));
+          float crest = (1.0 - smoothstep(0.3, 0.58, vJ)) * smoothstep(0.55, 0.85, fs.r * 0.7 + foamTex * 0.3 + vCrest * 0.2) * 0.7;
           vec2 hd = vec2(sin(uHull.w), -cos(uHull.w));
           float dh = sdCapsule(P.xz, uHull.xz + hd * uHull.y, uHull.xz - hd * uHull.y, uHullW);
           float hullFoam = (1.0 - smoothstep(-0.2, 1.0 + fo.g * 0.6, dh)) * smoothstep(0.35, 0.75, foamTex + 0.12 * sin(t * 1.3 + fo.g * 6.0)) * 0.85;
@@ -151,7 +162,7 @@ export class Ocean {
           alpha = mix(alpha, 1.0, distF * 0.3);
           diffuseColor.rgb = mix(body * 0.5, vec3(0.92), foam);
           diffuseColor.a = alpha;
-          roughnessFactor = mix(0.11 + distF * 0.15 + uNightF * 0.12 + uFogF * 0.2, 0.85, foam);
+          roughnessFactor = mix(0.06 + distF * 0.16 + uNightF * 0.28 + uFogF * 0.25, 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN;
         `],
@@ -166,7 +177,7 @@ export class Ocean {
           // sun glitter: extra sharp specular lobe from the finest normals
           vec3 Hh = normalize(V + uSunDir);
           float glit = pow(clamp(dot(waterN, Hh), 0.0, 1.0), 900.0) * smoothstep(0.0, 0.05, uSunDir.y);
-          totalEmissiveRadiance += uSunColor * glit * mix(0.3, 0.08, uNightF) * (1.0 - 0.9 * uFogF) * (1.0 - 0.6 * smoothstep(0.5, 0.9, uSunDir.y)) * (1.0 - waterFoam) * (1.0 - distF);
+          totalEmissiveRadiance += uSunColor * glit * mix(0.0, 0.0, uNightF) * (1.0 - 0.9 * uFogF) * (1.0 - 0.6 * smoothstep(0.5, 0.9, uSunDir.y)) * (1.0 - waterFoam) * (1.0 - distF);
         `],
     ] });
     const mesh = new THREE.Mesh(geo, mat);

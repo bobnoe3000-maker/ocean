@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/Rng';
 import { Heightfield, vistaToWorld } from '../terrain/Heightfield';
-import { loadSet } from '../materials/Textures';
+import { loadSet, loadTex } from '../materials/Textures';
 import { pbr, SWAY_VERTEX, SWAY_VERTEX_PARS, makeDepthMaterial } from '../materials/Helpers';
 import { injectWorld } from '../core/WorldUniforms';
 import { Extra } from '../world/World';
@@ -42,55 +42,33 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
     s.setAttribute('color', new THREE.Float32BufferAttribute(new Array(s.attributes.position.count * 3).fill(0.7), 3));
     barkParts.push(s);
   }
-  // fronds
+  // fronds: alpha-card strips (3 segments along the rachis so they arc and droop)
   const fp: number[] = [], fn: number[] = [], fu: number[] = [], fs: number[] = [], fc: number[] = [], fi: number[] = [];
-  const N = 12 + rng.int(4);
+  const N = 13 + rng.int(5);
   const a0 = rng.range(0, 6.28);
-  const pushQuad = (q: THREE.Vector3[], uvs: number[][], col: [number, number, number], flexes: number[], ph: number) => {
-    const base = fp.length / 3;
-    const nrm = q[1].clone().sub(q[0]).cross(q[2].clone().sub(q[0])).normalize();
-    for (let k = 0; k < 4; k++) { fp.push(q[k].x, q[k].y, q[k].z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(uvs[k][0], uvs[k][1]); fs.push(flexes[k], ph); fc.push(col[0], col[1], col[2]); }
-    fi.push(base, base + 1, base + 2, base, base + 2, base + 3);
-  };
   for (let f = 0; f < N; f++) {
     const age = f / (N - 1);
-    const az = a0 + f * 2.399963; // golden angle spread
-    const el = THREE.MathUtils.degToRad(62 - 118 * Math.pow(age, 1.1) + rng.range(-8, 8));
-    const L = rng.range(2.6, 3.6) * (1 - 0.15 * age);
+    const az = a0 + f * 2.399963;
+    const el = THREE.MathUtils.degToRad(58 - 115 * Math.pow(age, 1.15) + rng.range(-8, 8));
+    const L = rng.range(2.8, 3.9) * (1 - 0.15 * age);
     const dir = new THREE.Vector3(Math.cos(az) * Math.cos(el), Math.sin(el), Math.sin(az) * Math.cos(el));
-    const droop = rng.range(0.5, 1.1) + age * 0.6;
+    const droop = rng.range(0.6, 1.2) + age * 0.8;
     const ph = rng.range(0, 6.28);
-    const dead = age > 0.88;
-    const tint: [number, number, number] = dead ? [0.62, 0.45, 0.25] : [0.85 + 0.25 * (1 - age) * rng.range(0.6, 1), 0.9 + 0.2 * rng.range(0, 1), 0.85];
-    const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.2 : 1), 0));
-    // rachis ribbon
-    const RSEG = 8;
-    for (let s = 0; s < RSEG; s++) {
-      const p0 = rachis(s / RSEG), p1 = rachis((s + 1) / RSEG); const side = new THREE.Vector3(-dir.z, 0, dir.x).normalize().multiplyScalar(0.03 * (1 - s / RSEG) + 0.01);
-      pushQuad([p0.clone().sub(side), p1.clone().sub(side), p1.clone().add(side), p0.clone().add(side)], [[0, 0], [0, 0.2], [0.1, 0.2], [0.1, 0]], [0.6, 0.55, 0.35], [0.6 + s / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + s / RSEG * 0.8], ph);
-    }
-    // leaflets
-    const LEAF = 24;
-    for (let s = 1; s <= LEAF; s++) {
-      const t = s / (LEAF + 1); const p = rachis(t); const tang = rachis(t + 0.01).sub(rachis(t - 0.01)).normalize();
-      const sideV = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
-      const len = (0.45 + 0.35 * Math.sin(Math.PI * Math.pow(t, 0.7))) * (dead ? 0.8 : 1);
-      for (const sg of [-1, 1]) {
-        const sweep = tang.clone().multiplyScalar(0.5 + rng.range(-0.1, 0.15)).add(sideV.clone().multiplyScalar(sg)).normalize();
-        const droopL = 0.5 + (dead ? 0.5 : 0) + rng.range(-0.15, 0.2);
-        const down = new THREE.Vector3(0, -1, 0);
-        const w = 0.045 - 0.015 * t;
-        const flex = 0.9 + t * 1.0;
-        // two-segment leaflet: straight from the rachis, then drooping at the tip
-        const dir1 = sweep.clone().addScaledVector(down, droopL * 0.45).normalize();
-        const dir2 = sweep.clone().addScaledVector(down, droopL * 1.3).normalize();
-        const mid = p.clone().addScaledVector(dir1, len * 0.55);
-        const tip = mid.clone().addScaledVector(dir2, len * 0.45);
-        const across1 = dir1.clone().cross(sweep.clone().cross(down).normalize()).normalize().multiplyScalar(w);
-        const across2 = across1.clone().multiplyScalar(0.55);
-        pushQuad([p.clone().sub(across1), mid.clone().sub(across1), mid.clone().add(across1), p.clone().add(across1)], [[0, 0], [0.55, 0], [0.55, 1], [0, 1]], tint, [flex, flex + 0.3, flex + 0.3, flex], ph + t * 2.0);
-        pushQuad([mid.clone().sub(across1), tip.clone().sub(across2), tip.clone().add(across2), mid.clone().add(across1)], [[0.55, 0], [1, 0], [1, 1], [0.55, 1]], tint, [flex + 0.3, flex + 0.7, flex + 0.7, flex + 0.3], ph + t * 2.0);
-      }
+    const dead = age > 0.86;
+    const tint: [number, number, number] = dead ? [0.7, 0.5, 0.28] : [0.85 + 0.3 * (1 - age) * rng.range(0.5, 1), 0.92 + 0.15 * rng.range(0, 1), 0.85];
+    const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.0 : 1), 0));
+    const half = L * 0.24;
+    const SEG = 3; const base = fp.length / 3;
+    for (let sgi = 0; sgi <= SEG; sgi++) {
+      const t = sgi / SEG; const c = rachis(t); const tang = rachis(Math.min(1, t + 0.02)).sub(rachis(Math.max(0, t - 0.02))).normalize();
+      const side = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
+      // the card folds slightly into a V so leaflets catch light differently on each side
+      const up = new THREE.Vector3(0, 1, 0);
+      const l = c.clone().addScaledVector(side, -half).addScaledVector(up, -0.12 * half), r = c.clone().addScaledVector(side, half).addScaledVector(up, -0.12 * half);
+      const nrm = side.clone().cross(tang).normalize().lerp(new THREE.Vector3(0, 1, 0), 0.75).normalize();
+      const flex = 0.7 + t * 1.3;
+      for (const [pt, v] of [[l, 0], [r, 1]] as [THREE.Vector3, number][]) { fp.push(pt.x, pt.y, pt.z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(t, v); fs.push(flex, ph); fc.push(tint[0], tint[1], tint[2]); }
+      if (sgi > 0) { const k = base + sgi * 2; fi.push(k - 2, k, k - 1, k - 1, k, k + 1); }
     }
   }
   const frond = new THREE.BufferGeometry();
@@ -103,10 +81,11 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
 
 export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> {
   const group = new THREE.Group(); group.name = 'palms';
-  const [barkSet, frondSet] = await Promise.all([loadSet('bark'), loadSet('frond')]);
+  const [barkSet, frondCard] = await Promise.all([loadSet('bark'), loadTex('frondcard.png', { srgb: true, repeat: false })]);
   const rng = new Rng(seed * 31 + 5);
   const barkMat = pbr(barkSet, { vertexColors: true });
-  const frondMat = pbr(frondSet, { side: THREE.DoubleSide, vertexColors: true });
+  const frondMat = new THREE.MeshStandardMaterial({ map: frondCard, side: THREE.DoubleSide, vertexColors: true, alphaTest: 0.45, roughness: 0.55, metalness: 0 });
+  injectWorld(frondMat);
   for (const m of [barkMat, frondMat]) {
     injectWorld(m, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.35 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   }
@@ -135,7 +114,7 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
       m4.compose(new THREE.Vector3(x, y, z), q, sc); mesh.setMatrixAt(k, m4);
     });
     mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false;
-    mesh.customDepthMaterial = makeDepthMaterial(frondMat);
+    { const d = makeDepthMaterial(frondMat); d.map = frondCard; d.alphaTest = 0.45; mesh.customDepthMaterial = d; }
     group.add(mesh);
   });
   return { group };

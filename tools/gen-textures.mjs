@@ -449,4 +449,42 @@ function planks(N, cols, gapW, opts) {
     console.log('smoke, moon');
   }
 }
+
+// ---------------------------------------------------------------- alpha cards: palm frond and scrub leaf cluster (RGBA PNG)
+{
+  const N = makeNoise(131);
+  if (!only.length || only.includes('cards')) {
+    // frond card: rachis along +u from the base at u=0, leaflets fanning out to both sides, tapered, drooping toward the tip
+    const w = 1024, h = 512, img = new Uint8Array(w * h * 4);
+    const put = (x, y, r, g, b, a) => { if (x < 0 || y < 0 || x >= w || y >= h) return; const i = (y * w + x) * 4; const na = Math.min(255, img[i + 3] + a * 255); const t = a; img[i] = Math.round(img[i] * (1 - t) + r * 255 * t); img[i + 1] = Math.round(img[i + 1] * (1 - t) + g * 255 * t); img[i + 2] = Math.round(img[i + 2] * (1 - t) + b * 255 * t); img[i + 3] = Math.round(na); };
+    const stroke = (x0, y0, x1, y1, w0, w1, col, dark) => {
+      const len = Math.hypot(x1 - x0, y1 - y0); const steps = Math.ceil(len * 1.5);
+      for (let i = 0; i <= steps; i++) { const t = i / steps; const cx = x0 + (x1 - x0) * t, cy = y0 + (y1 - y0) * t; const ww = w0 + (w1 - w0) * t;
+        for (let dy = -ww - 1; dy <= ww + 1; dy++) for (let dx = -ww - 1; dx <= ww + 1; dx++) { const d = Math.hypot(dx, dy); if (d > ww + 0.8) continue; const a = clamp(ww + 0.8 - d); const sh = 0.7 + 0.3 * (1 - Math.abs(dy) / (ww + 0.01)) - dark * t; put(Math.round(cx + dx), Math.round(cy + dy), col[0] * sh, col[1] * sh, col[2] * sh, a); } }
+    };
+    const R = makeNoise(5);
+    const green = (k) => mix3(hex('#4C7A2A'), hex('#8FA73A'), k);
+    // rachis
+    stroke(4, h / 2, w - 8, h / 2 + 22, 7, 2, hex('#7C6A3E'), 0.1);
+    const nL = 42;
+    for (let i = 0; i < nL; i++) {
+      const t = (i + 0.5) / nL; const bx = 8 + t * (w - 40), by = h / 2 + t * 22;
+      const len = (0.35 + 0.65 * Math.sin(Math.PI * Math.pow(t, 0.75))) * 215 * (1 - 0.25 * t);
+      for (const sg of [-1, 1]) {
+        const ang = (0.62 - 0.35 * t + R.rng() * 0.12) * sg; const droop = (0.35 + 0.5 * t) * sg;
+        const ex = bx + Math.cos(ang) * len * 0.9, ey = by + Math.sin(ang) * len + droop * len * 0.3;
+        const k = R.rng(); stroke(bx, by, ex, ey, 6 - 2 * t, 1.2, green(k * 0.6 + 0.2), 0.25);
+      }
+    }
+    // dead tip and a couple of torn leaflets
+    writePNG(path.join(OUT, 'frondcard.png'), w, h, img);
+    // leaf cluster card: overlapping small leaves
+    const cw = 512, ch = 512, cimg = new Uint8Array(cw * ch * 4);
+    const cput = (x, y, r, g, b, a) => { if (x < 0 || y < 0 || x >= cw || y >= ch) return; const i = (y * cw + x) * 4; const na = Math.min(255, cimg[i + 3] + a * 255); const t = a; cimg[i] = Math.round(cimg[i] * (1 - t) + r * 255 * t); cimg[i + 1] = Math.round(cimg[i + 1] * (1 - t) + g * 255 * t); cimg[i + 2] = Math.round(cimg[i + 2] * (1 - t) + b * 255 * t); cimg[i + 3] = Math.round(na); };
+    const leaf = (cx, cy, L, W, ang, col) => { const Rm = Math.max(L, W) + 1; for (let py = -Rm; py <= Rm; py++) for (let px = -Rm; px <= Rm; px++) { const x = px * Math.cos(-ang) - py * Math.sin(-ang), y = px * Math.sin(-ang) + py * Math.cos(-ang); const e = (x * x) / (W * W) + (y * y) / (L * L); if (e > 1) continue; const a = clamp((1 - e) * 4); const sh = 0.75 + 0.25 * (0.5 + 0.5 * y / L); cput(Math.round(cx + px), Math.round(cy + py), col[0] * sh, col[1] * sh, col[2] * sh, a); } };
+    for (let i = 0; i < 260; i++) { const a = R.rng() * 6.28, r = Math.sqrt(R.rng()) * 200; const cx = 256 + Math.cos(a) * r, cy = 256 + Math.sin(a) * r * 0.8; const k = R.rng(); leaf(cx, cy, 14 + R.rng() * 12, 6 + R.rng() * 5, R.rng() * 6.28, mix3(hex('#556B3A'), hex('#9AA65A'), k * 0.7 + (1 - r / 200) * 0.3)); }
+    writePNG(path.join(OUT, 'leafcard.png'), cw, ch, cimg);
+    console.log('frondcard, leafcard');
+  }
+}
 console.log('done');

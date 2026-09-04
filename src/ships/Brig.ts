@@ -91,6 +91,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const deckMat = pbr(planksSet, { color: 0xb8a58a });
   const sparMat = pbr(planksSet, { color: 0x6e5236, repeat: [0.4, 1] });
   const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xd9ccb2, repeat: [1, 1] });
+  canvasMat.shadowSide = THREE.DoubleSide; canvasMat.normalScale.set(1.6, 1.6);
   const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0xa08a68 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2a2724, roughness: 0.55, metalness: 0.85, roughnessMap: noise });
   injectWorld(ironMat);
@@ -115,6 +116,13 @@ export async function buildBrig(seed: number): Promise<Extra> {
   add(box(2.6, 1.1, 3.2, 0, DECK + 0.55, 9.5, 0.7), deckMat);
   add(new THREE.CylinderGeometry(0.35, 0.4, 1.0, 10).translate(0, DECK + 0.5, -8.5), sparMat);
   add(box(0.5, 1.2, 0.5, 0, DECK + 0.6, L / 2 - 1.2, 0.7), sparMat); // tiller post / binnacle
+  // deck guns on carriages, run out through the bulwarks
+  for (const side of [1, -1]) for (let k = 0; k < 4; k++) {
+    const z = -8 + k * 5.2; const s = 0.5 - z / L; const x = (deckOutline(s) - 1.1) * side;
+    add(box(0.9, 0.55, 1.3, x, DECK + 0.28, z, 1), sparMat);
+    add(new THREE.CylinderGeometry(0.11, 0.16, 2.0, 8).rotateZ(Math.PI / 2).translate(x + 0.55 * side, DECK + 0.72, z), ironMat);
+    for (const dz of [-0.45, 0.45]) add(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 10).rotateZ(Math.PI / 2).translate(x, DECK + 0.2, z + dz), sparMat);
+  }
   // ship's boat on deck (small lofted hull)
   { const bg = hullGeometry(); bg.scale(0.16, 0.16, 0.16); bg.translate(0, DECK + 0.55, 1.5); add(bg, deckMat); }
   // masts, yards, sails, rigging
@@ -125,7 +133,14 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const sailMeshes: { mesh: THREE.Mesh; phase: number; billow: number }[] = [];
   const addSail = (g: THREE.BufferGeometry, x: number, y: number, z: number, rotY: number, billow: number) => {
     const m = new THREE.Mesh(g, canvasMat); m.position.set(x, y, z); m.rotation.y = rotY; m.castShadow = true; m.receiveShadow = true;
-    m.customDepthMaterial = makeDepthMaterial(canvasMat); ship.add(m); sails.push(m); sailMeshes.push({ mesh: m, phase: rng.range(0, 6), billow }); return m;
+    m.customDepthMaterial = makeDepthMaterial(canvasMat); ship.add(m); sails.push(m); sailMeshes.push({ mesh: m, phase: rng.range(0, 6), billow });
+    // bolt rope and reef band: a rope along the head, leeches and foot, and a darker band a third of the way down
+    g.computeBoundingBox(); const bb = g.boundingBox!;
+    const corners = [new THREE.Vector3(bb.min.x, bb.max.y, 0), new THREE.Vector3(bb.max.x, bb.max.y, 0), new THREE.Vector3(bb.max.x, bb.min.y, 0), new THREE.Vector3(bb.min.x, bb.min.y, 0)];
+    const edges: THREE.BufferGeometry[] = [];
+    for (let i = 0; i < 4; i++) edges.push(tube(corners[i], corners[(i + 1) % 4], 0.03, 0.03, 4, 6));
+    const rm = new THREE.Mesh(mergeGeometries(edges)!, ropeMat); m.add(rm);
+    return m;
   };
   for (const [mi, m] of masts.entries()) {
     const top = DECK + m.h;
@@ -188,7 +203,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
     #ifdef USE_UV
     { vec2 st = uv; float g = uWindSpeed / 6.0; float A = (1.1 + 0.5 * g);
       // slope of the belly: tilts the normal so the curvature shades
-      vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 0.35;
+      vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 1.1;
       objectNormal = normalize(vec3(-slope.x, -slope.y, 1.0) * sign(normal.z + 0.001)); }
     #endif
     vCloth = aCloth;`],
@@ -205,7 +220,8 @@ export async function buildBrig(seed: number): Promise<Extra> {
     ['#include <map_fragment>', /* glsl */ `
     #ifdef USE_MAP
       vec4 sampledDiffuseColor = texture2D( map, vCloth );
-      diffuseColor *= sampledDiffuseColor;
+      vec4 stain = texture2D( map, vCloth * 0.13 + 0.4 );
+      diffuseColor *= sampledDiffuseColor * mix(vec4(1.0), stain * 1.15, 0.6);
     #endif`],
     ['#include <normal_fragment_maps>', /* glsl */ `
     #ifdef USE_NORMALMAP

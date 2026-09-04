@@ -43,7 +43,7 @@ export class World {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
     this.renderer.info.autoReset = false;
     initTextures(this.renderer);
-    this.camera = new THREE.PerspectiveCamera(50, 1, 1, 12000);
+    this.camera = new THREE.PerspectiveCamera(60, 1, 1, 12000);
     this.scene.add(this.camera);
     this.lighting = new Lighting(this.renderer, this.scene, this.sky);
     this.hf = new Heightfield(spec.seed);

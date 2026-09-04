@@ -60,7 +60,8 @@ Object.assign(W, PCSS_UNIFORMS);
 // Penumbra in shadow-map texels per unit of normalised depth: depth range (m) x sun
 // angular diameter (rad) x texels per metre of the fitted frustum.
 export function setPCSSParams(depthRangeM: number, frustumWidthM: number, mapSize: number): void {
-  PCSS_UNIFORMS.uPcssPenumbra.value = depthRangeM * 0.0093 * mapSize / frustumWidthM;
-  PCSS_UNIFORMS.uPcssSearch.value = Math.min(24, Math.max(6, mapSize / frustumWidthM * 2.4)); // ~2.4 m max penumbra
+  // 4x the true solar diameter: an artistic light size so mast and cliff shadow tips visibly soften
+  PCSS_UNIFORMS.uPcssPenumbra.value = depthRangeM * 0.037 * mapSize / frustumWidthM;
+  PCSS_UNIFORMS.uPcssSearch.value = Math.min(28, Math.max(6, mapSize / frustumWidthM * 4.0)); // ~2.4 m max penumbra
   PCSS_UNIFORMS.uPcssMin.value = 1.2;
 }

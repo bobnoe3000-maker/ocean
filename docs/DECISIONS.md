@@ -74,3 +74,18 @@ Recorded as they were made. Newest at the bottom.
     map (critic round 1). 52° stays inside the full spec's 50–65° range and
     keeps the top-down read while façades and the slope show. `pitch` is a
     scene-spec parameter so the critic can check the horizon at 30°.
+18. **Vertical FOV 60°.** With 50° no preset could ever show the horizon
+    (critic round 2 checked pitch 30). At 60° the horizon enters the frame
+    below pitch 30°, so the sky and sun disc can be judged at `pitch=25`
+    while the hero stays at 52°.
+19. **Shadow light size is four times the sun's angular diameter.** The true
+    0.53° gives a 7 cm penumbra on an 8 m palm, invisible at 10 px/m. The
+    exaggeration makes mast and cliff shadow tips visibly soften with
+    distance, which the rubric asks for.
+20. **Water detail normals are wind-aligned and anisotropic**, sampled in a
+    frame rotated to the wind so ripples read as streaks, and the far field
+    hands over to a 140 m octave so no lattice repeats at 300 m. Glints come
+    from the GGX lobe of a smooth sea (roughness 0.06), not an added term.
+21. **Vegetation is alpha cards.** Palm fronds are three-segment strips with a
+    procedural frond card; bushes are three or four crossed leaf-cluster cards
+    plus a top card. Shadows use alpha-tested depth materials.
