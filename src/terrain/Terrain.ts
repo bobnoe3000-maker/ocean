@@ -18,7 +18,7 @@ export class Terrain {
   }
 
   private buildDepthTexture(): void {
-    const N = 512; const data = new Uint16Array(N * N);
+    const N = 1024; const data = new Uint16Array(N * N);
     const half = GRID.size / 2;
     for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
       const x = GRID.cx - half + (i / (N - 1)) * GRID.size, z = GRID.cz - half + (j / (N - 1)) * GRID.size;
@@ -50,7 +50,7 @@ export class Terrain {
         tRockA: { value: rock.map }, tRockN: { value: rock.normalMap }, tRockO: { value: rock.ormMap },
         tScrubA: { value: scrub.map }, tScrubN: { value: scrub.normalMap }, tScrubO: { value: scrub.ormMap },
         tStoneA: { value: stone.map }, tStoneN: { value: stone.normalMap }, tStoneO: { value: stone.ormMap },
-        tNoise: { value: noise },
+        tNoise: { value: noise }, tHeight: { value: this.depthTexture }, uGrid: { value: new THREE.Vector4(GRID.cx, GRID.cz, GRID.size, 0) },
         uVista: { value: new THREE.Matrix3().set(RIGHT[0], RIGHT[1], 0, FORWARD[0], FORWARD[1], 0, 0, 0, 1) },
         uBay: { value: new THREE.Vector4(LAYOUT.bayC[0], LAYOUT.bayC[1], 76, 136) },
       },
@@ -58,7 +58,7 @@ export class Terrain {
       vertexMain: 'vWNormal = normalize(mat3(modelMatrix) * objectNormal);',
       fragmentPars: /* glsl */ `
         uniform sampler2D tSandA, tSandN, tSandO, tRockA, tRockN, tRockO, tScrubA, tScrubN, tScrubO, tStoneA, tStoneN, tStoneO, tNoise;
-        uniform mat3 uVista; uniform vec4 uBay;
+        uniform mat3 uVista; uniform vec4 uBay; uniform sampler2D tHeight; uniform vec4 uGrid;
         uniform float uSeaLevel;
         varying vec3 vWNormal;
         vec3 unpackN(vec3 c) { return c * 2.0 - 1.0; }
@@ -94,10 +94,13 @@ export class Terrain {
           vec3 P = vWPos;
           vec4 nz = texture2D(tNoise, P.xz * 0.004);
           vec4 nz2 = texture2D(tNoise, P.xz * 0.035 + 0.3);
+          vec4 nz3 = texture2D(tNoise, P.xz * 0.0012 + 0.61);
           float macro = nz.r * 2.0 - 1.0;
           float slope = 1.0 - N.y;
-          float rockW = smoothstep(0.30, 0.55, slope + (nz2.g - 0.5) * 0.25 + macro * 0.08);
-          float h = P.y - uSeaLevel;
+          float rockW = smoothstep(0.26, 0.5, slope + (nz2.g - 0.5) * 0.25 + macro * 0.08);
+          // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline
+          float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
+          float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           float sandW = (1.0 - rockW) * (1.0 - smoothstep(2.2, 5.5, h + (nz2.r - 0.5) * 2.5 + macro * 1.5));
           float scrubW = (1.0 - rockW) * (1.0 - sandW) * smoothstep(0.0, 0.8, h);
           sandW = (1.0 - rockW) * (1.0 - scrubW);
@@ -109,7 +112,7 @@ export class Terrain {
           vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
           if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
-          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
+          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.62, 0.6, 0.5), vec3(1.0, 1.02, 0.95), smoothstep(0.3, 0.7, nz3.r)); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
           if (townW > 0.004) {
             Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 0.9, nz.g, N);
             Surf sD = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.5 + 0.37, nz.g, N);
@@ -119,7 +122,6 @@ export class Terrain {
           }
           wN = normalize(wN);
           // macro colour variation (kills tiling, adds patchiness)
-          vec4 nz3 = texture2D(tNoise, P.xz * 0.0012 + 0.61);
           albedo *= (0.86 + 0.28 * nz.a) * (0.9 + 0.2 * nz3.g);
           albedo = mix(albedo, albedo * vec3(0.93, 0.9, 0.86), sandW * smoothstep(0.45, 0.7, nz3.r) * 0.6);
           albedo = mix(albedo, albedo * vec3(1.06, 1.0, 0.92), macro * 0.5 + 0.5);

@@ -70,22 +70,26 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
       pushQuad([p0.clone().sub(side), p1.clone().sub(side), p1.clone().add(side), p0.clone().add(side)], [[0, 0], [0, 0.2], [0.1, 0.2], [0.1, 0]], [0.6, 0.55, 0.35], [0.6 + s / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + (s + 1) / RSEG * 0.8, 0.6 + s / RSEG * 0.8], ph);
     }
     // leaflets
-    const LEAF = 30;
+    const LEAF = 24;
     for (let s = 1; s <= LEAF; s++) {
       const t = s / (LEAF + 1); const p = rachis(t); const tang = rachis(t + 0.01).sub(rachis(t - 0.01)).normalize();
       const sideV = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
       const len = (0.45 + 0.35 * Math.sin(Math.PI * Math.pow(t, 0.7))) * (dead ? 0.8 : 1);
       for (const sg of [-1, 1]) {
-        const sweep = tang.clone().multiplyScalar(0.55).add(sideV.clone().multiplyScalar(sg)).normalize();
-        const down = new THREE.Vector3(0, -1, 0).multiplyScalar(0.55 + (dead ? 0.4 : 0));
-        const tipDir = sweep.clone().add(down).normalize();
-        const w = 0.04;
-        const across = sweep.clone().cross(tipDir).normalize().multiplyScalar(w);
-        const tip = p.clone().addScaledVector(tipDir, len);
-        const mid = p.clone().addScaledVector(tipDir, len * 0.5).add(across.clone().multiplyScalar(0.3));
-        void mid;
+        const sweep = tang.clone().multiplyScalar(0.5 + rng.range(-0.1, 0.15)).add(sideV.clone().multiplyScalar(sg)).normalize();
+        const droopL = 0.5 + (dead ? 0.5 : 0) + rng.range(-0.15, 0.2);
+        const down = new THREE.Vector3(0, -1, 0);
+        const w = 0.045 - 0.015 * t;
         const flex = 0.9 + t * 1.0;
-        pushQuad([p.clone().sub(across), tip.clone().sub(across.clone().multiplyScalar(0.3)), tip.clone().add(across.clone().multiplyScalar(0.3)), p.clone().add(across)], [[0, 0], [1, 0], [1, 1], [0, 1]], tint, [flex, flex + 0.5, flex + 0.5, flex], ph + t * 2.0);
+        // two-segment leaflet: straight from the rachis, then drooping at the tip
+        const dir1 = sweep.clone().addScaledVector(down, droopL * 0.45).normalize();
+        const dir2 = sweep.clone().addScaledVector(down, droopL * 1.3).normalize();
+        const mid = p.clone().addScaledVector(dir1, len * 0.55);
+        const tip = mid.clone().addScaledVector(dir2, len * 0.45);
+        const across1 = dir1.clone().cross(sweep.clone().cross(down).normalize()).normalize().multiplyScalar(w);
+        const across2 = across1.clone().multiplyScalar(0.55);
+        pushQuad([p.clone().sub(across1), mid.clone().sub(across1), mid.clone().add(across1), p.clone().add(across1)], [[0, 0], [0.55, 0], [0.55, 1], [0, 1]], tint, [flex, flex + 0.3, flex + 0.3, flex], ph + t * 2.0);
+        pushQuad([mid.clone().sub(across1), tip.clone().sub(across2), tip.clone().add(across2), mid.clone().add(across1)], [[0.55, 0], [1, 0], [1, 1], [0.55, 1]], tint, [flex + 0.3, flex + 0.7, flex + 0.7, flex + 0.3], ph + t * 2.0);
       }
     }
   }

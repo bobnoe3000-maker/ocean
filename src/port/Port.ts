@@ -406,7 +406,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
 }
 
 function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
-  const PER = 48; const n = emitters.length * PER;
+  const PER = 36; const n = emitters.length * PER;
   const pos = new Float32Array(n * 3), seed = new Float32Array(n * 2);
   for (let e = 0; e < emitters.length; e++) for (let i = 0; i < PER; i++) { const k = e * PER + i; pos.set([emitters[e].x, emitters[e].y, emitters[e].z], k * 3); seed[k * 2] = i / PER; seed[k * 2 + 1] = Math.random() * 6.28 + e; }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 2));
@@ -423,10 +423,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 1.0 + a * 6.0;
+        float size = 0.5 + a * 2.6;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.5) * smoothstep(0.0, 0.06, a) * 0.85;
+        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.42;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
@@ -434,7 +434,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
       void main() {
         vec2 c = gl_PointCoord - 0.5; c = vec2(c.x * vRot.x - c.y * vRot.y, c.x * vRot.y + c.y * vRot.x) + 0.5;
         float a = texture2D(tSmoke, c).a * vAlpha;
-        vec3 col = vec3(0.7, 0.68, 0.66) * uLight / 3.14159;
+        vec3 col = vec3(0.55, 0.53, 0.52) * uLight / 3.14159;
         gl_FragColor = vec4(col, a);
       }`,
   });

@@ -112,8 +112,8 @@ export class Heightfield {
       // agricultural terraces climbing the slope behind the town: stepped contours with soft risers
       const tmask = ang * smooth(132, 150, r) * (1 - smooth(240, 290, r));
       if (tmask > 0 && h > 2) {
-        const step = 2.6; const q = Math.floor(h / step) * step; const f = (h - q) / step;
-        const stepped = q + step * smooth(0.72, 1.0, f) + 0.4 * f;
+        const step = 3.4; const q = Math.floor(h / step) * step; const f = (h - q) / step;
+        const stepped = q + step * smooth(0.86, 1.0, f) + 0.5 * f;
         h = mix(h, stepped, tmask * 0.85);
       }
     }

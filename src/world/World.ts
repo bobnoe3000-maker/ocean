@@ -53,10 +53,10 @@ export class World {
     const q = this.spec.quality;
     await this.sky.load();
     W.tFogNoise.value = await loadTex('noise');
-    this.terrain = new Terrain(this.hf, q === 'low' ? 224 : q === 'medium' ? 352 : 512);
+    this.terrain = new Terrain(this.hf, q === 'low' ? 224 : q === 'medium' ? 336 : 448);
     await this.terrain.build();
     this.scene.add(this.terrain.group);
-    this.ocean = new Ocean(this.terrain.depthTexture, q === 'low' ? 160 : q === 'medium' ? 240 : 320);
+    this.ocean = new Ocean(this.terrain.depthTexture, q === 'low' ? 160 : q === 'medium' ? 224 : 272);
     await this.ocean.build();
     this.scene.add(this.ocean.group);
     const [bx, bz] = vistaToWorld(LAYOUT.brig[0], LAYOUT.brig[1]);
@@ -101,6 +101,7 @@ export class World {
     this.post.setNight(this.lighting.night);
     { const el = Math.asin(Math.max(-1, Math.min(1, W.uSunDir.value.y))) * 180 / Math.PI; this.post.setGolden(THREE.MathUtils.smoothstep(el, -2, 6) * (1 - THREE.MathUtils.smoothstep(el, 14, 32))); }
     this.ocean.uniforms.uNightF.value = this.lighting.night;
+    this.ocean.uniforms.uFogF.value = spec.weather === 'fog' ? 1 : 0;
     this.sky.uniforms.uIncludeSun.value = spec.sun ? 1 : 0;
     const hide = spec.hide.split(',').filter(Boolean);
     this.ocean.group.visible = !hide.includes('ocean'); this.terrain.group.visible = !hide.includes('terrain'); this.sky.mesh.visible = !hide.includes('sky');

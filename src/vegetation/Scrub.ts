@@ -33,7 +33,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
   const mat = pbr(frond, { side: THREE.DoubleSide, vertexColors: true, color: 0xb9c2a0 });
   injectWorld(mat, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.12 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   const rng = new Rng(seed * 77 + 11);
-  const count = quality === 'low' ? 350 : quality === 'medium' ? 700 : 1100;
+  const count = quality === 'low' ? 350 : quality === 'medium' ? 650 : 900;
   const spots: { u: number; w: number; s: number }[] = [];
   const bc = LAYOUT.bayC;
   let tries = 0;
@@ -47,7 +47,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
     const density = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(u * 0.021 + 1.3) * Math.cos(w * 0.017)); if (rng.next() > density) continue;
     spots.push({ u, w, s: rng.range(0.7, 1.6) });
   }
-  const variants = [bushGeometry(rng.fork(1), 26), bushGeometry(rng.fork(2), 34), bushGeometry(rng.fork(3), 42)];
+  const variants = [bushGeometry(rng.fork(1), 18), bushGeometry(rng.fork(2), 24), bushGeometry(rng.fork(3), 30)];
   const per: number[][] = [[], [], []]; spots.forEach((_, i) => per[i % 3].push(i));
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3();
   variants.forEach((geo, vi) => {

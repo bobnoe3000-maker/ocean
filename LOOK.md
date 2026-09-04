@@ -73,8 +73,10 @@ shadowed walls, `#1F3F8A` deep water, `#6FB29A` shallows, `#2E5A3F` scrub.
   and warm, long shadows fall up-left across the water (as in R1 and R5). The
   glitter path belongs to the noon frame, where the sun is high enough to
   sparkle straight down into the camera.
-- Camera: pitch 58° from horizontal, yaw fixed, 120 m of visible water width
-  in portrait, target on the harbour basin. The quay and town fill the upper
+- Camera: pitch 52° from horizontal (the brief's 58° reads as a map from 240 m
+  up; 52° keeps the tilted top-down read while façades and the slope show),
+  yaw fixed, 120 m of visible water width in portrait, target on the harbour
+  basin. The quay and town fill the upper
   third, the anchored brig sits on the lower-left third line, the lighthouse
   on the mole tip on the lower-right third line, the harbour mouth between
   them at the bottom of the frame.
