@@ -1,5 +1,6 @@
 import { World } from './World';
 import { buildPalms } from '../vegetation/Palms';
+import { buildScrub } from '../vegetation/Scrub';
 import { buildPort } from '../port/Port';
 import { buildBrig } from '../ships/Brig';
 // Scene content beyond terrain, ocean and sky. A module that throws is
@@ -7,6 +8,7 @@ import { buildBrig } from '../ships/Brig';
 export async function buildExtras(world: World): Promise<void> {
   const mods: [string, () => Promise<import('./World').Extra>][] = [
     ['palms', () => buildPalms(world.hf, world.spec.seed)],
+    ['scrub', () => buildScrub(world.hf, world.spec.seed, world.spec.quality)],
     ['port', () => buildPort(world.hf, world.spec.seed)],
     ['brig', () => buildBrig(world.spec.seed)],
   ];

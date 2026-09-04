@@ -28,7 +28,7 @@ function hullGeometry(): THREE.BufferGeometry {
     const base = pos.length / 3;
     for (let i = 0; i <= NS; i++) for (let j = 0; j <= NQ; j++) {
       const s = i / NS, q = j / NQ; const p = section(s, q);
-      pos.push(p.x * side, p.y, p.z); uv.push(q * 2.2, s * 4.0);
+      pos.push(p.x * side, p.y, p.z); uv.push(q * 2.2, s * 1.2);
       const wale = p.y > 0.55 && p.y < 1.05 ? 1 : 0; const c = wale ? [1.9, 1.55, 0.95] : [1, 1, 1];
       col.push(c[0], c[1], c[2]);
     }
@@ -52,7 +52,7 @@ function deckOutline(s: number): number { return (B / 2) * Math.pow(Math.sin(Mat
 
 function deckGeometry(): THREE.BufferGeometry {
   const NS = 30, pos: number[] = [], uv: number[] = [], idx: number[] = [];
-  for (let i = 0; i <= NS; i++) { const s = i / NS, hb = deckOutline(s) - 0.12, z = (s - 0.5) * -L; pos.push(-hb, DECK, z, hb, DECK, z); uv.push(-hb / 1.5, z / 1.5, hb / 1.5, z / 1.5); }
+  for (let i = 0; i <= NS; i++) { const s = i / NS, hb = deckOutline(s) - 0.12, z = (s - 0.5) * -L; pos.push(-hb, DECK, z, hb, DECK, z); uv.push(-hb / 1.5, z / 7.0, hb / 1.5, z / 7.0); }
   for (let i = 0; i < NS; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return g;
 }
@@ -61,7 +61,7 @@ function bulwarkGeometry(): THREE.BufferGeometry {
   const NS = 30, pos: number[] = [], uv: number[] = [], idx: number[] = [];
   for (const side of [1, -1]) {
     const base = pos.length / 3;
-    for (let i = 0; i <= NS; i++) { const s = i / NS, hb = deckOutline(s), z = (s - 0.5) * -L; pos.push(hb * side, DECK - 0.05, z, (hb - 0.05) * side, RAIL, z); uv.push(s * 4, 0, s * 4, 0.35); }
+    for (let i = 0; i <= NS; i++) { const s = i / NS, hb = deckOutline(s), z = (s - 0.5) * -L; pos.push(hb * side, DECK - 0.05, z, (hb - 0.05) * side, RAIL, z); uv.push(0.3, s * 1.2, 0.5, s * 1.2); }
     for (let i = 0; i < NS; i++) { const a = base + i * 2; if (side > 0) idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); else idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
   }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx); g.computeVertexNormals(); return g;
@@ -70,6 +70,10 @@ function bulwarkGeometry(): THREE.BufferGeometry {
 function sailGeometry(w: number, h: number, segs = 10, shape: 'square' | 'tri' | 'gaff' = 'square'): THREE.BufferGeometry {
   const g = new THREE.PlaneGeometry(w, h, segs, segs);
   const pos = g.attributes.position as THREE.BufferAttribute;
+  // uv2-like tiling for the cloth set (0.6 m panels): keep uv in 0..1 for the billow, tile via aCloth
+  const cloth = new Float32Array(pos.count * 2); const uvA = g.attributes.uv as THREE.BufferAttribute;
+  for (let i = 0; i < pos.count; i++) { cloth[i * 2] = uvA.getX(i) * w / 1.8; cloth[i * 2 + 1] = uvA.getY(i) * h / 1.8; }
+  g.setAttribute('aCloth', new THREE.BufferAttribute(cloth, 2));
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), y = pos.getY(i); const u = x / w + 0.5, v = y / h + 0.5;
     if (shape === 'tri') pos.setX(i, (x + w / 2) * v - w / 2); // triangle: top edge collapses
@@ -86,7 +90,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const hullMat = pbr(hullSet, { vertexColors: true, repeat: [1, 1] });
   const deckMat = pbr(planksSet, { color: 0xb8a58a });
   const sparMat = pbr(planksSet, { color: 0x6e5236, repeat: [0.4, 1] });
-  const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xf0e6cf });
+  const canvasMat = pbr(canvasSet, { side: THREE.DoubleSide, color: 0xd9ccb2, repeat: [1, 1] });
   const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0xa08a68 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2a2724, roughness: 0.55, metalness: 0.85, roughnessMap: noise });
   injectWorld(ironMat);
@@ -178,16 +182,42 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const ensign = new THREE.Mesh(sailGeometry(1.9, 1.2, 10, 'square').translate(0.95, 0, 0), flagMat); ensign.position.set(0, DECK + 15.6, masts[1].z - 8.5);
   for (const f of [pennant, ensign]) { f.castShadow = true; ship.add(f); }
   // cloth animation: sails billow to leeward and flutter; flags stream downwind
-  injectWorld(canvasMat, { uniforms: { uBillow: { value: 1 } }, replace: [['#include <begin_vertex>', /* glsl */ `
+  injectWorld(canvasMat, { uniforms: { uBillow: { value: 1 } }, vertexPars: 'attribute vec2 aCloth; varying vec2 vCloth;', fragmentPars: 'varying vec2 vCloth;', replace: [
+    ['#include <beginnormal_vertex>', /* glsl */ `
+    vec3 objectNormal = vec3( normal );
+    #ifdef USE_UV
+    { vec2 st = uv; float g = uWindSpeed / 6.0; float A = (0.7 + 0.4 * g);
+      // slope of the belly: tilts the normal so the curvature shades
+      vec2 slope = vec2(cos(3.14159 * st.x) * sin(3.14159 * st.y), sin(3.14159 * st.x) * cos(3.14159 * st.y)) * A * 0.35;
+      objectNormal = normalize(vec3(-slope.x, -slope.y, 1.0) * sign(normal.z + 0.001)); }
+    #endif
+    vCloth = aCloth;`],
+    ['#include <begin_vertex>', /* glsl */ `
     vec3 transformed = vec3(position);
     #ifdef USE_UV
     { vec2 st = uv; float g = uWindSpeed / 6.0;
       float belly = sin(3.14159 * st.x) * sin(3.14159 * st.y);
       float flutter = sin(uTime * 4.0 + st.y * 9.0 + st.x * 3.0) * 0.06 * (1.0 - st.x) * g + sin(uTime * 6.3 + st.x * 12.0) * 0.03 * g;
-      transformed.z += belly * (0.45 + 0.35 * g) * (0.9 + 0.1 * sin(uTime * 0.8)) + flutter;
+      transformed.z += belly * (0.7 + 0.4 * g) * (0.9 + 0.1 * sin(uTime * 0.8)) + flutter;
       transformed.y += belly * -0.12; }
     #endif
-  `]] });
+  `],
+    ['#include <map_fragment>', /* glsl */ `
+    #ifdef USE_MAP
+      vec4 sampledDiffuseColor = texture2D( map, vCloth );
+      diffuseColor *= sampledDiffuseColor;
+    #endif`],
+    ['#include <normal_fragment_maps>', /* glsl */ `
+    #ifdef USE_NORMALMAP
+      vec3 mapN = texture2D( normalMap, vCloth ).xyz * 2.0 - 1.0; mapN.xy *= normalScale;
+      normal = normalize( tbn * mapN );
+    #endif`],
+    ['#include <roughnessmap_fragment>', /* glsl */ `
+    float roughnessFactor = roughness;
+    #ifdef USE_ROUGHNESSMAP
+      roughnessFactor *= texture2D( roughnessMap, vCloth ).g;
+    #endif`],
+  ] });
   injectWorld(flagMat, { replace: [['#include <begin_vertex>', /* glsl */ `
     vec3 transformed = vec3(position);
     #ifdef USE_UV

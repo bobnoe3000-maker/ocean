@@ -67,18 +67,24 @@ shadowed walls, `#1F3F8A` deep water, `#6FB29A` shallows, `#2E5A3F` scrub.
 - Scene: one island with a walled harbour on its south-east side, a lighthouse
   on the mole, a stone quay with a timber dock, eleven buildings climbing the
   slope, palms along the beach to the west, a cliff to the north.
-- Time: 17:30, sun elevation 12°, azimuth south-west (sun light comes from
-  the right of frame and slightly toward the camera so wave backs glitter).
-- Camera: pitch 58° from horizontal, yaw fixed looking north-west, 120 m of
-  visible water width in portrait. The harbour mouth is in the upper third,
-  the anchored brig on the lower-left third line, the lighthouse on the
-  upper-right third line.
+- Time: 17:30, sun elevation 12°, azimuth 277° (west-north-west). The camera
+  looks along azimuth 142°, so the sun sits 135° behind-right of the view
+  axis: every camera-facing wall, the sails and the back slope are front-lit
+  and warm, long shadows fall up-left across the water (as in R1 and R5). The
+  glitter path belongs to the noon frame, where the sun is high enough to
+  sparkle straight down into the camera.
+- Camera: pitch 58° from horizontal, yaw fixed, 120 m of visible water width
+  in portrait, target on the harbour basin. The quay and town fill the upper
+  third, the anchored brig sits on the lower-left third line, the lighthouse
+  on the mole tip on the lower-right third line, the harbour mouth between
+  them at the bottom of the frame.
 - Ship: the brig anchored just inside the harbour mouth, bow into the wind,
   topsails loosed to dry, pennant streaming to leeward.
 - Wind: 6 m/s from the port quarter of the ship (south-south-west), so the
   swell runs toward the north-east and the palms lean north-east.
-- What the eye does: enters on the brig's sunlit sails, follows the glitter
-  path to the quay, rests on the warm lit walls and the lighthouse.
+- What the eye does: enters on the brig's sunlit sails, follows the brig's
+  long shadow and the turquoise shallows up to the quay, rests on the warm lit
+  walls and the lighthouse.
 
 ## 3. Time-of-day sheet
 

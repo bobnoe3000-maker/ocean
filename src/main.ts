@@ -5,7 +5,7 @@ import { buildExtras } from './world/Extras';
 declare global {
   interface Window {
     __ready: Promise<void>;
-    __ocean: { apply(spec: Partial<SceneSpec>): void; stats(): unknown; settle(frames: number): Promise<void>; world: World; errors: string[] };
+    __ocean: { apply(spec: Partial<SceneSpec>): void; stats(): unknown; settle(frames: number): Promise<void>; capture(): string; world: World; errors: string[] };
   }
 }
 
@@ -44,6 +44,7 @@ window.__ready = (async () => {
   }
   loop();
   await new Promise<void>((res) => waiters.push({ n: frames + 3, res }));
+  (window as unknown as { __readyDone: boolean }).__readyDone = true;
 })();
 
 window.__ocean = {
@@ -51,4 +52,6 @@ window.__ocean = {
   apply(p) { world.apply({ ...world.spec, ...p }); },
   stats: () => world.stats(),
   settle: (n) => new Promise<void>((res) => waiters.push({ n: frames + n, res })),
+  // render one frame and read the canvas back in the same task (no preserveDrawingBuffer needed)
+  capture: () => { world.frame(); return canvas.toDataURL('image/png'); },
 };

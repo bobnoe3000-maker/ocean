@@ -33,36 +33,35 @@ function run(name, w, h, fn, opts = {}) {
   const N = makeNoise(11);
   run('sand', SIZE, SIZE, (u, v, o) => {
     const warp = N.fbm(u * 3, v * 3, 3, 3, 3) * 0.6 + N.fbm(u * 9 + 4, v * 9, 9, 9, 2) * 0.12;
-    // wind ripples: asymmetric crests (steep lee side), slightly meandering
     const rip = fract(u * 9 + v * 0.9 + warp);
     const ripple = smooth(0.0, 0.7, rip) * (1 - smooth(0.7, 1.0, rip));
-    const rip2 = fract(u * 23 + v * 1.4 + warp * 1.5 + 0.3);
-    const ripple2 = smooth(0.0, 0.6, rip2) * (1 - smooth(0.6, 1.0, rip2));
     const grain = N.fbm(u * 140, v * 140, 140, 140, 3, 2.1, 0.6);
     const grain2 = N.fbm(u * 330 + 2, v * 330, 330, 330, 2, 2.0, 0.5);
     const macro = N.fbm(u * 2, v * 2, 2, 2, 3);
-    const damp = smooth(0.15, 0.55, N.fbm(u * 5 + 7, v * 5 + 3, 5, 5, 3));
-    const peb = N.worley(u * 36 + warp * 2, v * 36, 36, 36, 1);
-    const pebId = N.hash(Math.floor(u * 36 + warp * 2), Math.floor(v * 36), 36, 36, 5);
-    const pebble = smooth(0.11, 0.05, 1 - peb.f1) * 0; // unused
-    const pebR = 0.05 + 0.05 * pebId;
-    const pebM = (pebId > 0.86 ? 1 : 0) * (1 - smooth(pebR * 0.8, pebR, peb.f1));
-    const shellW = N.worley(u * 90 + 3, v * 90, 90, 90, 1);
-    const shellId = N.hash(Math.floor(u * 90 + 3), Math.floor(v * 90), 90, 90, 7);
-    const shell = (shellId > 0.955 ? 1 : 0) * (1 - smooth(0.02, 0.045, shellW.f1));
-    const foot = smooth(0.35, 0.6, N.fbm(u * 4 + 11, v * 4 + 5, 4, 4, 2)) * 0; // reserved
-    o.h = ripple * 0.016 + ripple2 * 0.004 + grain * 0.0012 + grain2 * 0.0005 + pebM * 0.012 + shell * 0.004 + macro * 0.006 + foot;
-    let col = mix3(hex('#D8C5A0'), hex('#C6AC84'), 0.5 + 0.5 * macro);
-    col = mix3(col, hex('#B69A72'), 0.4 * (1 - ripple) * ripple2 + 0.25 * (1 - ripple));
-    col = mix3(col, hex('#E7DABC'), 0.35 * smooth(-0.2, 0.7, grain));
-    col = mix3(col, hex('#A88F68'), damp * 0.35);
-    col = mix3(col, [col[0] * 0.92, col[1] * 0.92, col[2] * 0.9], smooth(0.2, 0.6, grain2) * 0.4);
-    col = mix3(col, mix3(hex('#6E655A'), hex('#9A8570'), pebId), pebM);
-    col = mix3(col, mix3(hex('#F3EEE2'), hex('#D9C4A8'), shellId * 4 - 3.8), shell * 0.9);
+    const mottle = N.fbm(u * 6 + 7, v * 6 + 3, 6, 6, 4, 2.2, 0.55);
+    const damp = smooth(0.1, 0.5, mottle + macro * 0.4);
+    const dry = smooth(0.15, 0.5, -mottle + macro * 0.2);
+    // pebbles: irregular, varied size and tone, sparse
+    const pw = N.worley(u * 30 + warp * 1.5 + N.fbm(u * 40, v * 40, 40, 40, 2) * 0.15, v * 30, 30, 30, 1);
+    const pid = N.hash(Math.floor(u * 30 + warp * 1.5), Math.floor(v * 30), 30, 30, 5);
+    const pr = 0.04 + 0.09 * N.hash(Math.floor(u * 30 + warp * 1.5), Math.floor(v * 30), 30, 30, 6);
+    const pebble = (pid > 0.88 ? 1 : 0) * (1 - smooth(pr * 0.7, pr, pw.f1 * (1 + 0.4 * Math.sin(pid * 20 + u * 100))));
+    // shell fragments: pale, irregular, small
+    const sw = N.worley(u * 70 + 3 + N.fbm(u * 90, v * 90, 90, 90, 2) * 0.2, v * 70, 70, 70, 1);
+    const sid = N.hash(Math.floor(u * 70 + 3), Math.floor(v * 70), 70, 70, 7);
+    const shell = (sid > 0.94 ? 1 : 0) * (1 - smooth(0.025, 0.05, sw.f1));
+    o.h = ripple * 0.010 + grain * 0.0012 + grain2 * 0.0005 + pebble * 0.014 * (0.6 + pr * 4) + shell * 0.004 + macro * 0.006 - damp * 0.002;
+    let col = mix3(hex('#DAC8A4'), hex('#CDB48C'), 0.5 + 0.5 * macro);
+    col = mix3(col, hex('#C2A882'), 0.12 * (1 - ripple));
+    col = mix3(col, hex('#EADFC4'), 0.4 * smooth(-0.2, 0.7, grain) + dry * 0.35);
+    col = mix3(col, hex('#AE9670'), damp * 0.45);
+    col = mix3(col, [col[0] * 0.93, col[1] * 0.93, col[2] * 0.91], smooth(0.2, 0.6, grain2) * 0.35);
+    const pebCol = mix3(mix3(hex('#6E655A'), hex('#A08A6E'), pid * 5 - 4.4), hex('#8D8478'), N.hash(Math.floor(u * 30), Math.floor(v * 30), 30, 30, 8));
+    col = mix3(col, pebCol, pebble);
+    col = mix3(col, mix3(hex('#F4EFE4'), hex('#E2CDB0'), sid * 12 - 11.3), shell * 0.9);
     o.a = col;
-    o.r = 0.94 - 0.04 * ripple - 0.3 * pebM - 0.2 * shell + 0.03 * grain - 0.1 * damp;
-    void pebble;
-  }, { normalStrength: 1.8, aoScale: 12 });
+    o.r = 0.94 - 0.03 * ripple - 0.3 * pebble - 0.2 * shell + 0.03 * grain - 0.12 * damp;
+  }, { normalStrength: 1.3, aoScale: 10 });
 }
 
 // ---------------------------------------------------------------- rock (cliff)
@@ -105,26 +104,41 @@ function run(name, w, h, fn, opts = {}) {
   }, { normalStrength: 1.4, aoScale: 8 });
 }
 
-// ---------------------------------------------------------------- scrub ground
+// ---------------------------------------------------------------- scrub ground (dry Mediterranean hillside)
 {
   const N = makeNoise(37);
   run('scrub', SIZE, SIZE, (u, v, o) => {
-    const macro = N.fbm(u * 3, v * 3, 3, 3, 3);
-    const clump = N.worley(u * 16, v * 16, 16, 16, 1);
-    const tuft = smooth(0.45, 0.1, clump.f1) * smooth(0.25, 0.6, N.fbm(u * 6 + 4, v * 6, 6, 6, 3) + macro * 0.5);
-    const blades = N.ridged(u * 90, v * 90, 90, 90, 3, 2, 0.6);
-    const stone = N.worley(u * 30 + 1, v * 30, 30, 30, 1);
-    const stoneMask = smooth(0.14, 0.05, stone.f1) * (stone.id > 0.75 ? 1 : 0) * (1 - tuft);
-    const dirt = N.fbm(u * 50, v * 50, 50, 50, 4);
-    o.h = tuft * (0.02 + blades * 0.015) + stoneMask * 0.012 + dirt * 0.003 + macro * 0.006;
-    let col = mix3(hex('#7A6A4F'), hex('#5E4F3A'), 0.5 + 0.5 * dirt);
-    col = mix3(col, hex('#9C8A63'), smooth(0.1, 0.6, macro) * 0.4);
-    const grassCol = mix3(hex('#6E7A2E'), hex('#A6963F'), clump.id);
-    col = mix3(col, mix3(grassCol, hex('#3F4E22'), 1 - blades), tuft);
-    col = mix3(col, mix3(hex('#8B8579'), hex('#A79F92'), stone.id), stoneMask);
+    const macro = N.fbm(u * 2, v * 2, 2, 2, 3);
+    const warp = N.fbm(u * 5 + 2, v * 5 + 9, 5, 5, 3) * 0.3;
+    // grass patches: large irregular areas, blades inside
+    const patchN = N.fbm(u * 4 + warp, v * 4, 4, 4, 4, 2.1, 0.55) + macro * 0.35;
+    const patch = smooth(-0.05, 0.25, patchN);
+    const blades = N.ridged(u * 110 + warp * 8, v * 70, 110, 70, 3, 2, 0.6);
+    const bladeDir = N.fbm(u * 200, v * 40 + 3, 200, 40, 2);
+    const grassTone = N.fbm(u * 12 + 5, v * 12, 12, 12, 3);
+    // bare dirt with stones of varied size
+    const dirt = N.fbm(u * 60, v * 60, 60, 60, 4, 2.2, 0.55);
+    const dirt2 = N.fbm(u * 18 + 8, v * 18, 18, 18, 3);
+    const sw = N.worley(u * 22 + N.fbm(u * 50, v * 50, 50, 50, 2) * 0.2, v * 22 + warp, 22, 22, 1);
+    const sid = N.hash(Math.floor(u * 22), Math.floor(v * 22 + warp), 22, 22, 5);
+    const sr = 0.05 + 0.13 * N.hash(Math.floor(u * 22), Math.floor(v * 22 + warp), 22, 22, 6);
+    const stone = (sid > 0.8 ? 1 : 0) * (1 - smooth(sr * 0.75, sr, sw.f1 * (1 + 0.35 * Math.sin(sid * 30 + v * 80)))) * (1 - patch * 0.7);
+    const twig = smooth(0.62, 0.72, N.ridged(u * 40 + 1, v * 40 + 7, 40, 40, 2)) * (1 - patch) * smooth(0.1, 0.4, dirt2) * 0.6;
+    o.h = patch * (0.012 + blades * 0.01) + stone * 0.016 * (0.5 + sr * 4) + dirt * 0.003 + dirt2 * 0.006 + macro * 0.005 + twig * 0.004;
+    let col = mix3(hex('#8A7756'), hex('#6B5A42'), 0.5 + 0.5 * dirt2);
+    col = mix3(col, hex('#A28E68'), smooth(0.1, 0.6, macro) * 0.4 + smooth(0.2, 0.6, dirt) * 0.25);
+    col = mix3(col, hex('#5A4B38'), smooth(0.3, 0.7, -dirt) * 0.3);
+    const grassA = mix3(hex('#8E8A46'), hex('#B7A85A'), 0.5 + 0.5 * grassTone);
+    const grassB = mix3(hex('#5F6E33'), hex('#7C8A3E'), 0.5 + 0.5 * bladeDir);
+    const grass = mix3(grassA, grassB, smooth(0.3, 0.8, blades));
+    col = mix3(col, grass, patch);
+    col = mix3(col, [col[0] * 0.8, col[1] * 0.8, col[2] * 0.78], patch * (1 - smooth(0.2, 0.7, blades)) * 0.5);
+    const stoneCol = mix3(mix3(hex('#8B8579'), hex('#A9A296'), sid * 5 - 4), hex('#7C7264'), N.hash(Math.floor(u * 22), Math.floor(v * 22), 22, 22, 9));
+    col = mix3(col, stoneCol, stone);
+    col = mix3(col, hex('#4E4030'), twig * 0.8);
     o.a = col;
-    o.r = 0.9 - 0.1 * stoneMask - 0.15 * tuft * blades;
-  }, { normalStrength: 1.3, aoScale: 9 });
+    o.r = 0.9 - 0.12 * stone - 0.15 * patch * smooth(0.4, 0.9, blades) + 0.03 * dirt;
+  }, { normalStrength: 1.2, aoScale: 9 });
 }
 
 // ---------------------------------------------------------------- plank generator
@@ -167,7 +181,7 @@ function planks(N, cols, gapW, opts) {
 {
   const N = makeNoise(41);
   run('planks', SIZE, SIZE, planks(N, 6, 0.05, {
-    c1: hex('#8B8073'), c2: hex('#A09484'), c3: hex('#6F6558'), cGrain: hex('#B7A88F'), cKnot: hex('#5C4A3A'), cGap: hex('#2E2925'),
+    c1: hex('#8E8578'), c2: hex('#9C9385'), c3: hex('#7A7064'), cGrain: hex('#B3A68F'), cKnot: hex('#5C4A3A'), cGap: hex('#4A423B'),
     grain: 40, r0: 0.62, rVar: 0.18, rGap: -0.15,
   }), { normalStrength: 1.0, aoScale: 7, extraAO: true });
 }
@@ -362,31 +376,42 @@ function planks(N, cols, gapW, opts) {
   const N = makeNoise(101);
   if (!only.length || only.includes('water')) {
     const w = 512, h = 512;
-    const hgt = new Float32Array(w * h);
-    const waves = [];
-    for (let i = 0; i < 28; i++) {
-      const k = 2 + Math.floor(N.rng() * 12);
-      const a = N.rng() * Math.PI * 2;
-      waves.push({ kx: Math.round(Math.cos(a) * k), ky: Math.round(Math.sin(a) * k), amp: 1 / (k * k) * (0.6 + N.rng() * 0.8), ph: N.rng() * 6.28 });
-    }
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      const u = x / w, v = y / h;
-      let s = 0;
-      for (const wv of waves) s += Math.sin((wv.kx * u + wv.ky * v) * Math.PI * 2 + wv.ph) * wv.amp;
-      s += N.fbm(u * 24, v * 24, 24, 24, 4) * 0.01;
-      hgt[y * w + x] = s * 0.06;
-    }
     const { normalFromHeight } = await import('./lib/image.mjs');
-    writePNG(path.join(OUT, 'waternormal.png'), w, h, normalFromHeight(hgt, w, h, 0.9));
-    console.log('waternormal');
+    const field = (kmin, kmax, count, pw, seedOff) => {
+      const M = makeNoise(101 + seedOff);
+      const hgt = new Float32Array(w * h);
+      const waves = [];
+      for (let i = 0; i < count; i++) {
+        const k = kmin + Math.floor(M.rng() * (kmax - kmin + 1));
+        const a = M.rng() * Math.PI * 2;
+        let kx = Math.round(Math.cos(a) * k), ky = Math.round(Math.sin(a) * k);
+        if (kx === 0 && ky === 0) kx = 1;
+        const kk = Math.hypot(kx, ky);
+        waves.push({ kx, ky, amp: Math.pow(kk, -pw) * (0.5 + M.rng()), ph: M.rng() * 6.28, sharp: 0.3 + M.rng() * 0.5 });
+      }
+      let maxA = 0;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const u = x / w, v = y / h; let s = 0;
+        for (const wv of waves) { const ph = (wv.kx * u + wv.ky * v) * Math.PI * 2 + wv.ph; s += (Math.sin(ph) - wv.sharp * 0.5 * Math.sin(2 * ph)) * wv.amp; }
+        s += M.fbm(u * 30, v * 30, 30, 30, 3) * 0.02;
+        hgt[y * w + x] = s; if (Math.abs(s) > maxA) maxA = Math.abs(s);
+      }
+      for (let i = 0; i < w * h; i++) hgt[i] = hgt[i] / maxA * 0.05;
+      return hgt;
+    };
+    writePNG(path.join(OUT, 'waternormal.png'), w, h, normalFromHeight(field(2, 18, 90, 1.6, 0), w, h, 1.2));
+    writePNG(path.join(OUT, 'ripple.png'), w, h, normalFromHeight(field(6, 44, 120, 1.4, 7), w, h, 0.9));
+    console.log('waternormal, ripple');
     // foam and generic noise
     const foam = new Uint8Array(w * h * 4), noise = new Uint8Array(w * h * 4);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
       const u = x / w, v = y / h;
       const c1 = N.worley(u * 10, v * 10, 10, 10), c2 = N.worley(u * 24 + 3, v * 24, 24, 24), c3 = N.worley(u * 50 + 7, v * 50, 50, 50);
-      const web = smooth(0.0, 0.25, c1.f2 - c1.f1) * 0.5 + smooth(0.0, 0.2, c2.f2 - c2.f1) * 0.3 + smooth(0.0, 0.15, c3.f2 - c3.f1) * 0.2;
-      const f = N.fbm(u * 8, v * 8, 8, 8, 4) * 0.5 + 0.5;
-      const foamV = clamp(1 - web * 1.4 + f * 0.6 - 0.3);
+      const web = smooth(0.0, 0.35, c1.f2 - c1.f1) * 0.25 + smooth(0.0, 0.3, c2.f2 - c2.f1) * 0.25 + smooth(0.0, 0.2, c3.f2 - c3.f1) * 0.2;
+      const f = N.fbm(u * 6, v * 6, 6, 6, 5, 2.2, 0.55) * 0.5 + 0.5;
+      const f2 = N.fbm(u * 20 + 3, v * 20, 20, 20, 3) * 0.5 + 0.5;
+      const streak = N.fbm(u * 3 + 1, v * 40, 3, 40, 2) * 0.5 + 0.5;
+      const foamV = clamp(f * 1.1 + f2 * 0.35 - web * 0.55 + streak * 0.2 - 0.45);
       const i = (y * w + x) * 4;
       foam[i] = Math.round(foamV * 255); foam[i + 1] = Math.round(clamp(f) * 255); foam[i + 2] = Math.round(clamp(smooth(0.35, 0.65, f)) * 255); foam[i + 3] = 255;
       noise[i] = Math.round(clamp(N.fbm(u * 4, v * 4, 4, 4, 5) * 0.5 + 0.5) * 255);

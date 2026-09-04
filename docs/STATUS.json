@@ -1,0 +1,14 @@
+{
+  "phase": "1 look test",
+  "updated": "2026-09-04T02:40:00Z",
+  "rounds": [],
+  "best": null,
+  "open_issues": [],
+  "budget": {
+    "reference_device_fps": "not measured (no device reachable from this session; headless SwiftShader only)",
+    "draw_calls": null,
+    "triangles": null,
+    "texture_mb": null
+  },
+  "notes": "Filled after each critic round by the builder; scores are the critic's, never the builder's."
+}

@@ -60,7 +60,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         const a = toW(prev[0], prev[1]), b = toW(cur[0], cur[1]); const ua = d / 3;
         stone.quad(a.clone().setY(y0), b.clone().setY(y0), b.clone().setY(y1), a.clone().setY(y1), [[ua, 0], [ua + 1.3, 0], [ua + 1.3, 1.4], [ua, 1.4]]);
         const po = toW(prevOut![0], prevOut![1]), co = toW(out[0], out[1]);
-        stone.quad(a.clone().setY(y1), b.clone().setY(y1), co.clone().setY(y1 + 0.35), po.clone().setY(y1 + 0.35), [[ua * 2, 0], [ua * 2 + 2.6, 0], [ua * 2 + 2.6, 4], [ua * 2, 4]], [0.8, 0.8, 0.78]);
+        stone.quad(a.clone().setY(y1), b.clone().setY(y1), co.clone().setY(y1 + 0.35), po.clone().setY(y1 + 0.35), [[ua * 5, 0.5], [ua * 5 + 6.5, 0.5], [ua * 5 + 6.5, 9.5], [ua * 5, 9.5]], [0.82, 0.82, 0.8]);
         // kerb
         stone.quad(a.clone().setY(y1), b.clone().setY(y1), b.clone().setY(y1 + 0.12).addScaledVector(co.clone().sub(b).normalize(), 0.3), a.clone().setY(y1 + 0.12).addScaledVector(po.clone().sub(a).normalize(), 0.3), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.0], [ua, 1.0]]);
       }
@@ -143,7 +143,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     const P = (t: number, s: number, y: number) => a.clone().addScaledVector(dir, t).addScaledVector(side, s).setY(y);
     for (let t = 0; t < len; t += 6) {
       const t1 = Math.min(len, t + 6); const uu = t / 4, uu1 = t1 / 4;
-      stone.quad(P(t, -3, 2.0), P(t1, -3, 2.0), P(t1, 3, 2.0), P(t, 3, 2.0), [[uu, 0], [uu1, 0], [uu1, 1.5], [uu, 1.5]], [0.85, 0.85, 0.83]);
+      stone.quad(P(t, -3, 2.0), P(t1, -3, 2.0), P(t1, 3, 2.0), P(t, 3, 2.0), [[uu * 2.5, 0.5], [uu1 * 2.5, 0.5], [uu1 * 2.5, 4.2], [uu * 2.5, 4.2]], [0.85, 0.85, 0.83]);
       stone.quad(P(t, -3, 2.0), P(t, -7.5, -4), P(t1, -7.5, -4), P(t1, -3, 2.0), [[uu, 1.6], [uu, 0], [uu1, 0], [uu1, 1.6]]);
       stone.quad(P(t, 3, 2.0), P(t1, 3, 2.0), P(t1, 7.5, -4), P(t, 7.5, -4), [[uu, 1.6], [uu1, 1.6], [uu1, 0], [uu, 0]]);
       if (t + 6 >= len) stone.quad(P(t1, -3, 2.0), P(t1, -7.5, -4), P(t1, 7.5, -4), P(t1, 3, 2.0), [[0, 1.6], [0, 0], [3, 0], [3, 1.6]]);
@@ -175,8 +175,8 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   }
 
   // ------------------------------------------------------------ materials + meshes
-  const plasterMat = pbr(plasterSet, { vertexColors: true }); const tilesMat = pbr(tilesSet, { vertexColors: true });
-  const planksMat = pbr(planksSet, { vertexColors: true }); const stoneMat = pbr(stoneSet, { vertexColors: true });
+  const plasterMat = pbr(plasterSet, { vertexColors: true, side: THREE.DoubleSide }); const tilesMat = pbr(tilesSet, { vertexColors: true, side: THREE.DoubleSide });
+  const planksMat = pbr(planksSet, { vertexColors: true, side: THREE.DoubleSide }); const stoneMat = pbr(stoneSet, { vertexColors: true, side: THREE.DoubleSide });
   const ropeMat = pbr(ropeSet, { vertexColors: true, color: 0xa08a68 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2b2926, roughness: 0.6, metalness: 0.8, roughnessMap: noise, vertexColors: true }); injectWorld(ironMat);
   const paintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.75, vertexColors: true, roughnessMap: noise }); injectWorld(paintMat);

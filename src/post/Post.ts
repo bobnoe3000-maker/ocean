@@ -26,5 +26,6 @@ export class Post {
     void KernelSize;
   }
   setSize(w: number, h: number): void { this.composer.setSize(w, h); }
+  setNight(night: number): void { this.grade.saturation = 0.18 - 0.42 * night; this.contrast.contrast = 0.04 + 0.06 * night; }
   render(dt: number): void { this.composer.render(dt); }
 }

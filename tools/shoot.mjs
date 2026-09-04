@@ -14,7 +14,7 @@ const DEVICES = {
   'phone-landscape': { width: 844, height: 390, dpr: 3 },
   desktop: { width: 1920, height: 1080, dpr: 1 },
 };
-const SPEC_KEYS = ['time', 'weather', 'zoom', 'quality', 'seed', 't', 'pause', 'hud', 'sun', 'hide'];
+const SPEC_KEYS = ['time', 'weather', 'zoom', 'quality', 'seed', 't', 'pause', 'hud', 'sun', 'hide', 'lu', 'lw'];
 
 async function portOpen(port) { return new Promise((r) => { const s = net.connect(port, '127.0.0.1'); s.on('connect', () => { s.end(); r(true); }); s.on('error', () => r(false)); }); }
 
@@ -30,12 +30,13 @@ export async function shoot(browser, spec, outBase, { device = 'phone', dpr, fra
   const url = BASE + '?' + q.toString();
   const t0 = Date.now();
   await page.goto(url, { waitUntil: 'load', timeout: 120000 });
-  await page.evaluate(() => window.__ready).catch((e) => log.errors.push('ready failed: ' + e.message));
+  await page.waitForFunction(() => window.__readyDone === true, undefined, { timeout: 900000, polling: 500 }).catch((e) => log.errors.push('ready failed: ' + e.message));
   const settle = (n) => Promise.race([page.evaluate((k) => window.__ocean.settle(k), n), new Promise((_, rej) => setTimeout(() => rej(new Error('settle timeout')), 240000))]);
   await settle(frames).catch((e) => log.errors.push('settle failed: ' + e.message));
   await settle(2).catch(() => {});
   fs.mkdirSync(path.dirname(outBase), { recursive: true });
-  await page.screenshot({ path: outBase + '.png', fullPage: false, timeout: 600000 });
+  const dataUrl = await page.evaluate(() => window.__ocean.capture());
+  fs.writeFileSync(outBase + '.png', Buffer.from(dataUrl.split(',')[1], 'base64'));
   const stats = await page.evaluate(() => window.__ocean.stats());
   const pageErrors = await page.evaluate(() => window.__ocean.errors);
   const json = { url, device, viewport: dev, dpr: dpr ?? dev.dpr, loadMs: Date.now() - t0, console: { errors: [...log.errors, ...pageErrors], warnings: log.warnings }, stats, budget: {

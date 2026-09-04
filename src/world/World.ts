@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import { SceneSpec } from '../core/Spec';
 import { W } from '../core/WorldUniforms';
-import { initTextures, textureMemoryBytes } from '../materials/Textures';
+import { initTextures, textureMemoryBytes, loadTex } from '../materials/Textures';
 import { Sky } from '../sky/Sky';
 import { Lighting } from '../lighting/Lighting';
 import { Heightfield, FORWARD, LAYOUT, TARGET, vistaToWorld } from '../terrain/Heightfield';
 import { Terrain } from '../terrain/Terrain';
 import { Ocean } from '../ocean/Ocean';
 import { Post } from '../post/Post';
+import { installPCSS } from '../lighting/PCSS';
 
 export interface Stats {
   calls: number; triangles: number; programs: number; textureMB: number; geometries: number; textures: number;
@@ -30,7 +31,7 @@ export class World {
   private frameTimes: number[] = [];
   private last = performance.now();
   animT = 0;
-  readonly target = new THREE.Vector3(vistaToWorld(TARGET[0], TARGET[1])[0], 0, vistaToWorld(TARGET[0], TARGET[1])[1]);
+  readonly target = new THREE.Vector3();
 
   constructor(canvas: HTMLCanvasElement, spec: SceneSpec) {
     this.spec = spec;
@@ -38,7 +39,7 @@ export class World {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.NoToneMapping;
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFShadowMap;
+    if (spec.quality === 'high') { installPCSS(); this.renderer.shadowMap.type = THREE.BasicShadowMap; } else this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
     this.renderer.info.autoReset = false;
     initTextures(this.renderer);
@@ -51,6 +52,7 @@ export class World {
   async build(): Promise<void> {
     const q = this.spec.quality;
     await this.sky.load();
+    W.tFogNoise.value = await loadTex('noise');
     this.terrain = new Terrain(this.hf, q === 'low' ? 192 : q === 'medium' ? 288 : 384);
     await this.terrain.build();
     this.scene.add(this.terrain.group);
@@ -77,6 +79,7 @@ export class World {
 
   placeCamera(): void {
     const pitch = 58 * Math.PI / 180;
+    const [tx, tz] = vistaToWorld(TARGET[0] + this.spec.lu, TARGET[1] + this.spec.lw); this.target.set(tx, 0, tz);
     const aspect = Math.max(this.camera.aspect, 390 / 844);
     const halfH = Math.tan(this.camera.fov * Math.PI / 360);
     const D = this.spec.zoom / (2 * halfH * aspect);
@@ -95,6 +98,8 @@ export class World {
     this.lighting.apply(spec);
     this.lighting.fitShadow(this.target, spec.zoom, this.lighting.keyDir);
     this.renderer.toneMappingExposure = this.lighting.exposure;
+    this.post.setNight(this.lighting.night);
+    this.ocean.uniforms.uNightF.value = this.lighting.night;
     this.sky.uniforms.uIncludeSun.value = spec.sun ? 1 : 0;
     const hide = spec.hide.split(',').filter(Boolean);
     this.ocean.group.visible = !hide.includes('ocean'); this.terrain.group.visible = !hide.includes('terrain'); this.sky.mesh.visible = !hide.includes('sky');

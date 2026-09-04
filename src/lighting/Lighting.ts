@@ -4,6 +4,7 @@ import { W } from '../core/WorldUniforms';
 import { Sky } from '../sky/Sky';
 import { SceneSpec } from '../core/Spec';
 import { FORWARD } from '../terrain/Heightfield';
+import { setPCSSParams } from './PCSS';
 
 // Key light (sun by day, moon by night), image-based lighting baked from the
 // sky dome, exposure, and the fog colours, all from the one atmosphere model.
@@ -41,6 +42,7 @@ export class Lighting {
     cam.updateProjectionMatrix();
     this.key.shadow.normalBias = 0.03 + zoom * 0.0009;
     this.key.shadow.bias = -0.00025;
+    setPCSSParams(cam.far - cam.near, half * 2, this.key.shadow.mapSize.x);
   }
 
   apply(spec: SceneSpec): void {
@@ -54,7 +56,7 @@ export class Lighting {
     this.sunE.copy(trS).multiplyScalar(ATMO.sunIntensity * sunUp * fogMul);
     const trM = transmittanceCPU(ro, moonDir);
     const moonUp = THREE.MathUtils.smoothstep(moonDir.y, -0.02, 0.08);
-    this.moonE.copy(trM).multiply(new THREE.Vector3(0.85, 0.92, 1.0)).multiplyScalar(ATMO.moonIntensity * moonUp * fogMul);
+    this.moonE.copy(trM).multiply(new THREE.Vector3(0.72, 0.86, 1.0)).multiplyScalar(ATMO.moonIntensity * moonUp * fogMul);
     // sky irradiance estimate: sample a few directions
     const dirs = [[0, 1, 0], [0.7, 0.7, 0], [-0.7, 0.7, 0], [0, 0.7, 0.7], [0, 0.7, -0.7], [0.5, 0.3, 0.5], [-0.5, 0.3, -0.5], [0.5, 0.3, -0.5], [-0.5, 0.3, 0.5]];
     this.skyE.set(0, 0, 0);
@@ -95,19 +97,23 @@ export class Lighting {
       // mist: bright, desaturated, lit by the whole sky and the sun
       const avg = horizonSide.clone().multiplyScalar(0.55).add(zenith.multiplyScalar(0.25)).add(horizonSun.clone().multiplyScalar(0.2));
       const l = 0.2126 * avg.x + 0.7152 * avg.y + 0.0722 * avg.z;
-      W.uFogSky.value.copy(avg).lerp(new THREE.Vector3(l, l, l), 0.35).multiplyScalar(1.25 * fogMul + 0.75);
-      W.uFogSun.value.copy(horizonSun).multiplyScalar(0.9).add(E.clone().multiplyScalar(0.02));
-      W.uFogDensity.value = 0.02; W.uFogHeight.value = 45; W.uFogSunPow.value = 3;
+      W.uFogSky.value.copy(avg).lerp(new THREE.Vector3(l, l, l), 0.4).multiplyScalar(0.42);
+      W.uFogSun.value.copy(horizonSun).multiplyScalar(0.7).add(E.clone().multiplyScalar(0.015));
+      // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
+      W.uFogDensity.value = 0.05; W.uFogHeight.value = 16; W.uFogSunPow.value = 3; W.uFogPatch.value = 1;
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
-      W.uFogDensity.value = 0.00009; W.uFogHeight.value = 600; W.uFogSunPow.value = 10;
+      W.uFogDensity.value = 0.00009; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0;
     }
     // exposure: key on the brightest lambertian white in the scene
     const white = (v: THREE.Vector3) => (0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z) / Math.PI;
-    const keyLum = white(this.sunE) * Math.max(sunDir.y, 0.12) + white(this.moonE) * 2.5 + white(this.skyE) * 1.0 + 0.0004;
+    // fog dims the sun but the eye does not fully compensate: key on the clear-sky sun
+    const keyLum = white(this.sunE) / fogMul * (0.6 + 0.4 * fogMul) * Math.max(sunDir.y, 0.12) + white(this.moonE) * 2.5 + white(this.skyE) * 1.0 + 0.0004;
     this.exposure = THREE.MathUtils.clamp(0.48 / keyLum, 0.05, 80);
-    if (spec.weather === 'fog') this.exposure *= 1.15;
+
+    // scotopic night: the eye trades brightness for sensitivity, the scene stays dark
+    this.exposure *= 1 - 0.45 * this.night;
 
     this.bakeEnvironment();
   }

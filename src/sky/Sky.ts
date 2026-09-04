@@ -15,7 +15,7 @@ export class Sky {
     uIncludeSun: { value: 1 }, uStars: { value: 1 },
     tMoon: { value: null as THREE.Texture | null },
     uFogDensity: W.uFogDensity, uFogHeight: W.uFogHeight, uFogSky: W.uFogSky, uFogSun: W.uFogSun, uFogSunPow: W.uFogSunPow, uNight: W.uNight,
-    uFogOnSky: { value: 1 },
+    uFogOnSky: { value: 1 }, tFogNoise: W.tFogNoise, uFogPatch: W.uFogPatch,
   };
 
   constructor() {

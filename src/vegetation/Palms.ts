@@ -108,7 +108,7 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
   }
   // placements: beach clumps, a few by the town, a line behind the quay
   const spots: [number, number][] = [];
-  const clumps: [number, number, number, number][] = [[-95, -12, 26, 9], [-70, 22, 18, 6], [-120, 30, 22, 7], [-60, 62, 14, 4], [-55, 130, 10, 4], [-20, 150, 12, 3], [60, 160, 18, 5], [-140, 55, 16, 4]];
+  const clumps: [number, number, number, number][] = [[-95, -12, 26, 11], [-70, 22, 18, 7], [-120, 30, 22, 8], [-60, 62, 14, 5], [-55, 132, 12, 5], [-20, 150, 12, 4], [60, 160, 18, 6], [-140, 55, 16, 5], [-100, -40, 20, 6], [10, 140, 14, 4], [-75, 100, 8, 3], [40, 135, 10, 3]];
   for (const [cu, cw, r, n] of clumps) for (let i = 0; i < n; i++) {
     for (let tries = 0; tries < 12; tries++) {
       const a = rng.range(0, 6.28), d = Math.sqrt(rng.next()) * r; const u = cu + Math.cos(a) * d, w = cw + Math.sin(a) * d;

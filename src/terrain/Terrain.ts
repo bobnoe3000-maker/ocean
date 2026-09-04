@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Heightfield, GRID } from './Heightfield';
+import { Heightfield, GRID, RIGHT, FORWARD, LAYOUT } from './Heightfield';
 import { injectWorld } from '../core/WorldUniforms';
 import { loadSet, loadTex, PbrSet } from '../materials/Textures';
 
@@ -12,9 +12,9 @@ export class Terrain {
   constructor(private hf: Heightfield, private segments: number) {}
 
   async build(): Promise<void> {
-    const [sand, rock, scrub, noise] = await Promise.all([loadSet('sand'), loadSet('rock'), loadSet('scrub'), loadTex('noise', { srgb: false })]);
+    const [sand, rock, scrub, stone, noise] = await Promise.all([loadSet('sand'), loadSet('rock'), loadSet('scrub'), loadSet('stone'), loadTex('noise', { srgb: false })]);
     this.buildDepthTexture();
-    this.buildMesh(sand, rock, scrub, noise);
+    this.buildMesh(sand, rock, scrub, stone, noise);
   }
 
   private buildDepthTexture(): void {
@@ -29,7 +29,7 @@ export class Terrain {
     this.depthTexture = t;
   }
 
-  private buildMesh(sand: PbrSet, rock: PbrSet, scrub: PbrSet, noise: THREE.Texture): void {
+  private buildMesh(sand: PbrSet, rock: PbrSet, scrub: PbrSet, stone: PbrSet, noise: THREE.Texture): void {
     const S = this.segments, half = GRID.size / 2;
     const geo = new THREE.PlaneGeometry(GRID.size, GRID.size, S, S);
     geo.rotateX(-Math.PI / 2);
@@ -49,12 +49,16 @@ export class Terrain {
         tSandA: { value: sand.map }, tSandN: { value: sand.normalMap }, tSandO: { value: sand.ormMap },
         tRockA: { value: rock.map }, tRockN: { value: rock.normalMap }, tRockO: { value: rock.ormMap },
         tScrubA: { value: scrub.map }, tScrubN: { value: scrub.normalMap }, tScrubO: { value: scrub.ormMap },
+        tStoneA: { value: stone.map }, tStoneN: { value: stone.normalMap }, tStoneO: { value: stone.ormMap },
         tNoise: { value: noise },
+        uVista: { value: new THREE.Matrix3().set(RIGHT[0], RIGHT[1], 0, FORWARD[0], FORWARD[1], 0, 0, 0, 1) },
+        uBay: { value: new THREE.Vector4(LAYOUT.bayC[0], LAYOUT.bayC[1], 76, 136) },
       },
       vertexPars: 'varying vec3 vWNormal;',
       vertexMain: 'vWNormal = normalize(mat3(modelMatrix) * objectNormal);',
       fragmentPars: /* glsl */ `
-        uniform sampler2D tSandA, tSandN, tSandO, tRockA, tRockN, tRockO, tScrubA, tScrubN, tScrubO, tNoise;
+        uniform sampler2D tSandA, tSandN, tSandO, tRockA, tRockN, tRockO, tScrubA, tScrubN, tScrubO, tStoneA, tStoneN, tStoneO, tNoise;
+        uniform mat3 uVista; uniform vec4 uBay;
         uniform float uSeaLevel;
         varying vec3 vWNormal;
         vec3 unpackN(vec3 c) { return c * 2.0 - 1.0; }
@@ -97,13 +101,23 @@ export class Terrain {
           float sandW = (1.0 - rockW) * (1.0 - smoothstep(2.2, 5.5, h + (nz2.r - 0.5) * 2.5 + macro * 1.5));
           float scrubW = (1.0 - rockW) * (1.0 - sandW) * smoothstep(0.0, 0.8, h);
           sandW = (1.0 - rockW) * (1.0 - scrubW);
-          Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N);
-          Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N);
-          Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N);
-          vec3 albedo = sS.a * sandW + sR.a * rockW + sC.a * scrubW;
-          vec3 wN = normalize(sS.n * sandW + sR.n * rockW + sC.n * scrubW);
-          float rough = sS.r * sandW + sR.r * rockW + sC.r * scrubW;
-          float ao = sS.ao * sandW + sR.ao * rockW + sC.ao * scrubW;
+          // town terrace: packed earth and worn cobbles between the houses
+          vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
+          vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
+          float townW = smoothstep(uBay.z - 4.0, uBay.z + 2.0, br) * (1.0 - smoothstep(uBay.w - 12.0, uBay.w + 6.0, br + (nz2.r - 0.5) * 14.0)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * (1.0 - rockW) * smoothstep(0.3, 1.2, h);
+          sandW *= 1.0 - townW; scrubW *= 1.0 - townW;
+          vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
+          if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
+          if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
+          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
+          if (townW > 0.004) {
+            Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 0.9, nz.g, N);
+            Surf sD = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.5 + 0.37, nz.g, N);
+            float cob = smoothstep(0.35, 0.65, nz2.a + (nz.b - 0.5) * 0.4);
+            vec3 ta = mix(sD.a * vec3(1.05, 0.98, 0.9), sT.a * vec3(0.95, 0.93, 0.9), cob);
+            albedo += ta * townW; wN += normalize(mix(sD.n, sT.n, cob)) * townW; rough += mix(sD.r, sT.r, cob) * townW; ao += mix(sD.ao, sT.ao, cob) * townW;
+          }
+          wN = normalize(wN);
           // macro colour variation (kills tiling, adds patchiness)
           albedo *= 0.86 + 0.28 * nz.a;
           albedo = mix(albedo, albedo * vec3(1.06, 1.0, 0.92), macro * 0.5 + 0.5);
