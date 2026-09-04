@@ -9,6 +9,7 @@ import { Terrain } from '../terrain/Terrain';
 import { Ocean } from '../ocean/Ocean';
 import { Post } from '../post/Post';
 import { installPCSS } from '../lighting/PCSS';
+import { Reflection } from '../ocean/Reflection';
 
 export interface Stats {
   calls: number; triangles: number; programs: number; textureMB: number; geometries: number; textures: number;
@@ -25,7 +26,7 @@ export class World {
   readonly sky = new Sky();
   readonly lighting: Lighting;
   readonly hf: Heightfield;
-  terrain!: Terrain; ocean!: Ocean; post!: Post;
+  terrain!: Terrain; ocean!: Ocean; post!: Post; reflection: Reflection | null = null;
   spec: SceneSpec;
   extras: Extra[] = [];
   private frameTimes: number[] = [];
@@ -63,6 +64,7 @@ export class World {
     this.ocean.setHull(bx, bz, LAYOUT.brigHeading * Math.PI / 180, 14, 3.4);
     this.lighting.setShadowQuality(q === 'low' ? 1024 : q === 'medium' ? 2048 : 4096, q === 'high' ? 3 : 2);
     this.post = new Post(this.renderer, this.scene, this.camera, q);
+    if (q !== 'low') { this.reflection = new Reflection(this.renderer, q === 'high' ? 0.5 : 0.35); this.ocean.uniforms.tRefl.value = this.reflection.target.texture; this.ocean.uniforms.uReflMatrix.value = this.reflection.textureMatrix; this.ocean.uniforms.uReflF.value = 1; }
     this.resize();
     this.apply(this.spec);
   }
@@ -73,6 +75,7 @@ export class World {
     const w = window.innerWidth, h = window.innerHeight;
     this.renderer.setSize(w, h, false);
     this.post?.setSize(w * this.renderer.getPixelRatio(), h * this.renderer.getPixelRatio());
+    this.reflection?.setSize(w * this.renderer.getPixelRatio(), h * this.renderer.getPixelRatio());
     this.camera.aspect = w / h;
     this.placeCamera();
   }
@@ -103,6 +106,7 @@ export class World {
     { const el = Math.asin(Math.max(-1, Math.min(1, W.uSunDir.value.y))) * 180 / Math.PI; this.post.setGolden(THREE.MathUtils.smoothstep(el, -2, 6) * (1 - THREE.MathUtils.smoothstep(el, 14, 32))); }
     this.ocean.uniforms.uNightF.value = this.lighting.night;
     this.ocean.uniforms.uFogF.value = spec.weather === 'fog' ? 1 : 0;
+    if (this.reflection) this.ocean.uniforms.uReflF.value = 1 - 0.55 * this.lighting.night;
     this.sky.uniforms.uIncludeSun.value = spec.sun ? 1 : 0;
     const hide = spec.hide.split(',').filter(Boolean);
     this.ocean.group.visible = !hide.includes('ocean'); this.terrain.group.visible = !hide.includes('terrain'); this.sky.mesh.visible = !hide.includes('sky');
@@ -121,6 +125,8 @@ export class World {
     if (!this.post) return;
     this.renderer.info.reset();
     this.post.render(dt);
+    // reflection for the next frame: after the main pass so the shadow map is already built this frame (one frame of lag on a fixed camera is invisible)
+    if (this.reflection) { const hide: THREE.Object3D[] = [this.ocean.group]; this.reflection.render(this.scene, this.camera, hide); }
     this.frameTimes.push(performance.now() - now);
     if (this.frameTimes.length > 240) this.frameTimes.shift();
   }

@@ -15,6 +15,9 @@ export class Ocean {
     tRipple: { value: null as THREE.Texture | null },
     uNightF: { value: 0 },
     uFogF: { value: 0 },
+    tRefl: { value: null as THREE.Texture | null },
+    uReflMatrix: { value: new THREE.Matrix4() },
+    uReflF: { value: 0 },
     tFoam: { value: null as THREE.Texture | null },
     tNoise: { value: null as THREE.Texture | null },
     uGrid: { value: new THREE.Vector4(GRID.cx, GRID.cz, GRID.size, 0) },
@@ -103,7 +106,7 @@ export class Ocean {
         ['#include <beginnormal_vertex>', 'vec3 objectNormal = vec3(0.0, 1.0, 0.0);'],
       ],
       fragmentPars: /* glsl */ `
-        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF;
+        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF; uniform mat4 uReflMatrix;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;
         float sdCapsule(vec2 p, vec2 a, vec2 b, float r) { vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
@@ -170,6 +173,22 @@ export class Ocean {
         `],
         ['#include <map_fragment>', ''],
         ['#include <roughnessmap_fragment>', 'float roughnessFactor = roughness;'],
+        ['#include <lights_fragment_end>', /* glsl */ `
+          #include <lights_fragment_end>
+          if (uReflF > 0.0) {
+            vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
+            vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
+            if (ruv.x > 0.0 && ruv.x < 1.0 && ruv.y > 0.0 && ruv.y < 1.0) {
+              vec3 refl = texture2D(tRefl, ruv).rgb;
+              vec3 Vr = normalize(cameraPosition - vWPos);
+              float f0 = 0.035; float fres = f0 + (1.0 - f0) * pow(1.0 - max(dot(Vr, waterN), 0.0), 5.0);
+              // replace the sky-only indirect specular where the mirror image has content
+              float lum = dot(refl, vec3(0.2126, 0.7152, 0.0722));
+              float has = smoothstep(0.0, 0.02, lum);
+              reflectedLight.indirectSpecular = mix(reflectedLight.indirectSpecular, refl * fres * (1.0 - waterFoam) * 1.1, has * uReflF);
+            }
+          }
+        `],
         ['#include <emissivemap_fragment>', /* glsl */ `
           // sub-surface light through the wave backs, lit from behind by the sun
           vec3 V = normalize(cameraPosition - vWPos);
