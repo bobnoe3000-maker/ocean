@@ -86,7 +86,7 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
   const barkMat = pbr(barkSet, { vertexColors: true });
   const frondMat = new THREE.MeshStandardMaterial({ map: frondCard, side: THREE.DoubleSide, vertexColors: true, alphaTest: 0.45, roughness: 0.55, metalness: 0 });
   // leaf translucency: sunlight through the fronds keeps them green under a low sun
-  injectWorld(frondMat, { fragmentPars: 'uniform vec3 uSunColor;', replace: [['#include <emissivemap_fragment>', 'totalEmissiveRadiance += diffuseColor.rgb * uSunColor * 0.09 * max(uSunDir.y, 0.0) * 4.0;']] });
+  injectWorld(frondMat, { fragmentPars: 'uniform vec3 uSunColor;', replace: [['#include <emissivemap_fragment>', 'totalEmissiveRadiance += diffuseColor.rgb * vec3(0.9, 1.1, 0.6) * uSunColor * 0.2 * max(uSunDir.y, 0.0) * 4.0;']] });
   for (const m of [barkMat, frondMat]) {
     injectWorld(m, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.35 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   }

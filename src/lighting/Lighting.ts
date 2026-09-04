@@ -134,7 +134,7 @@ export class Lighting {
     if (this.envRT) this.envRT.dispose();
     this.envRT = this.pmrem.fromScene(s, 0.02, 1, 12000);
     this.scene.environment = this.envRT.texture;
-    this.scene.environmentIntensity = 2.2;
+    this.scene.environmentIntensity = 1.7;
     this.sky.uniforms.uIncludeSun.value = 1; this.sky.uniforms.uStars.value = 1;
     this.scene.add(this.sky.mesh);
   }
