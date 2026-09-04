@@ -33,10 +33,10 @@ export class Ocean {
     const [wn, rip, foam, noise] = await Promise.all([loadTex('waternormal'), loadTex('ripple'), loadTex('foam'), loadTex('noise')]);
     this.uniforms.tHeight.value = this.depthTexture; this.uniforms.tWaterN.value = wn; this.uniforms.tRipple.value = rip; this.uniforms.tFoam.value = foam; this.uniforms.tNoise.value = noise;
 
-    const N = this.segments, EXT = 3000;
+    const N = this.segments, EXT = 24000;
     const geo = new THREE.BufferGeometry();
     const verts = new Float32Array((N + 1) * (N + 1) * 3);
-    const shape = (t: number) => Math.sign(t) * Math.pow(Math.abs(t), 2.4) * EXT;
+    const shape = (t: number) => Math.sign(t) * Math.pow(Math.abs(t), 3.2) * EXT;
     let k = 0;
     for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) {
       const x = shape((i / N) * 2 - 1), z = shape((j / N) * 2 - 1);
@@ -128,7 +128,8 @@ export class Ocean {
           vec3 n1 = texture2D(tWaterN, pw / vec2(26.0, 11.0) + vec2(t * 0.05, 0.0) + 0.3).xyz * 2.0 - 1.0;
           vec3 n2 = texture2D(tRipple, pw / vec2(7.5, 3.2) + vec2(t * 0.14, 0.02 * sin(t * 0.3))).xyz * 2.0 - 1.0;
           vec3 n3 = texture2D(tRipple, pw / vec2(2.4, 1.1) + vec2(t * 0.3, 0.0) + 0.6).xyz * 2.0 - 1.0;
-          vec2 nx = n0.xy * (0.5 + 1.2 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.55 * nearF + n3.xy * 0.25 * nearF * nearF;
+          float glassy = smoothstep(1500.0, 6000.0, length(P - cameraPosition));
+          vec2 nx = (n0.xy * (0.5 + 0.5 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.55 * nearF + n3.xy * 0.25 * nearF * nearF) * (1.0 - 0.85 * glassy);
           nx = fromWind * nx;
           vec3 dn = normalize(vec3(nx.x * 1.3, 1.6, nx.y * 1.3));
           vec3 Nw = normalize(vWN);

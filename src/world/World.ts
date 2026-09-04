@@ -83,7 +83,7 @@ export class World {
     const aspect = Math.max(this.camera.aspect, 390 / 844);
     const halfH = Math.tan(this.camera.fov * Math.PI / 360);
     const D = this.spec.zoom / (2 * halfH * aspect);
-    const f = new THREE.Vector3(FORWARD[0], 0, FORWARD[1]);
+    const f = new THREE.Vector3(FORWARD[0], 0, FORWARD[1]).applyAxisAngle(new THREE.Vector3(0, 1, 0), -this.spec.yaw * Math.PI / 180);
     this.camera.position.copy(this.target).addScaledVector(f, -D * Math.cos(pitch)).add(new THREE.Vector3(0, D * Math.sin(pitch), 0));
     this.camera.lookAt(this.target);
     this.camera.near = Math.max(0.5, D * 0.04); this.camera.far = 14000;

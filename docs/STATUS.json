@@ -1,6 +1,6 @@
 {
   "phase": "1 look test",
-  "updated": "2026-09-04T07:05:33.864Z",
+  "updated": "2026-09-04T09:02:24.953Z",
   "rounds": [
     {
       "round": 1,
@@ -97,35 +97,90 @@
         "shots/critic2/sky_check_crop_top.png"
       ],
       "commit": "aecb97c"
+    },
+    {
+      "round": 3,
+      "scores": {
+        "materials": 5.5,
+        "light": 6,
+        "atmosphere": 4.5,
+        "water": 4.5,
+        "scale_motion": 6,
+        "composition": 5.5,
+        "budget_errors": 8.5,
+        "programmer_art": 4
+      },
+      "pass": false,
+      "console_errors": 0,
+      "programmer_art_hits": [
+        "flat or untextured surfaces: sails, window decals, black doors, unshaded balcony bars, black chimney caps, flat quay/mole paving (shots/critic3/zoom60_brig_crop_sail.png, shots/critic3/zoom60_town_crop_windows.png, shots/critic3/hero_phone_crop_mole.png)",
+        "visible tiling or stretched UVs: far-water lattice to the horizon, east-shore sawtooth with smeared texture, uniform beach grain (shots/critic3/sky_check_crop_top.png, shots/critic3/hero_phone_crop_east_shore.png, shots/critic3/landscape_crop_east_shore.png, shots/critic3/zoom60_beach.png)",
+        "uniform water plane / white-stripe foam: uniform foam stipple over the whole basin at every zoom, noon foam comet and outer-beach band (shots/critic3/hero_phone_crop_shore.png, shots/critic3/contact_clear_12.png, shots/critic3/zoom300.png)",
+        "placeholder primitives: lighthouse beam as a flat translucent trapezoid quad, sphere boulders (shots/critic3/night_phone_crop_mole.png, shots/critic3/contact_fog_22.png, shots/critic3/hero_phone_crop_mole.png)"
+      ],
+      "report": "docs/critic/round3.md",
+      "screenshots": [
+        "shots/critic3/hero_phone.png",
+        "shots/critic3/hero_phone_crop_town.png",
+        "shots/critic3/hero_phone_crop_brig.png",
+        "shots/critic3/hero_phone_crop_mole.png",
+        "shots/critic3/hero_phone_crop_shore.png",
+        "shots/critic3/hero_phone_crop_hill.png",
+        "shots/critic3/hero_phone_crop_east_shore.png",
+        "shots/critic3/contact.png",
+        "shots/critic3/contact_clear_12.png",
+        "shots/critic3/contact_clear_175.png",
+        "shots/critic3/contact_clear_22.png",
+        "shots/critic3/contact_fog_12.png",
+        "shots/critic3/contact_fog_175.png",
+        "shots/critic3/contact_fog_22.png",
+        "shots/critic3/zoom60_town.png",
+        "shots/critic3/zoom60_town_crop_windows.png",
+        "shots/critic3/zoom60_brig.png",
+        "shots/critic3/zoom60_brig_crop_sail.png",
+        "shots/critic3/zoom60_beach.png",
+        "shots/critic3/zoom300.png",
+        "shots/critic3/zoom300_crop_island.png",
+        "shots/critic3/night_phone.png",
+        "shots/critic3/night_phone_crop_mole.png",
+        "shots/critic3/night_phone_crop_town.png",
+        "shots/critic3/fog_phone.png",
+        "shots/critic3/fog_phone_crop_town.png",
+        "shots/critic3/landscape.png",
+        "shots/critic3/landscape_crop_east_shore.png",
+        "shots/critic3/sky_check.png",
+        "shots/critic3/sky_check_crop_top.png"
+      ],
+      "commit": "e3f6853"
     }
   ],
   "best": {
-    "round": 2,
-    "min_score": 3.5
+    "round": 3,
+    "min_score": 4
   },
   "open_issues": [
-    "Water is still a static noise field: no swell, chop, crest foam or reflections; shadowed water is a blotchy caustic patchwork; noon glitter uniform confetti (shots/critic2/hero_phone_crop_shore.png, shots/critic2/zoom60_brig.png, shots/critic2/contact_clear_12.png)",
-    "Sails, hull and flags are flat planes (shots/critic2/zoom60_brig.png)",
-    "No sky, horizon or sun disc at any pitch or zoom (shots/critic2/sky_check.png, shots/critic2/sky_check_crop_top.png, shots/critic2/landscape.png)",
-    "Fog is one grey tone with a cloud-blob pattern; 12:00 fog is a sheet; no light halos at 22:00 (shots/critic2/contact_fog_12.png, shots/critic2/contact_fog_22.png, shots/critic2/fog_phone.png)",
-    "Windows and doors are identical painted decals on every house (shots/critic2/zoom60_town_crop_windows.png, shots/critic2/hero_phone_crop_town.png)",
-    "Sail shadow is a hard dark block on the water and light leaks through the mainsail (shots/critic2/zoom60_brig.png)",
-    "Hillside reads as dune corrugation, not a scrub slope; no north cliff (shots/critic2/hero_phone.png, shots/critic2/zoom300.png)",
-    "Night: lighthouse is a bloom disc with a projected pool; moon glitter blankets the basin (shots/critic2/night_phone_crop_mole.png, shots/critic2/contact_clear_22.png)",
-    "17:30 shade is neutral grey-brown with no bounce or blue sky fill (shots/critic2/hero_phone_crop_town.png, shots/critic2/zoom60_town.png)",
-    "Quay and mole are flat grey slabs with repeating stone and no wet edge (shots/critic2/zoom60_town_crop_windows.png, shots/critic2/hero_phone_crop_mole.png)",
-    "East shore is still a geometric sawtooth in the landscape preset (shots/critic2/landscape_crop_east_shore.png)",
-    "Shadow softness is uniform, not graded with distance (shots/critic2/zoom60_town.png, shots/critic2/zoom60_beach.png)",
-    "Far water shows a regular ripple lattice at 300 m (shots/critic2/sky_check_crop_top.png, shots/critic2/zoom300.png)",
-    "Palms are comb-strip fronds; beach bushes are faceted blobs (shots/critic2/zoom60_beach.png)",
-    "Dock is a stub; smoke reads as speckles at hero zoom; lamp posts are pins (shots/critic2/hero_phone_crop_shore.png, shots/critic2/hero_phone_crop_town.png, shots/critic2/zoom60_town.png)"
+    "Foam is a uniform pink-tan stipple over the whole basin at every zoom, no swell shape, no reflections, noon glitter confetti with a foam comet (shots/critic3/hero_phone_crop_shore.png, shots/critic3/zoom300.png, shots/critic3/contact_clear_12.png)",
+    "Lighthouse beam is a flat translucent trapezoid quad on the water with a hot specular blob, at night and in 22:00 fog (shots/critic3/night_phone_crop_mole.png, shots/critic3/contact_fog_22.png)",
+    "Hillside is a stepped terrace corrugation with zig-zag step edges dominating the top third; no north cliff (shots/critic3/hero_phone_crop_hill.png, shots/critic3/zoom300_crop_island.png)",
+    "Sails are flat quads with a light-leak smear and a hard trapezoid shadow on the water; flag a flat quad (shots/critic3/zoom60_brig_crop_sail.png, shots/critic3/zoom60_brig.png)",
+    "Far water tiles as a regular lattice to the horizon; sky is a flat wash with no sun disc, rose belt or aerial perspective (shots/critic3/sky_check_crop_top.png, shots/critic3/zoom300.png)",
+    "East shore is a hard sawtooth staircase with smeared stretched texture in hero and landscape (shots/critic3/hero_phone_crop_east_shore.png, shots/critic3/landscape_crop_east_shore.png)",
+    "Fog is one tan-grey tone, depth-inverted at 17:30 (far hill sharp, near water thick), opaque sheet at 12:00 (shots/critic3/fog_phone_crop_town.png, shots/critic3/contact_fog_12.png)",
+    "Windows identical flat white-cross decals, black door rectangles, unshaded balcony bar cages, black chimney caps (shots/critic3/zoom60_town_crop_windows.png)",
+    "17:30 shade neutral grey-green with no sky fill or bounce (shots/critic3/zoom60_town.png, shots/critic3/hero_phone_crop_town.png)",
+    "Quay and mole flat paving with no wet band, hard paving-to-sand edge, sphere boulders (shots/critic3/hero_phone_crop_mole.png, shots/critic3/hero_phone_crop_east_shore.png)",
+    "Moon glitter blankets the whole basin as uniform speckle (shots/critic3/night_phone.png, shots/critic3/contact_clear_22.png)",
+    "Beach sand a uniform micro-ripple grain with no macro variation or debris (shots/critic3/zoom60_beach.png)",
+    "Barrels and crates float on the water off the beach (shots/critic3/hero_phone_crop_shore.png)",
+    "Landscape preset shows only water and the dock; brig and lighthouse cut out (shots/critic3/landscape.png)",
+    "Chimney smoke barely visible at hero zoom; motion unverifiable (shots/critic3/hero_phone_crop_town.png)"
   ],
   "budget": {
     "reference_device_fps": "not measured (no device reachable; headless SwiftShader only)",
-    "draw_calls": 159,
-    "triangles": 1484571,
-    "texture_mb": 41.8,
-    "measured_on": "shots/critic2/hero_phone.json"
+    "draw_calls": 235,
+    "triangles": 1235171,
+    "texture_mb": 45.3,
+    "measured_on": "shots/critic3/hero_phone.json"
   },
   "notes": "Filled after each critic round by the builder; scores are the critic's, never the builder's."
 }

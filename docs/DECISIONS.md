@@ -89,3 +89,10 @@ Recorded as they were made. Newest at the bottom.
 21. **Vegetation is alpha cards.** Palm fronds are three-segment strips with a
     procedural frond card; bushes are three or four crossed leaf-cluster cards
     plus a top card. Shadows use alpha-tested depth materials.
+22. **Ocean grid reaches 24 km** on a centre-dense grid so the horizon is
+    water, not a mesh edge; beyond 1.5 km the detail normals fade so the far
+    sea goes glassy and hands the horizon to aerial perspective.
+23. **`yaw` and `pitch` scene parameters** exist for the critic only: the hero
+    keeps a fixed yaw, but the atmosphere lines (sun disc, horizon gradient,
+    glitter path) can only be judged looking toward the sun, e.g.
+    `pitch=14 yaw=135 zoom=300` at 17:30.

@@ -99,7 +99,11 @@ export async function buildBrig(seed: number): Promise<Extra> {
   injectWorld(flagMat);
 
   const ship = new THREE.Group();
-  const add = (g: THREE.BufferGeometry, m: THREE.Material, shadow = true) => { const mesh = new THREE.Mesh(g, m); mesh.castShadow = shadow; mesh.receiveShadow = true; ship.add(mesh); return mesh; };
+  // geometry is collected per material and merged into one mesh each (draw-call budget)
+  const buckets = new Map<THREE.Material, { geos: THREE.BufferGeometry[]; shadow: boolean }>();
+  const ensureColor = (g: THREE.BufferGeometry) => { if (!g.attributes.color) g.setAttribute('color', new THREE.Float32BufferAttribute(new Array(g.attributes.position.count * 3).fill(1), 3)); if (!g.attributes.uv) g.setAttribute('uv', new THREE.Float32BufferAttribute(new Array(g.attributes.position.count * 2).fill(0), 2)); return g; };
+  const add = (g: THREE.BufferGeometry, m: THREE.Material, shadow = true) => { let b = buckets.get(m); if (!b) { b = { geos: [], shadow }; buckets.set(m, b); } b.geos.push(ensureColor(g.index ? g.toNonIndexed() : g)); b.shadow = b.shadow || shadow; return null as unknown as THREE.Mesh; };
+  const flushBuckets = () => { for (const [m, b] of buckets) { const g = mergeGeometries(b.geos, false); if (!g) continue; const mesh = new THREE.Mesh(g, m); mesh.castShadow = b.shadow; mesh.receiveShadow = true; ship.add(mesh); } buckets.clear(); };
   add(hullGeometry(), hullMat);
   add(deckGeometry(), deckMat);
   add(bulwarkGeometry(), hullMat);
@@ -116,6 +120,25 @@ export async function buildBrig(seed: number): Promise<Extra> {
   add(box(2.6, 1.1, 3.2, 0, DECK + 0.55, 9.5, 0.7), deckMat);
   add(new THREE.CylinderGeometry(0.35, 0.4, 1.0, 10).translate(0, DECK + 0.5, -8.5), sparMat);
   add(box(0.5, 1.2, 0.5, 0, DECK + 0.6, L / 2 - 1.2, 0.7), sparMat); // tiller post / binnacle
+  // gunports along the wale (dark recessed squares with lids), stern gallery windows, chainplates
+  for (const side of [1, -1]) for (let k = 0; k < 4; k++) {
+    const z = -8 + k * 5.2; const sIdx = 0.5 - z / L; const hb = deckOutline(sIdx);
+    add(box(0.12, 0.7, 0.8, (hb - 0.02) * side, DECK - 0.05, z, 1), ironMat);
+    add(box(0.08, 0.35, 0.85, (hb + 0.08) * side, DECK + 0.45, z, 1).rotateZ(side * 0.9), hullMat);
+    for (const dz of [-1.2, 0, 1.2]) add(box(0.06, 1.2, 0.12, (hb + 0.03) * side, DECK - 0.55, z + dz + 2.6, 1), ironMat);
+  }
+  for (const x of [-1.6, -0.55, 0.55, 1.6]) { const g = box(0.8, 0.6, 0.1, x, DECK - 0.25, -L / 2 - 0.1, 1); add(g, ironMat); }
+  add(box(3.4, 0.14, 0.3, 0, RAIL + 0.05, -L / 2 - 0.05, 1), sparMat);
+  // hatch gratings: a lattice of thin battens on the hatch tops
+  for (const [hx, hz, hw, hd] of [[0, -2.5, 2.2, 3.0], [0, 6, 1.8, 2.2]] as [number, number, number, number][]) {
+    for (let i = 0; i <= 6; i++) add(box(0.06, 0.06, hd, hx - hw / 2 + hw * i / 6, DECK + 0.53, hz, 1), ironMat);
+    for (let i = 0; i <= 8; i++) add(box(hw, 0.06, 0.06, hx, DECK + 0.53, hz - hd / 2 + hd * i / 8, 1), ironMat);
+  }
+  // rope coils, buckets and the helm
+  for (const [rx, rz] of [[2.4, -5], [-2.6, 3], [1.8, 9.5], [-2.2, -10.5]]) add(new THREE.TorusGeometry(0.32, 0.1, 6, 14).rotateX(Math.PI / 2).translate(rx, DECK + 0.1, rz), ropeMat);
+  for (const [bx, bz] of [[2.9, 1.5], [-3.0, -1.0]]) add(new THREE.CylinderGeometry(0.2, 0.16, 0.3, 8).translate(bx, DECK + 0.15, bz), sparMat);
+  add(new THREE.TorusGeometry(0.55, 0.05, 6, 12).rotateZ(Math.PI / 2).translate(0, DECK + 1.1, -L / 2 + 2.2), sparMat);
+  for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; add(tube(new THREE.Vector3(0, DECK + 1.1, -L / 2 + 2.2), new THREE.Vector3(0, DECK + 1.1 + Math.cos(a) * 0.7, -L / 2 + 2.2 + Math.sin(a) * 0.7), 0.025, 0.025, 4), sparMat); }
   // deck guns on carriages, run out through the bulwarks
   for (const side of [1, -1]) for (let k = 0; k < 4; k++) {
     const z = -8 + k * 5.2; const s = 0.5 - z / L; const x = (deckOutline(s) - 1.1) * side;
@@ -221,7 +244,11 @@ export async function buildBrig(seed: number): Promise<Extra> {
     #ifdef USE_MAP
       vec4 sampledDiffuseColor = texture2D( map, vCloth );
       vec4 stain = texture2D( map, vCloth * 0.13 + 0.4 );
-      diffuseColor *= sampledDiffuseColor * mix(vec4(1.0), stain * 1.15, 0.6);
+      // cloth panels (0.6 m), reef bands and a weathered foot
+      float panel = 1.0 - 0.14 * smoothstep(0.93, 1.0, abs(fract(vCloth.x * 3.0) - 0.5) * 2.0);
+      float reef = 1.0 - 0.1 * (smoothstep(0.02, 0.0, abs(fract(vCloth.y * 0.45 + 0.2) - 0.5) - 0.44));
+      float foot = 1.0 - 0.12 * (1.0 - smoothstep(0.0, 0.35, vCloth.y / max(vCloth.y + 0.001, 1.0)));
+      diffuseColor *= sampledDiffuseColor * mix(vec4(1.0), stain * 1.15, 0.6) * panel * reef * foot;
     #endif`],
     ['#include <normal_fragment_maps>', /* glsl */ `
     #ifdef USE_NORMALMAP
@@ -242,6 +269,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
     #endif
   `]] });
 
+  flushBuckets();
   // place at anchor, bow to the wind
   const [x, z] = vistaToWorld(LAYOUT.brig[0], LAYOUT.brig[1]);
   ship.position.set(x, 0, z);

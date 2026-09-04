@@ -120,7 +120,7 @@ export class Terrain {
           vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
           if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
-          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.6, 0.6, 0.52), vec3(1.0, 1.0, 0.95), smoothstep(0.3, 0.7, nz3.r)); sC.a = mix(sC.a, vec3(dot(sC.a, vec3(0.333))) * vec3(0.8, 0.88, 0.72), 0.45); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
+          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.6, 0.6, 0.52), vec3(1.0, 1.0, 0.95), smoothstep(0.3, 0.7, nz3.r)); sC.a = mix(sC.a, vec3(dot(sC.a, vec3(0.333))) * vec3(0.72, 0.84, 0.6), 0.55); sC.a *= mix(vec3(1.0), vec3(0.62, 0.72, 0.5), smoothstep(0.4, 0.75, nz3.g + nz.a * 0.3)); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
           if (townW > 0.004) {
             Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 0.9, nz.g, N);
             Surf sD = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.5 + 0.37, nz.g, N);
