@@ -1,0 +1,8 @@
+node_modules/
+dist/
+refs/
+shots/
+tools/vendor/
+public/textures/*.png
+.vite/
+*.log

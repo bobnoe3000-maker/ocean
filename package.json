@@ -1,0 +1,39 @@
+{
+  "name": "ocean",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json",
+    "textures": "node tools/gen-textures.mjs && node tools/encode-ktx2.mjs",
+    "shoot": "node tools/shoot.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobnoe3000-maker/ocean.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bobnoe3000-maker/ocean/issues"
+  },
+  "homepage": "https://github.com/bobnoe3000-maker/ocean#readme",
+  "type": "module",
+  "private": "true",
+  "dependencies": {
+    "postprocessing": "^6.39.4",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.185.4",
+    "playwright": "^1.56.1",
+    "pngjs": "^7.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
+  }
+}
