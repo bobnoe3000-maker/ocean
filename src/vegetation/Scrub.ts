@@ -33,7 +33,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
   const mat = pbr(frond, { side: THREE.DoubleSide, vertexColors: true, color: 0xb9c2a0 });
   injectWorld(mat, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.12 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   const rng = new Rng(seed * 77 + 11);
-  const count = quality === 'low' ? 350 : quality === 'medium' ? 650 : 900;
+  const count = quality === 'low' ? 400 : quality === 'medium' ? 900 : 1300;
   const spots: { u: number; w: number; s: number }[] = [];
   const bc = LAYOUT.bayC;
   let tries = 0;
@@ -44,8 +44,10 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
     const dx = u - bc[0], dw = w - bc[1]; const r = Math.hypot(dx, dw); const th = Math.atan2(dw, dx) * 180 / Math.PI;
     if (r > 74 && r < 138 && th > 28 && th < 152) continue; // town terrace
     const [x, z] = vistaToWorld(u, w); const n = hf.normalWorld(x, z); if (n[1] < 0.55) continue;
-    const density = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(u * 0.021 + 1.3) * Math.cos(w * 0.017)); if (rng.next() > density) continue;
-    spots.push({ u, w, s: rng.range(0.7, 1.6) });
+    const cl = 0.5 + 0.5 * Math.sin(u * 0.045 + 1.3) * Math.cos(w * 0.038 + 0.4) + 0.3 * Math.sin(u * 0.11 - w * 0.07);
+    const density = 0.3 + 0.7 * Math.max(0, cl); if (rng.next() > density) continue;
+    const tree = rng.next() < 0.06;
+    spots.push({ u, w, s: tree ? rng.range(2.4, 3.4) : rng.range(0.7, 1.6) });
   }
   const variants = [bushGeometry(rng.fork(1), 18), bushGeometry(rng.fork(2), 24), bushGeometry(rng.fork(3), 30)];
   const per: number[][] = [[], [], []]; spots.forEach((_, i) => per[i % 3].push(i));

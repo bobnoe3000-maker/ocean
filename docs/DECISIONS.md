@@ -61,3 +61,16 @@ Recorded as they were made. Newest at the bottom.
     mid-capture.
 14. **Whitecaps come from the swell Jacobian only.** Including the chop waves in
     the Jacobian made foam speckle the whole basin at 6 m/s.
+15. **Shore masks read a 1 m heightfield texture, not the vertex height.** The
+    terrain mesh (2.2 m at high) interpolates height linearly per triangle, so
+    the waterline, wet band and foam followed a polyline and stair-stepped.
+    Sampling the 1024² half-float heightfield gives a smooth contour at no
+    mesh cost; the same texture drives water depth.
+16. **Terrace walls and outcrops are painted, not modelled.** Retaining walls
+    on the slope behind the town are stone stripes along height contours of
+    the heightfield texture; outcrops are noise patches of the rock set.
+    Geometric walls would need a 1 m mesh over the whole slope.
+17. **Hero pitch 52°.** The brief says 58°; at 240 m altitude that reads as a
+    map (critic round 1). 52° stays inside the full spec's 50–65° range and
+    keeps the top-down read while façades and the slope show. `pitch` is a
+    scene-spec parameter so the critic can check the horizon at 30°.

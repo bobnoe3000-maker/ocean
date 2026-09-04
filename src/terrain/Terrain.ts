@@ -97,7 +97,10 @@ export class Terrain {
           vec4 nz3 = texture2D(tNoise, P.xz * 0.0012 + 0.61);
           float macro = nz.r * 2.0 - 1.0;
           float slope = 1.0 - N.y;
-          float rockW = smoothstep(0.26, 0.5, slope + (nz2.g - 0.5) * 0.25 + macro * 0.08);
+          float rockW = smoothstep(0.16, 0.42, slope + (nz2.g - 0.5) * 0.25 + macro * 0.08);
+          // outcrops: patches of bare rock on the ridges and shoulders, from a low-frequency cell field
+          float outcrop = smoothstep(0.66, 0.78, nz.a * 0.6 + nz3.b * 0.4 + macro * 0.15) * smoothstep(0.03, 0.1, slope + (nz2.r - 0.5) * 0.1) * smoothstep(4.0, 12.0, P.y);
+          rockW = max(rockW, outcrop);
           // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
@@ -109,10 +112,15 @@ export class Terrain {
           vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
           float townW = smoothstep(uBay.z - 4.0, uBay.z + 2.0, br) * (1.0 - smoothstep(uBay.w - 12.0, uBay.w + 6.0, br + (nz2.r - 0.5) * 14.0)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * (1.0 - rockW) * smoothstep(0.3, 1.2, h);
           sandW *= 1.0 - townW; scrubW *= 1.0 - townW;
+          // terraces behind the town: dry-stone retaining walls painted along the height contours
+          float terrW = smoothstep(128.0, 142.0, br) * (1.0 - smoothstep(236.0, 262.0, br)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * smoothstep(2.0, 4.0, hTex);
+          float contour = fract(hTex / 3.4);
+          float wallLine = smoothstep(0.86, 0.92, contour) * (1.0 - smoothstep(0.97, 1.0, contour)) * terrW * (0.6 + 0.4 * nz2.a);
+          float wallShade = smoothstep(0.55, 0.8, contour) * (1.0 - smoothstep(0.8, 0.95, contour)) * terrW * 0.5;
           vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
           if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
-          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.62, 0.6, 0.5), vec3(1.0, 1.02, 0.95), smoothstep(0.3, 0.7, nz3.r)); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
+          if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.6, 0.6, 0.52), vec3(1.0, 1.0, 0.95), smoothstep(0.3, 0.7, nz3.r)); sC.a = mix(sC.a, vec3(dot(sC.a, vec3(0.333))) * vec3(0.8, 0.88, 0.72), 0.45); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
           if (townW > 0.004) {
             Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 0.9, nz.g, N);
             Surf sD = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.5 + 0.37, nz.g, N);
@@ -133,6 +141,9 @@ export class Terrain {
           wet = max(wet, 1.0 - smoothstep(-0.05, 0.5, h)) * (1.0 - rockW * 0.4);
           albedo *= mix(1.0, 0.5, wet);
           rough = mix(rough, 0.12, wet * 0.95);
+          // terrace walls: grey stone with a shadowed base, and a strip of bare earth above each wall
+          if (wallLine > 0.004) { Surf sW = triplanar(tStoneA, tStoneN, tStoneO, P * 0.7, nz.g, N); albedo = mix(albedo, sW.a * 0.55, wallLine); wN = normalize(mix(wN, sW.n, wallLine)); rough = mix(rough, sW.r, wallLine); }
+          albedo *= 1.0 - wallShade * 0.35;
           // wrack line: dark weed and debris left at the high-tide mark
           float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;
           albedo = mix(albedo, vec3(0.22, 0.17, 0.11), wrack * 0.8);
