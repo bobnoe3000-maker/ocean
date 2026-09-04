@@ -111,3 +111,11 @@ Recorded as they were made. Newest at the bottom.
 27. **Exposure stops down when the sun disc is in frame** (about -1.5 EV,
     view dependent) so the sun-facing sky keeps its gradient; the hero view,
     with the sun behind the camera, is unaffected.
+28. **Planar reflections** (medium and high tiers). The scene is rendered once
+    more per frame from the camera mirrored in the water plane, at 0.35–0.5
+    resolution, water hidden, clipped at the plane, after the main pass so the
+    shadow map of the frame is reused (one frame of lag is invisible on a fixed
+    camera). The ocean shader replaces its sky-only indirect specular with the
+    mirror image, perturbed by the surface normal, wherever the image has
+    content; halved at night so the moon glow does not blotch. Roughly +50
+    draw calls; the low tier keeps the sky-only reflection.
