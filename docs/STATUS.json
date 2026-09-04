@@ -1,6 +1,6 @@
 {
   "phase": "1 look test",
-  "updated": "2026-09-04T10:16:59.920Z",
+  "updated": "2026-09-04T11:42:20.843Z",
   "rounds": [
     {
       "round": 1,
@@ -209,35 +209,110 @@
         "shots/critic4/fog_phone_crop_near_water.png"
       ],
       "commit": "2f856e8"
+    },
+    {
+      "round": 5,
+      "scores": {
+        "materials": 6,
+        "light": 7,
+        "atmosphere": 5,
+        "water": 5,
+        "scale_motion": 6,
+        "composition": 6.5,
+        "budget_errors": 8.5,
+        "programmer_art": 4.5
+      },
+      "pass": false,
+      "console_errors": 0,
+      "programmer_art_hits": [
+        "Flat or untextured surfaces: flat sails with light-leak smear, textureless pennant, teal-box lamp head, unshaded balcony rails, blurred dock slab (shots/critic5/zoom60_brig_crop_sail.png, shots/critic5/zoom60_town_crop_quay.png, shots/critic5/zoom60_town_crop_windows.png, shots/critic5/hero_phone_crop_dock.png)",
+        "Visible tiling: far water a regular diagonal lattice at 300 m and at the sun-check horizon; beach a uniform micro-ripple grain (shots/critic5/zoom300_crop_top.png, shots/critic5/sun_check_crop_sky.png, shots/critic5/zoom60_beach_crop_shore.png)",
+        "White-stripe foam: noon foam comet off the mole tip in clear and fog (shots/critic5/contact_clear_12_crop_glitter.png, shots/critic5/contact_fog_12_crop_mole.png)",
+        "Fog as one colour: 17:30 fog a single grey-blue tone with inverted depth, 12:00 a white sheet (shots/critic5/fog_phone.png, shots/critic5/fog_phone_crop_near_water.png, shots/critic5/contact_fog_12.png)"
+      ],
+      "report": "docs/critic/round5.md",
+      "screenshots": [
+        "shots/critic5/sun_check.png",
+        "shots/critic5/landscape.png",
+        "shots/critic5/hero_phone.png",
+        "shots/critic5/contact.png",
+        "shots/critic5/contact_clear_12.png",
+        "shots/critic5/contact_clear_175.png",
+        "shots/critic5/contact_clear_22.png",
+        "shots/critic5/contact_fog_12.png",
+        "shots/critic5/contact_fog_175.png",
+        "shots/critic5/contact_fog_22.png",
+        "shots/critic5/zoom60_town.png",
+        "shots/critic5/zoom60_brig.png",
+        "shots/critic5/zoom60_beach.png",
+        "shots/critic5/zoom300.png",
+        "shots/critic5/night_phone.png",
+        "shots/critic5/fog_phone.png",
+        "shots/critic5/sun_check_crop_sky.png",
+        "shots/critic5/sun_check_crop_glitter.png",
+        "shots/critic5/sun_check_crop_foreground.png",
+        "shots/critic5/landscape_crop_hill.png",
+        "shots/critic5/landscape_crop_basin.png",
+        "shots/critic5/hero_phone_crop_town.png",
+        "shots/critic5/hero_phone_crop_hill.png",
+        "shots/critic5/hero_phone_crop_brig.png",
+        "shots/critic5/hero_phone_crop_mole.png",
+        "shots/critic5/hero_phone_crop_water.png",
+        "shots/critic5/hero_phone_crop_dock.png",
+        "shots/critic5/hero_phone_crop_east_shore.png",
+        "shots/critic5/hero_phone_crop_bottom.png",
+        "shots/critic5/zoom60_town_crop_windows.png",
+        "shots/critic5/zoom60_town_crop_quay.png",
+        "shots/critic5/zoom60_town_crop_roof.png",
+        "shots/critic5/zoom60_brig_crop_sail.png",
+        "shots/critic5/zoom60_beach_crop_shore.png",
+        "shots/critic5/zoom60_beach_crop_crate.png",
+        "shots/critic5/zoom300_crop_top.png",
+        "shots/critic5/zoom300_crop_island.png",
+        "shots/critic5/contact_clear_12_crop_glitter.png",
+        "shots/critic5/contact_fog_175_crop_town.png",
+        "shots/critic5/contact_fog_175_crop_near.png",
+        "shots/critic5/contact_fog_22_crop_mole.png",
+        "shots/critic5/contact_clear_22_crop_basin.png",
+        "shots/critic5/contact_fog_12_crop_mole.png",
+        "shots/critic5/night_phone_crop_town.png",
+        "shots/critic5/night_phone_crop_brig.png",
+        "shots/critic5/night_phone_crop_basin.png",
+        "shots/critic5/night_phone_crop_mole.png",
+        "shots/critic5/fog_phone_crop_town.png",
+        "shots/critic5/fog_phone_crop_near_water.png",
+        "shots/critic5/fog_phone_crop_brig.png"
+      ],
+      "commit": "881d535"
     }
   ],
   "best": {
-    "round": 3,
-    "min_score": 4
+    "round": 5,
+    "min_score": 4.5
   },
   "open_issues": [
-    "Foam is a uniform tan-pink stipple over the whole basin at every zoom, no swell shape, no daylight reflections, noon glitter confetti with a foam comet (shots/critic4/hero_phone_crop_water.png, shots/critic4/contact_clear_12_crop_glitter.png)",
-    "Hillside is a flat gradient with painted contour lines that reads as a topographic map; no north cliff (shots/critic4/hero_phone_crop_hill.png, shots/critic4/zoom300_crop_island.png)",
-    "Fog-night lighthouse beam is a flat hard-edged trapezoid quad with a bright blob, larger than round 3 (shots/critic4/contact_fog_22_crop_beam.png)",
-    "Sails are flat quads with seam stripes and a light-leak smear; pennant is a flat unlit red quad (shots/critic4/zoom60_brig_crop_sail.png)",
-    "Fog is one grey-blue tone with inverted depth at 17:30 and an opaque white sheet at 12:00 (shots/critic4/fog_phone_crop_town.png, shots/critic4/fog_phone_crop_near_water.png, shots/critic4/contact_fog_12.png)",
-    "No sky, sun disc, horizon gradient or aerial perspective in any frame; far water is a cross-hatch lattice (shots/critic4/zoom300_crop_top.png, shots/critic4/hero_phone.png)",
-    "Windows flat decals or black rectangles, doors black rectangles, rails bar cages, lamp heads black boxes (shots/critic4/zoom60_town_crop_windows.png, shots/critic4/zoom60_town_crop_quay.png)",
-    "17:30 shade is neutral tan-grey with no sky fill or bounce (shots/critic4/zoom60_town.png, shots/critic4/hero_phone_crop_town.png)",
-    "Quay and mole are a flat flagstone grid with no wet band and a hard step to the cobble apron (shots/critic4/zoom60_town_crop_quay.png, shots/critic4/hero_phone_crop_mole.png)",
-    "Moon glitter blankets the whole basin as uniform speckle (shots/critic4/night_phone.png)",
-    "Noon reads as dim overcast dusk (shots/critic4/contact_clear_12.png)",
-    "Chimney smoke is flat white blotches painted over roofs (shots/critic4/hero_phone_crop_east_shore.png)",
-    "Beach is one uniform grain with pink blotches and no debris; palms grey-blue (shots/critic4/zoom60_beach.png)",
-    "A crate floats in open water off the beach (shots/critic4/zoom60_beach.png)",
-    "Hero lower 40% is empty stippled water; landscape framing and motion unverified (shots/critic4/hero_phone.png)"
+    "Water is a single-scale streaked plane: no swell, lattice at 300 m and horizon, no daylight reflections, no bow/mole foam, noon confetti with the foam comet (shots/critic5/hero_phone_crop_bottom.png, shots/critic5/zoom300_crop_top.png, shots/critic5/zoom60_brig.png, shots/critic5/contact_clear_12_crop_glitter.png)",
+    "Fog is one grey-blue tone with inverted depth at 17:30 and a white sheet at 12:00 (shots/critic5/fog_phone.png, shots/critic5/fog_phone_crop_near_water.png, shots/critic5/contact_fog_12.png)",
+    "Sails are flat quads with the light-leak smear; pennant a textureless quad (shots/critic5/zoom60_brig_crop_sail.png)",
+    "Hillside is a bare tan dune with faint contour lines and smudges; no rock, no north cliff (shots/critic5/hero_phone_crop_hill.png, shots/critic5/landscape_crop_hill.png)",
+    "Sky is a monotone warm-grey haze with no blue zenith or rose belt; glitter path clips to white; a fog sheet intersects near terrain (shots/critic5/sun_check.png, shots/critic5/sun_check_crop_glitter.png, shots/critic5/sun_check_crop_foreground.png)",
+    "Lamp heads are teal boxes, balconies unshaded bar cages, rigging bright orange (shots/critic5/zoom60_town_crop_quay.png, shots/critic5/zoom60_brig_crop_sail.png)",
+    "Quay and mole have no wet band; flagstone grid meets hex cobble apron at a hard step; boulders dry to the waterline (shots/critic5/zoom60_town_crop_quay.png, shots/critic5/hero_phone_crop_mole.png)",
+    "Crates float beside the dock and off the beach; dock deck is a blurred slab (shots/critic5/hero_phone_crop_dock.png, shots/critic5/zoom60_beach_crop_crate.png)",
+    "Moon light is a mottled blanket over the whole basin rather than a path (shots/critic5/night_phone_crop_basin.png)",
+    "17:30 shade is green-grey not violet, no warm bounce (shots/critic5/zoom60_town_crop_roof.png)",
+    "Hull has no wale stripe or waterline band (shots/critic5/hero_phone_crop_brig.png)",
+    "Beach is one uniform grain with pink blotches, no debris (shots/critic5/zoom60_beach_crop_shore.png)",
+    "Roofs are paper-thin with no eaves (shots/critic5/zoom60_town_crop_roof.png)",
+    "Chimney smoke is faint flat smudges (shots/critic5/hero_phone_crop_town.png)",
+    "Hero lower 40% is an empty streaked plane; no sky in hero or landscape (shots/critic5/hero_phone.png, shots/critic5/landscape.png)"
   ],
   "budget": {
     "reference_device_fps": "not measured (no device reachable; headless SwiftShader only)",
-    "draw_calls": 114,
-    "triangles": 1218187,
+    "draw_calls": 112,
+    "triangles": 1209415,
     "texture_mb": 45.3,
-    "measured_on": "shots/critic4/hero_phone.json"
+    "measured_on": "shots/critic5/hero_phone.json"
   },
   "notes": "Filled after each critic round by the builder; scores are the critic's, never the builder's."
 }
