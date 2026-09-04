@@ -116,8 +116,8 @@ export class Terrain {
           // terraces behind the town: dry-stone retaining walls painted along the height contours
           float terrW = smoothstep(128.0, 142.0, br) * (1.0 - smoothstep(236.0, 262.0, br)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * smoothstep(2.0, 4.0, hTex);
           float contour = fract(hTex / 3.4);
-          float wallLine = smoothstep(0.86, 0.92, contour) * (1.0 - smoothstep(0.97, 1.0, contour)) * terrW * (0.6 + 0.4 * nz2.a);
-          float wallShade = smoothstep(0.55, 0.8, contour) * (1.0 - smoothstep(0.8, 0.95, contour)) * terrW * 0.5;
+          float wallLine = smoothstep(0.88, 0.93, contour) * (1.0 - smoothstep(0.97, 1.0, contour)) * terrW * smoothstep(0.35, 0.6, nz2.a * 0.6 + nz.g * 0.4) * 0.55;
+          float wallShade = smoothstep(0.55, 0.8, contour) * (1.0 - smoothstep(0.8, 0.95, contour)) * terrW * 0.25;
           vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
           if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }

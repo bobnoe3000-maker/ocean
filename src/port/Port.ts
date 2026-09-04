@@ -61,7 +61,9 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         stone.quad(a.clone().setY(y0), b.clone().setY(y0), b.clone().setY(0.55), a.clone().setY(0.55), [[ua, 0], [ua + 1.3, 0], [ua + 1.3, 0.9], [ua, 0.9]], [0.45, 0.5, 0.45]);
         stone.quad(a.clone().setY(0.55), b.clone().setY(0.55), b.clone().setY(y1), a.clone().setY(y1), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.4], [ua, 1.4]]);
         const po = toW(prevOut![0], prevOut![1]), co = toW(out[0], out[1]);
-        stone.quad(a.clone().setY(y1), b.clone().setY(y1), co.clone().setY(y1 + 0.35), po.clone().setY(y1 + 0.35), [[ua * 1.6, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 3.3 + ua * 0.2], [ua * 1.6, 3.3 + ua * 0.2]], [0.88, 0.87, 0.84]);
+        { const ea = a.clone().setY(y1).lerp(po.clone().setY(y1 + 0.35), 0.16), eb = b.clone().setY(y1).lerp(co.clone().setY(y1 + 0.35), 0.16);
+          stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [[ua * 1.6, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 0.95 + ua * 0.2], [ua * 1.6, 0.95 + ua * 0.2]], [0.5, 0.52, 0.5]);
+          stone.quad(ea, eb, co.clone().setY(y1 + 0.35), po.clone().setY(y1 + 0.35), [[ua * 1.6, 0.95 + ua * 0.2], [ua * 1.6 + 2.1, 0.95 + ua * 0.2], [ua * 1.6 + 2.1, 3.3 + ua * 0.2], [ua * 1.6, 3.3 + ua * 0.2]], [0.88, 0.87, 0.84]); }
         // kerb
         stone.quad(a.clone().setY(y1), b.clone().setY(y1), b.clone().setY(y1 + 0.12).addScaledVector(co.clone().sub(b).normalize(), 0.3), a.clone().setY(y1 + 0.12).addScaledVector(po.clone().sub(a).normalize(), 0.3), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.0], [ua, 1.0]]);
       }
@@ -77,7 +79,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         iron.geo(new THREE.CylinderGeometry(0.07, 0.12, 3.6, 7).translate(lw.x, y1 + 1.8, lw.z));
         iron.geo(new THREE.CylinderGeometry(0.22, 0.26, 0.25, 8).translate(lw.x, y1 + 0.12, lw.z));
         iron.geo(box(0.5, 0.08, 0.08, lw.x + 0.2, y1 + 3.5, lw.z, 1)); iron.geo(box(0.08, 0.5, 0.08, lw.x + 0.45, y1 + 3.3, lw.z, 1));
-        iron.geo(box(0.46, 0.14, 0.46, lw.x + 0.45, y1 + 3.62, lw.z, 1)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
+        paint.geo(new THREE.ConeGeometry(0.4, 0.3, 4).rotateY(Math.PI / 4).translate(lw.x + 0.45, y1 + 3.75, lw.z), hexc(0x3e5a4c)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
         glass.geo(box(0.3, 0.5, 0.3, lw.x + 0.45, y1 + 3.3, lw.z, 1));
         if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x + 0.45, y1 + 3.2, lw.z); lights.push(l); }
       }
@@ -255,7 +257,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   const gradTex = new THREE.DataTexture(grad, 1, 256, THREE.RGBAFormat); gradTex.needsUpdate = true;
   const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff2c8, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, alphaMap: gradTex });
   const beamGeo = new THREE.CylinderGeometry(0.6, 12, 160, 14, 1, true).rotateX(-Math.PI / 2).translate(0, 0, -80);
-  const beam = new THREE.Mesh(beamGeo, beamMat); beam.position.copy(lights[lights.length - 1].position); group.add(beam);
+  const beam = new THREE.Mesh(beamGeo, beamMat); beam.position.copy(lights[lights.length - 1].position); beam.visible = false; // a flat wedge from above reads as a quad; halos carry the fog glow
 
   // ------------------------------------------------------------ smoke
   const smoke = makeSmoke(emitters, smokeTex); group.add(smoke.points);
@@ -468,7 +470,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         float size = 0.7 + a * 3.6;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.5;
+        vAlpha = pow(1.0 - a, 1.7) * smoothstep(0.0, 0.06, a) * 0.36;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
@@ -476,7 +478,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
       void main() {
         vec2 c = gl_PointCoord - 0.5; c = vec2(c.x * vRot.x - c.y * vRot.y, c.x * vRot.y + c.y * vRot.x) + 0.5;
         float a = texture2D(tSmoke, c).a * vAlpha;
-        vec3 col = vec3(0.55, 0.53, 0.52) * uLight / 3.14159;
+        vec3 col = vec3(0.42, 0.41, 0.4) * uLight / 3.14159;
         gl_FragColor = vec4(col, a);
       }`,
   });

@@ -95,8 +95,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   const ropeMat = pbr(ropeSet, { repeat: [1, 1], color: 0xa08a68 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2a2724, roughness: 0.55, metalness: 0.85, roughnessMap: noise });
   injectWorld(ironMat);
-  const flagMat = new THREE.MeshStandardMaterial({ color: 0xb3282d, roughness: 0.9, side: THREE.DoubleSide });
-  injectWorld(flagMat);
+  const flagMat = pbr(canvasSet, { color: 0xb3282d, side: THREE.DoubleSide, roughness: 1 }); flagMat.shadowSide = THREE.DoubleSide;
 
   const ship = new THREE.Group();
   // geometry is collected per material and merged into one mesh each (draw-call budget)

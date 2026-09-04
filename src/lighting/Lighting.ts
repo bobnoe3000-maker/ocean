@@ -104,7 +104,7 @@ export class Lighting {
       W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
       void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
-      W.uFogDensity.value = 0.042; W.uFogHeight.value = 16; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = 0.0035;
+      W.uFogDensity.value = 0.028; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = 0.006;
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
@@ -114,7 +114,7 @@ export class Lighting {
     const white = (v: THREE.Vector3) => (0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z) / Math.PI;
     // fog dims the sun but the eye does not fully compensate: key on the clear-sky sun
     const keyLum = white(this.sunE) / fogMul * (0.6 + 0.4 * fogMul) * Math.max(sunDir.y, 0.12) + white(this.moonE) * 2.5 + white(this.skyE) * 1.0 + 0.0004;
-    this.exposure = THREE.MathUtils.clamp(0.38 / keyLum, 0.05, 80);
+    this.exposure = THREE.MathUtils.clamp((0.38 + 0.16 * THREE.MathUtils.smoothstep(sunDir.y, 0.3, 0.9)) / keyLum, 0.05, 80);
 
     // scotopic night: the eye trades brightness for sensitivity, the scene stays dark
     this.exposure *= 1 - 0.45 * this.night;
@@ -129,12 +129,12 @@ export class Lighting {
     const s = new THREE.Scene(); s.add(this.sky.mesh);
     // ground bounce: a warm sand disc below the horizon so shaded surfaces pick up bounced light
     const gE = this.sunE.clone().multiplyScalar(Math.max(W.uSunDir.value.y, 0)).add(this.skyE).add(this.moonE.clone().multiplyScalar(Math.max(W.uMoonDir.value.y, 0)));
-    const ground = new THREE.Mesh(new THREE.CircleGeometry(5000, 32), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.62 * gE.x / Math.PI, 0.52 * gE.y / Math.PI, 0.4 * gE.z / Math.PI), side: THREE.DoubleSide }));
+    const ground = new THREE.Mesh(new THREE.CircleGeometry(5000, 32), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.4 * gE.x / Math.PI, 0.38 * gE.y / Math.PI, 0.34 * gE.z / Math.PI), side: THREE.DoubleSide }));
     ground.rotation.x = -Math.PI / 2; ground.position.y = -30; s.add(ground);
     if (this.envRT) this.envRT.dispose();
     this.envRT = this.pmrem.fromScene(s, 0.02, 1, 12000);
     this.scene.environment = this.envRT.texture;
-    this.scene.environmentIntensity = 1.9;
+    this.scene.environmentIntensity = 2.2;
     this.sky.uniforms.uIncludeSun.value = 1; this.sky.uniforms.uStars.value = 1;
     this.scene.add(this.sky.mesh);
   }

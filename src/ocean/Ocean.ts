@@ -130,9 +130,9 @@ export class Ocean {
           vec3 n2 = texture2D(tRipple, pw / vec2(7.5, 3.2) + vec2(t * 0.14, 0.02 * sin(t * 0.3))).xyz * 2.0 - 1.0;
           vec3 n3 = texture2D(tRipple, pw / vec2(2.4, 1.1) + vec2(t * 0.3, 0.0) + 0.6).xyz * 2.0 - 1.0;
           float glassy = smoothstep(1500.0, 6000.0, length(P - cameraPosition));
-          vec2 nx = (n0.xy * (0.5 + 0.5 * farF) + n1.xy * 1.1 * (1.0 - 0.6 * farF) + n2.xy * 0.5 * nearF + n3.xy * 0.22 * nearF * nearF) * (1.0 - 0.85 * glassy) * (1.0 - 0.5 * uNightF);
+          vec2 nx = (n0.xy * (0.35 + 0.35 * farF) + n1.xy * 0.5 * (1.0 - 0.6 * farF) + n2.xy * 0.45 * nearF + n3.xy * 0.2 * nearF * nearF) * (1.0 - 0.85 * glassy) * (1.0 - 0.7 * uNightF);
           nx = fromWind * nx;
-          vec3 dn = normalize(vec3(nx.x * 1.3, 1.6, nx.y * 1.3));
+          vec3 dn = normalize(vec3(nx.x * 0.9, 1.6, nx.y * 0.9));
           vec3 Nw = normalize(vWN);
           vec3 T = normalize(cross(vec3(0.0, 0.0, 1.0), Nw)); vec3 B = cross(Nw, T);
           vec3 wN = normalize(T * dn.x + Nw * dn.y + B * dn.z);
@@ -164,7 +164,7 @@ export class Ocean {
           alpha = mix(alpha, 1.0, distF * 0.3);
           diffuseColor.rgb = mix(body * 0.5, vec3(0.92), foam);
           diffuseColor.a = alpha;
-          roughnessFactor = mix(0.06 + distF * 0.16 + uNightF * 0.28 + uFogF * 0.25, 0.85, foam);
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25, 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN;
         `],
