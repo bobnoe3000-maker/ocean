@@ -105,3 +105,9 @@ Recorded as they were made. Newest at the bottom.
     than the near water (critic round 3 read it as inverted depth). A uniform
     haze term (0.0035/m, about 850 m visibility) restores distance fall-off
     underneath the bank.
+26. **Island form.** Wide presets showed a single sand mound. A rocky western
+    headland and a northern ridge spine give the island two shoulders and a
+    crest; both are soft-max blended so the coast stays smooth.
+27. **Exposure stops down when the sun disc is in frame** (about -1.5 EV,
+    view dependent) so the sun-facing sky keeps its gradient; the hero view,
+    with the sun behind the camera, is unaffected.

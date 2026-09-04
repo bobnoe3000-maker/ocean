@@ -114,6 +114,19 @@ export class Heightfield {
       const tmask = ang * smooth(132, 150, r) * (1 - smooth(240, 290, r));
       void tmask; // terraces are painted in the terrain shader; geometric steps zig-zag on the mesh
     }
+    // western headland: a second, lower rocky rise so the island has two shoulders
+    {
+      const hu = (u + 205) / 95, hw = (w - 60) / 70; const hr = Math.pow(Math.pow(Math.abs(hu), 2.6) + Math.pow(Math.abs(hw), 2.6), 1 / 2.6);
+      const en = this.n2.fbm(u * 0.015 + 9, w * 0.015 + 4, 3) * 0.2;
+      const head = 22 * (1 - smooth(0.5 + en, 1.0 + en, hr)) * smooth(4, 30, sd);
+      if (head > 0.01) { const rid = this.n2.ridged(u * 0.035 + 2, w * 0.035 + 7, 4) * 5; const k = 5; h = Math.log(Math.exp(h / k) + Math.exp((head + rid * smooth(2, 10, head)) / k)) * k; }
+    }
+    // north ridge: the island's spine, a broken rocky crest well behind the town
+    {
+      const rw = (w - 330) / 55; const ru = (u + 40) / 300;
+      const spine = 26 * (1 - smooth(0.35, 1.0, Math.abs(rw) + Math.abs(ru) * 0.8)) * smooth(60, 140, sd);
+      if (spine > 0.01) { const rid = this.n2.ridged(u * 0.02 + 5, w * 0.02 + 1, 4) * 8; const k = 6; h = Math.log(Math.exp(h / k) + Math.exp((h * 0.55 + spine + rid) / k)) * k; }
+    }
     // beach shelf: low sand foreshore and a shallow bar
     const bu = (u - L.beachC[0]) / L.beachR[0], bw = (w - L.beachC[1]) / L.beachR[1];
     const beach = 1 - smooth(0.55, 1.0, Math.sqrt(bu * bu + bw * bw));
