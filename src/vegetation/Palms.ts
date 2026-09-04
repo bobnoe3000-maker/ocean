@@ -44,7 +44,7 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
   }
   // fronds: chunky sculpted ribbons (stylised realism): a thick curved blade with a rounded tip, lighter toward the tip
   const fp: number[] = [], fn: number[] = [], fu: number[] = [], fs: number[] = [], fc: number[] = [], fi: number[] = [];
-  const N = 9 + rng.int(4);
+  const N = 12 + rng.int(4);
   const a0 = rng.range(0, 6.28);
   for (let f = 0; f < N; f++) {
     const age = f / (N - 1);
@@ -55,15 +55,15 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
     const droop = rng.range(0.7, 1.3) + age * 0.8;
     const ph = rng.range(0, 6.28);
     const dead = age > 0.88;
-    const base: [number, number, number] = dead ? [0.62, 0.44, 0.22] : [0.30 + 0.1 * rng.next(), 0.55 + 0.12 * rng.next(), 0.22];
-    const tip: [number, number, number] = dead ? [0.7, 0.55, 0.3] : [0.62 + 0.1 * rng.next(), 0.78, 0.3];
+    const base: [number, number, number] = dead ? [0.5, 0.36, 0.18] : [0.16 + 0.06 * rng.next(), 0.36 + 0.1 * rng.next(), 0.13];
+    const tip: [number, number, number] = dead ? [0.62, 0.48, 0.26] : [0.36 + 0.08 * rng.next(), 0.56, 0.2];
     const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.0 : 1), 0));
     const SEG = 7; const b0 = fp.length / 3;
     for (let sgi = 0; sgi <= SEG; sgi++) {
       const t = sgi / SEG; const c = rachis(t); const tang = rachis(Math.min(1, t + 0.02)).sub(rachis(Math.max(0, t - 0.02))).normalize();
       const side = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
       // blade width: narrow at the stem, widest at 40%, rounded tip
-      const wdt = L * 0.13 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.03;
+      const wdt = L * 0.085 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.03;
       const sag = 0.18 * wdt; // edges fold down into a V
       const l = c.clone().addScaledVector(side, -wdt).add(new THREE.Vector3(0, -sag, 0)), r = c.clone().addScaledVector(side, wdt).add(new THREE.Vector3(0, -sag, 0));
       const nrm = side.clone().cross(tang).normalize().lerp(new THREE.Vector3(0, 1, 0), 0.7).normalize();
@@ -86,9 +86,10 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
   const [barkSet, noiseTex] = await Promise.all([loadSet('bark'), loadTex('noise')]);
   const rng = new Rng(seed * 31 + 5);
   const barkMat = pbr(barkSet, { vertexColors: true });
-  const frondMat = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, vertexColors: true, roughness: 0.6, metalness: 0, roughnessMap: noiseTex });
+  const frondMat = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide, vertexColors: true, roughness: 0.9, metalness: 0, envMapIntensity: 0.35 });
+  void noiseTex;
   // leaf translucency: sunlight through the fronds keeps them green under a low sun
-  injectWorld(frondMat, { fragmentPars: 'uniform vec3 uSunColor;', replace: [['#include <emissivemap_fragment>', 'totalEmissiveRadiance += diffuseColor.rgb * vec3(0.9, 1.1, 0.6) * uSunColor * 0.2 * max(uSunDir.y, 0.0) * 4.0;']] });
+  injectWorld(frondMat, { fragmentPars: 'uniform vec3 uSunColor;', replace: [['#include <emissivemap_fragment>', 'totalEmissiveRadiance += diffuseColor.rgb * vec3(0.9, 1.1, 0.6) * uSunColor * 0.05 * max(uSunDir.y, 0.0) * 4.0;']] });
   for (const m of [barkMat, frondMat]) {
     injectWorld(m, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.35 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   }

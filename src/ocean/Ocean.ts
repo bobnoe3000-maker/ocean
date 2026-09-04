@@ -118,7 +118,8 @@ export class Ocean {
         ['#include <normal_fragment_maps>', /* glsl */ `
           vec3 P = vWPos; float t = uTime;
           vec2 wd = normalize(uWindDir);
-          float depth = max(vDepth, 0.0);
+          float depthTex = P.y - texture2D(tHeight, clamp((P.xz - uGrid.xy) / uGrid.z + 0.5, 0.0, 1.0)).r;
+          float depth = max(mix(vDepth, depthTex, 1.0 - smoothstep(6.0, 12.0, vDepth)), 0.0);
           // detail normals: two scales scrolled with the wind, weaker in the far field
           float distF = clamp((length(P - cameraPosition) - 120.0) / 700.0, 0.0, 1.0);
           // four octaves from two textures, rotated against each other so no direction repeats
@@ -176,12 +177,13 @@ export class Ocean {
             // then sparse lace streaks fading out over the next few metres, all breathing with the swell
             vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
             vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
-            float collarEdge = 0.9 + 0.9 * surge + (lace.g - 0.5) * 1.6;
+            float collarEdge = 1.3 + 0.9 * surge + (lace.g - 0.5) * 1.6;
             float collar = 1.0 - smoothstep(collarEdge - 0.35, collarEdge + 0.35, depth);
             float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 3.5, depth)) * smoothstep(0.55, 0.75, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
             float hullWake = (1.0 - smoothstep(0.3, 2.2, dh)) * smoothstep(0.35, 0.65, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
             foam = clamp(max(max(collar, laceBand * 0.85), max(foam * 0.6, hullWake)), 0.0, 1.0);
-            alpha = max(alpha, 0.72);
+            // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
+            alpha = max(alpha, 0.72) * smoothstep(0.05, 0.5, depth);
             styleEmis = body * 0.35;
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);

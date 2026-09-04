@@ -145,6 +145,15 @@ export class Terrain {
           // terrace walls: grey stone with a shadowed base, and a strip of bare earth above each wall
           if (wallLine > 0.004) { Surf sW = triplanar(tStoneA, tStoneN, tStoneO, P * 0.7, nz.g, N); albedo = mix(albedo, sW.a * 0.55, wallLine); wN = normalize(mix(wN, sW.n, wallLine)); rough = mix(rough, sW.r, wallLine); }
           albedo *= 1.0 - wallShade * 0.35;
+          // shore wash: the water's foam collar is painted onto the sand just above and below the waterline,
+          // so the terrain mesh's cut through the water plane is invisible (both sides carry the same collar)
+          {
+            float lace = texture2D(tNoise, P.xz * 0.08 + uWindDir * uTime * 0.01).b;
+            float washEdge = 0.55 + (lace - 0.5) * 0.7 + 0.25 * sin(uTime * 0.7 + P.x * 0.05 + P.z * 0.03);
+            float wash = (1.0 - smoothstep(washEdge - 0.25, washEdge + 0.25, h)) * smoothstep(-1.4, -0.4, h) * sandW;
+            albedo = mix(albedo, vec3(0.93, 0.95, 0.94), wash * 0.9);
+            rough = mix(rough, 0.6, wash);
+          }
           // wrack line: dark weed and debris left at the high-tide mark
           float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;
           albedo = mix(albedo, vec3(0.2, 0.15, 0.1), wrack * 0.95);
