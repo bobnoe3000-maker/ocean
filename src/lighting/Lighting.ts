@@ -104,7 +104,7 @@ export class Lighting {
       W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
       void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
-      W.uFogDensity.value = 0.028; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = 0.006;
+      W.uFogDensity.value = 0.024; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = 0.0028;
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
