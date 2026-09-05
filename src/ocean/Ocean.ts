@@ -81,7 +81,7 @@ export class Ocean {
             vec2 p = position.xz; float t = uTime;
             float th = terrainH(p);
             float depth = clamp(-th, 0.0, 30.0);
-            float shoal = smoothstep(0.0, 7.0, depth) * smoothstep(0.2, 3.0, depth);           // waves shrink in the shallows and die at the beach
+            float shoal = smoothstep(0.0, 7.0, depth) * smoothstep(0.4, 5.0, depth);           // waves shrink in the shallows and die well before the beach (the mesh is ~10 m coarse there)
             vec2 wd = normalize(uWindDir);
             mat2 rot = mat2(0.96, 0.28, -0.28, 0.96);
             vec3 disp = vec3(0.0), dPx = vec3(0.0), dPz = vec3(0.0);
