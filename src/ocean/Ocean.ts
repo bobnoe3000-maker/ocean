@@ -190,8 +190,11 @@ export class Ocean {
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
-            alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.92 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(0.02, 0.06, depth)); // the collar and the first hand-span of water are opaque paint
-            if (depthTex < 0.02) discard;
+            // the collar and the first hand-span of water are opaque paint, and the sheet runs a few centimetres past the
+            // field's shoreline: where the 2 m terrain grid dips below the plane on the land side, the water covers the
+            // wet-sand notch instead of exposing it (the sand wins by depth wherever the grid is above the plane)
+            alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.12, -0.06, depthTex));
+            if (depthTex < -0.12) discard;
             body = mix(body * 0.12, body, dayF);
             styleEmis = body * 0.35 * dayF;
           }
