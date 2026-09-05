@@ -219,3 +219,14 @@ Recorded as they were made. Newest at the bottom.
     circle. The choice is now blended over 40 m. Same family as decision
     37: every hard edge in the height function becomes a drawn line on the
     water.
+39. **The harbour-mouth ring was a crease in the coast distance.** After
+    the seabed transparency, the mirror and the sky reflection were each
+    ruled out, the khaki crescent across the hero's lower third turned out
+    to be the hard `min` of the two signed distances (bay circle, island
+    outline): where they cross, the depth has a crease along a circle, and
+    the water's colour bands trace it. The combination is now a smooth
+    minimum with a 14 m radius. Two more of the same family surfaced in the
+    same pass: gunport lids rotated about the ship origin instead of their
+    own centre (dashes on the water) and a yellow-green shallow tint that
+    went khaki under the golden key (now a clean turquoise, with more of the
+    water's colour carried as painted emissive than as sun-lit diffuse).
