@@ -147,3 +147,12 @@ Recorded as they were made. Newest at the bottom.
     sun (the noon basin was a white sky sheet smeared by the chop) and cuts
     the water's sky-lit specular floor at night so the basin sits near black
     with only the moon path and the lanterns reading, as in R2.
+32. **Painted sky tint over the physical sky.** The single-scattering model
+    gives an olive-yellow dome at 17:30 and never the cobalt zenith and rose
+    belt of R1/R5. In the stylised style the sky shader keeps the physical
+    luminance and pulls the hue toward a painted gradient (cobalt zenith,
+    rose belt low on the sun's side, warm horizon), fading with twilight.
+    The same shader renders the IBL, so shaded walls pick up the blue. The
+    haze now starts 70 m from the camera (near chop and rigging stay crisp)
+    and thins and cools under a high sun so the noon mist is a layer, not a
+    grey sheet. `style=real` is untouched.
