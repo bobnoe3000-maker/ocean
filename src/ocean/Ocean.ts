@@ -190,7 +190,7 @@ export class Ocean {
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
-            alpha = max(alpha, 0.72) * smoothstep(0.05, 0.5, depth);
+            alpha = max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97); // the collar is opaque paint
             if (depthTex < 0.02) discard;
             body = mix(body * 0.12, body, dayF);
             styleEmis = body * 0.35 * dayF;

@@ -106,7 +106,10 @@ export class Terrain {
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
           // the 2 m terrain grid interpolates above sea level on steep shores where the smooth heightfield is below it,
           // which draws a sawtooth of sand slivers the water cannot cover: drop those fragments so the water plane wins
-          float sliver = (hTex < -0.02 - uSeaLevel && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) ? 1.0 : 0.0;
+          // the 2 m grid interpolates above sea level on steep shores where the smooth heightfield is below it: those
+          // slivers are dropped and the ocean's opaque foam collar covers the hole, so the visible edge is the field's contour
+          if (hTex < -0.02 - uSeaLevel && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) discard;
+          float sliver = 0.0;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
           vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
