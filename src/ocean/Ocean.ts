@@ -210,7 +210,7 @@ export class Ocean {
         ['#include <lights_fragment_end>', /* glsl */ `
           #include <lights_fragment_end>
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
-          reflectedLight.indirectSpecular *= 1.0 - 0.7 * uNightF;
+          reflectedLight.indirectSpecular *= 1.0 - 0.85 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
           reflectedLight.directSpecular *= (1.0 - 0.55 * sunHigh * uStyle) * (1.0 - 0.75 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {

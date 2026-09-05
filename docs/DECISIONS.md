@@ -188,3 +188,13 @@ Recorded as they were made. Newest at the bottom.
     clear colour as a pale ledge. The slivers are now painted as the water
     beside them (shallow body and the same collar) so the eye reads the
     smooth heightfield contour.
+36. **The shoreline notches, finally.** A frame with the ocean hidden
+    showed the stair-step lives in the terrain: where the 2 m grid dips
+    below the water plane while the smooth field still says land, the ocean
+    used to discard (field depth under 2 cm) and the dark wet seabed showed
+    as a notch every cell. The water sheet now runs 12 cm past the field's
+    shoreline (opaque collar there), covering those notches; where the grid
+    is above the plane the sand wins by depth and the field-contour
+    discard from decision 34 removes the slivers. Nine rounds of "sawtooth"
+    were three different mechanisms, each only visible after the previous
+    one was removed.
