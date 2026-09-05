@@ -90,6 +90,18 @@ tiles at 300 m; fog stays one tone; the noon foam streak off the mole tip;
 the hillside reads as a contour map rather than sculpted rock; the sky is a
 warm haze without a blue zenith or rose belt in the one view that shows it.
 
+## Direction change: stylised realism (rounds 7 onward)
+
+After round 6 the user reviewed a side-by-side of the physically based hero
+against a stylised-realism variant (`shots/compare/side_by_side.png`) and
+chose stylised realism in the manner of Sea of Conquest. Rounds 7 onward are
+scored against that reference. Round 7 (first stylised build): materials 6.5,
+light 5.5, atmosphere 4.5, water 6.0, scale and motion 6.5, composition 7.0,
+budget 8.5, checklist 3.5; water and composition rose, light fell because the
+night basin flooded, and the checklist picked up new hits (stair-stepped
+shore, faceted bushes, flat sand) that the round 8 build addresses. Later
+rounds are appended to the score table in `docs/STATUS.json`.
+
 ## What phase 2 needs before this look can pass
 
 1. Photographic PBR sets from the sources the brief names. The procedural
