@@ -197,7 +197,8 @@ export class Ocean {
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25 + uStyle * (0.22 - 0.14 * sunHigh), 0.85, foam);
+          // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uNightF * 0.16 + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh), 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN; vec3 waterStyleEmis = styleEmis;
         `],
