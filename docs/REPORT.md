@@ -32,16 +32,16 @@ Pass requires every line at or above 8.5 with zero console errors.
 
 Stylised-realism rounds (scored against Sea of Conquest R1/R2):
 
-| Line | R7 | R8 | R9 | R10 | R11 | R12 | R13 |
-|---|---|---|---|---|---|---|---|
-| Materials | 6.5 | 6.5 | 6.5 | 7.0 | 7.0 | 7.0 | 7.0 |
-| Light | 5.5 | 6.5 | 6.5 | 6.5 | 6.5 | 7.0 | 7.5 |
-| Atmosphere | 4.5 | 5.0 | 5.5 | 5.5 | 6.0 | 6.5 | 6.5 |
-| Water | 6.0 | 5.5 | 6.0 | 7.0 | 6.5 | 6.5 | 7.0 |
-| Scale and motion | 6.5 | 6.5 | 6.5 | 6.5 | 7.0 | 7.5 | 7.5 |
-| Composition | 7.0 | 7.0 | 7.5 | 7.5 | 7.5 | 7.5 | 7.5 |
-| Budget and errors | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 |
-| Programmer-art checklist | 3.5 | 4.0 | 4.5 | 5.0 | 5.0 | 5.5 | 6.5 |
+| Line | R7 | R8 | R9 | R10 | R11 | R12 | R13 | R14 |
+|---|---|---|---|---|---|---|---|---|
+| Materials | 6.5 | 6.5 | 6.5 | 7.0 | 7.0 | 7.0 | 7.0 | 6.5 |
+| Light | 5.5 | 6.5 | 6.5 | 6.5 | 6.5 | 7.0 | 7.5 | 7.5 |
+| Atmosphere | 4.5 | 5.0 | 5.5 | 5.5 | 6.0 | 6.5 | 6.5 | 6.5 |
+| Water | 6.0 | 5.5 | 6.0 | 7.0 | 6.5 | 6.5 | 7.0 | 7.0 |
+| Scale and motion | 6.5 | 6.5 | 6.5 | 6.5 | 7.0 | 7.5 | 7.5 | 7.5 |
+| Composition | 7.0 | 7.0 | 7.5 | 7.5 | 7.5 | 7.5 | 7.5 | 7.5 |
+| Budget and errors | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 |
+| Programmer-art checklist | 3.5 | 4.0 | 4.5 | 5.0 | 5.0 | 5.5 | 6.5 | 6.0 |
 
 ## What the critic still lists as missing for a pass (round 6, verbatim)
 
