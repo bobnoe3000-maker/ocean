@@ -119,7 +119,7 @@ export class Terrain {
           float wallLine = smoothstep(0.88, 0.93, contour) * (1.0 - smoothstep(0.97, 1.0, contour)) * terrW * smoothstep(0.35, 0.6, nz2.a * 0.6 + nz.g * 0.4) * 0.55;
           float wallShade = smoothstep(0.55, 0.8, contour) * (1.0 - smoothstep(0.8, 0.95, contour)) * terrW * 0.25;
           vec3 albedo = vec3(0.0); vec3 wN = vec3(0.0); float rough = 0.0; float ao = 0.0;
-          if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.6)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
+          if (sandW > 0.004) { Surf sS = planar(tSandA, tSandN, tSandO, vec2(P.x, -P.z) * 0.5, nz.g, N); sS.a *= mix(vec3(0.86, 0.82, 0.74), vec3(1.05, 1.02, 0.98), smoothstep(0.3, 0.7, nz3.g * 0.6 + nz.a * 0.4)); albedo += sS.a * sandW; wN += normalize(mix(N, sS.n, 0.85)) * sandW; rough += sS.r * sandW; ao += sS.ao * sandW; }
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
           if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.6, 0.6, 0.52), vec3(1.0, 1.0, 0.95), smoothstep(0.3, 0.7, nz3.r)); sC.a = mix(sC.a, vec3(dot(sC.a, vec3(0.333))) * vec3(0.72, 0.84, 0.6), 0.55); sC.a *= mix(vec3(1.0), vec3(0.62, 0.72, 0.5), smoothstep(0.4, 0.75, nz3.g + nz.a * 0.3)); albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
           if (townW > 0.004) {
@@ -151,7 +151,7 @@ export class Terrain {
             float lace = texture2D(tNoise, P.xz * 0.08 + uWindDir * uTime * 0.01).b;
             float washEdge = 0.55 + (lace - 0.5) * 0.7 + 0.25 * sin(uTime * 0.7 + P.x * 0.05 + P.z * 0.03);
             float wash = (1.0 - smoothstep(washEdge - 0.25, washEdge + 0.25, h)) * smoothstep(-1.4, -0.4, h) * sandW;
-            albedo = mix(albedo, vec3(0.93, 0.95, 0.94), wash * 0.9);
+            albedo = mix(albedo, vec3(0.93, 0.95, 0.94), wash * 0.9 * (1.0 - 0.8 * uNight));
             rough = mix(rough, 0.6, wash);
           }
           // wrack line: dark weed and debris left at the high-tide mark

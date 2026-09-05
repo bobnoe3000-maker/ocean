@@ -7,14 +7,14 @@ import * as THREE from 'three';
 export const ATMO = {
   Re: 6371e3, Ra: 6471e3, Hr: 8000, Hm: 1200,
   betaR: new THREE.Vector3(5.8e-6, 13.5e-6, 33.1e-6),
-  betaM: 21e-6, mieG: 0.76,
+  betaM: 15e-6, mieG: 0.76,
   sunIntensity: 22.0,     // radiance scale of the solar disc before atmosphere (scene units)
   moonIntensity: 22.0 * 0.0025, // artistic: moon lit night reads at +8 EV
 };
 
 export const ATMO_GLSL = /* glsl */ `
 const float Re = 6371e3; const float Ra = 6471e3; const float Hr = 8000.0; const float Hm = 1200.0;
-const vec3 betaR = vec3(5.8e-6, 13.5e-6, 33.1e-6); const vec3 betaM = vec3(21e-6);
+const vec3 betaR = vec3(5.8e-6, 13.5e-6, 33.1e-6); const vec3 betaM = vec3(15e-6);
 const float mieG = 0.76;
 vec2 raySphere(vec3 ro, vec3 rd, float r) {
   float b = dot(ro, rd); float c = dot(ro, ro) - r * r; float d = b * b - c;

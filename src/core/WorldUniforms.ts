@@ -20,11 +20,14 @@ export const W = {
   tFogNoise: { value: null as THREE.Texture | null },
   uFogPatch: { value: 0 },
   uFogHaze: { value: 0 },
+  uHazeNear: { value: new THREE.Vector3(0.55, 0.65, 0.85) },
+  uHazeFar: { value: new THREE.Vector3(0.95, 0.88, 0.8) },
+  uHazeGrade: { value: 0 },
 };
 
 export const FOG_PARS = /* glsl */ `
 uniform float uFogDensity; uniform float uFogHeight; uniform vec3 uFogSky; uniform vec3 uFogSun; uniform float uFogSunPow;
-uniform vec3 uSunDir; uniform vec3 uMoonDir; uniform float uNight; uniform sampler2D tFogNoise; uniform float uFogPatch; uniform float uFogHaze;
+uniform vec3 uSunDir; uniform vec3 uMoonDir; uniform float uNight; uniform sampler2D tFogNoise; uniform float uFogPatch; uniform float uFogHaze; uniform vec3 uHazeNear, uHazeFar; uniform float uHazeGrade;
 varying vec3 vWPos;
 vec3 applyAerial(vec3 color, vec3 wpos) {
   vec3 d = wpos - cameraPosition; float dist = length(d); vec3 rd = d / max(dist, 1e-3);
@@ -43,6 +46,8 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
   vec3 inscatter = mix(uFogSky, uFogSun, sunW);
   // the bank is cooler and a touch darker near the water, warmer where it thins with height
   inscatter *= mix(vec3(0.82, 0.86, 0.92), vec3(1.0), smoothstep(0.0, 35.0, wpos.y));
+  // graded haze: cool and thin near, warm and dense far (R4 layering)
+  if (uHazeGrade > 0.0) inscatter = mix(inscatter, mix(uHazeNear, uHazeFar, smoothstep(0.1, 0.9, fog)) * dot(inscatter, vec3(0.33)), uHazeGrade);
   return mix(color, inscatter, clamp(fog, 0.0, 1.0));
 }
 `;

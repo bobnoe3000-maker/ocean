@@ -104,12 +104,12 @@ export class Lighting {
       W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
       void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
-      W.uFogDensity.value = spec.style === 'stylized' ? 0.006 : 0.012; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = 1; W.uFogHaze.value = spec.style === 'stylized' ? 0.0032 : 0.0045;
+      W.uFogDensity.value = spec.style === 'stylized' ? 0.0 : 0.012; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = spec.style === 'stylized' ? 0 : 1; W.uFogHaze.value = spec.style === 'stylized' ? 0.0052 : 0.0045; W.uHazeGrade.value = spec.style === 'stylized' ? 1 : 0;
       if (spec.style === 'stylized') W.uFogSky.value.multiply(new THREE.Vector3(0.9, 0.97, 1.08));
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
-      W.uFogDensity.value = 0.00009; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0; W.uFogHaze.value = 0.0;
+      W.uFogDensity.value = 0.00006; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0; W.uFogHaze.value = 0.0; W.uHazeGrade.value = 0;
     }
     // exposure: key on the brightest lambertian white in the scene
     const white = (v: THREE.Vector3) => (0.2126 * v.x + 0.7152 * v.y + 0.0722 * v.z) / Math.PI;

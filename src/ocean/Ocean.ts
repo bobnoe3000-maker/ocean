@@ -153,7 +153,7 @@ export class Ocean {
           vec2 guv = (P.xz - uGrid.xy) / uGrid.z + 0.5; float gs = 2.5 / uGrid.z;
           float gx = texture2D(tHeight, guv + vec2(gs, 0.0)).r - texture2D(tHeight, guv - vec2(gs, 0.0)).r; float gz = texture2D(tHeight, guv + vec2(0.0, gs)).r - texture2D(tHeight, guv - vec2(0.0, gs)).r;
           float steep = smoothstep(1.2, 3.5, length(vec2(gx, gz)));
-          shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 3.0, depth)) * smoothstep(0.4, 0.75, foamTex + 0.25 * surge) * 0.6);
+          shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 1.5, depth)) * smoothstep(0.45, 0.75, foamTex + 0.25 * surge) * 0.35);
           vec4 fs = texture2D(tFoam, (toWind * P.xz) / vec2(24.0, 4.0) + vec2(t * 0.06, 0.0));
           float crest = (1.0 - smoothstep(0.2, 0.42, vJ)) * smoothstep(0.6, 0.88, fs.r * 0.7 + foamTex * 0.3 + vCrest * 0.2) * 0.7;
           vec2 hd = vec2(sin(uHull.w), -cos(uHull.w));
@@ -173,18 +173,20 @@ export class Ocean {
             float d1 = smoothstep(0.0, 2.5, depth), d2 = smoothstep(2.5, 9.0, depth), d3 = smoothstep(9.0, 26.0, depth);
             vec3 c0 = vec3(0.32, 0.78, 0.70), c1 = vec3(0.04, 0.42, 0.50), c2 = vec3(0.015, 0.16, 0.36), c3 = vec3(0.006, 0.06, 0.22);
             body = mix(mix(mix(c0, c1, d1), c2, d2), c3, d3);
+            float dayF = 1.0 - uNightF;
             // painted foam: a solid collar along every shore whose inner edge is scalloped by a lace texture,
             // then sparse lace streaks fading out over the next few metres, all breathing with the swell
             vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
             vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
             float collarEdge = 1.3 + 0.9 * surge + (lace.g - 0.5) * 1.6;
-            float collar = 1.0 - smoothstep(collarEdge - 0.35, collarEdge + 0.35, depth);
-            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 3.5, depth)) * smoothstep(0.55, 0.75, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
-            float hullWake = (1.0 - smoothstep(0.3, 2.2, dh)) * smoothstep(0.35, 0.65, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
-            foam = clamp(max(max(collar, laceBand * 0.85), max(foam * 0.6, hullWake)), 0.0, 1.0);
+            float collar = 1.0 - smoothstep(collarEdge - 0.12, collarEdge + 0.12, depth);
+            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 4.0, depth)) * smoothstep(0.58, 0.66, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
+            float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
+            foam = clamp(max(max(collar, laceBand * 0.85), max(foam * 0.6, hullWake)), 0.0, 1.0) * (0.3 + 0.7 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
             alpha = max(alpha, 0.72) * smoothstep(0.05, 0.5, depth);
-            styleEmis = body * 0.35;
+            body = mix(body * 0.12, body, dayF);
+            styleEmis = body * 0.35 * dayF;
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;

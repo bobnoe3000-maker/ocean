@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/Rng';
 import { Heightfield, LAYOUT, vistaToWorld } from '../terrain/Heightfield';
 import { loadTex } from '../materials/Textures';
@@ -10,7 +11,7 @@ import { Extra } from '../world/World';
 // instanced across the slopes with per-instance rotation, scale and wind sway.
 function bushGeometry(rng: Rng, detail: number): THREE.BufferGeometry {
   // sculpted blob: a flattened icosphere with lumpy noise displacement and a painted top-light gradient
-  const g = new THREE.IcosahedronGeometry(1, detail);
+  const g = mergeVertices(new THREE.IcosahedronGeometry(1, detail));
   const pos = g.attributes.position as THREE.BufferAttribute;
   const lumps = Array.from({ length: 5 }, () => new THREE.Vector3(rng.range(-1, 1), rng.range(-0.3, 1), rng.range(-1, 1)).normalize());
   const col: number[] = [], sway: number[] = [];
@@ -36,7 +37,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
   injectWorld(mat);
   injectWorld(mat, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.12 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   const rng = new Rng(seed * 77 + 11);
-  const count = quality === 'low' ? 300 : quality === 'medium' ? 550 : 750;
+  const count = quality === 'low' ? 260 : quality === 'medium' ? 440 : 470;
   const spots: { u: number; w: number; s: number }[] = [];
   const bc = LAYOUT.bayC;
   let tries = 0;
@@ -52,7 +53,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
     const tree = rng.next() < 0.06;
     spots.push({ u, w, s: tree ? rng.range(2.4, 3.4) : rng.range(0.7, 1.6) });
   }
-  const variants = [bushGeometry(rng.fork(1), 1), bushGeometry(rng.fork(2), 1), bushGeometry(rng.fork(3), 2)];
+  const variants = [bushGeometry(rng.fork(1), 2), bushGeometry(rng.fork(2), 2), bushGeometry(rng.fork(3), 2)];
   const per: number[][] = [[], [], []]; spots.forEach((_, i) => per[i % 3].push(i));
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3();
   variants.forEach((geo, vi) => {
