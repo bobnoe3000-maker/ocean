@@ -30,6 +30,19 @@ not AAA and is not close to Sea of Conquest, Dredge or the Symi photograph.
 
 Pass requires every line at or above 8.5 with zero console errors.
 
+Stylised-realism rounds (scored against Sea of Conquest R1/R2):
+
+| Line | R7 | R8 | R9 |
+|---|---|---|---|
+| Materials | 6.5 | 6.5 | 6.5 |
+| Light | 5.5 | 6.5 | 6.5 |
+| Atmosphere | 4.5 | 5.0 | 5.5 |
+| Water | 6.0 | 5.5 | 6.0 |
+| Scale and motion | 6.5 | 6.5 | 6.5 |
+| Composition | 7.0 | 7.0 | 7.5 |
+| Budget and errors | 8.5 | 8.5 | 8.5 |
+| Programmer-art checklist | 3.5 | 4.0 | 4.5 |
+
 ## What the critic still lists as missing for a pass (round 6, verbatim)
 
 - materials (6.5): cloth sails and flag with weave, seams and belly; a modelled lantern and rails with thickness; irregular wet-banded quay stones with a blended apron; eaves; sculpted rock on the slope; sand macro variation and debris

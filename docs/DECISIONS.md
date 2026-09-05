@@ -137,3 +137,13 @@ Recorded as they were made. Newest at the bottom.
     grade. What does not change: the atmosphere model, PCSS shadows,
     image-based lighting, the town, the terrain and the harness. `style=real`
     keeps the old look for comparison.
+31. **Shoreline from the rest water level.** Three rounds of sawtooth at the
+    beach had one cause: the ocean fragment's depth was taken from the
+    wave-displaced surface, so any triangle lifted by swell was drawn over the
+    sand as a pale tooth and cut off at its neighbour's edge. Depth (and so
+    the alpha cut, the collar and the banding) now comes from sea level minus
+    the 1 m heightfield texture, which is smooth; the terrain-side wash still
+    paints the run-up. The same pass eases the planar reflection under a high
+    sun (the noon basin was a white sky sheet smeared by the chop) and cuts
+    the water's sky-lit specular floor at night so the basin sits near black
+    with only the moon path and the lanterns reading, as in R2.
