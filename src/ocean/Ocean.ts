@@ -207,7 +207,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             body = mix(max(body * 0.1, vec3(0.004, 0.009, 0.03)), body, dayF); // R2 navy (#111C3C) at night, never a black hole
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
             body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
-            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF) + vec3(0.004, 0.009, 0.03) * 0.7 * uNightF; // night: a self-lit navy floor (R2 #111C3C) so the sea is never a black hole
+            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF) + vec3(0.004, 0.009, 0.03) * 0.1 * uNightF; // night: a faint self-lit navy floor (R2 #111C3C) so the sea is never a black hole
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
