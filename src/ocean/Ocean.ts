@@ -81,17 +81,17 @@ export class Ocean {
             vec2 p = position.xz; float t = uTime;
             float th = terrainH(p);
             float depth = clamp(-th, 0.0, 30.0);
-            float shoal = smoothstep(0.0, 7.0, depth);           // waves shrink in the shallows
+            float shoal = smoothstep(0.0, 7.0, depth) * smoothstep(0.2, 1.6, depth);           // waves shrink in the shallows and die at the beach
             vec2 wd = normalize(uWindDir);
             mat2 rot = mat2(0.96, 0.28, -0.28, 0.96);
             vec3 disp = vec3(0.0), dPx = vec3(0.0), dPz = vec3(0.0);
-            float sw = uSwell * (0.35 + 0.65 * shoal);
+            float sw = uSwell * shoal;
             gerstner(wd, 52.0, 0.85 * sw, 0.5, 1.0, p, t, disp, dPx, dPz);
             gerstner(rot * wd, 33.0, 0.45 * sw, 0.55, 1.0, p, t, disp, dPx, dPz);
             gerstner(wd * mat2(0.94, -0.34, 0.34, 0.94), 20.0, 0.24 * sw, 0.55, 1.0, p, t, disp, dPx, dPz);
             // Jacobian from the swell only: whitecaps come from the long waves, not the chop
             float Jswell = (1.0 + dPx.x) * (1.0 + dPz.z) - dPx.z * dPz.x;
-            float ch = uChop * (0.5 + 0.5 * shoal);
+            float ch = uChop * shoal;
             gerstner(rot * rot * wd, 9.5, 0.07 * ch, 0.6, 1.1, p, t, disp, dPx, dPz);
             gerstner(wd * mat2(0.87, 0.5, -0.5, 0.87), 6.2, 0.045 * ch, 0.7, 1.15, p, t, disp, dPx, dPz);
             gerstner(wd * mat2(0.87, -0.5, 0.5, 0.87), 4.1, 0.03 * ch, 0.7, 1.2, p, t, disp, dPx, dPz);
@@ -178,11 +178,11 @@ export class Ocean {
             // then sparse lace streaks fading out over the next few metres, all breathing with the swell
             vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
             vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
-            float collarEdge = 1.3 + 0.9 * surge + (lace.g - 0.5) * 1.6;
+            float collarEdge = 0.5 + 0.35 * surge + (lace.g - 0.5) * 0.7;
             float collar = 1.0 - smoothstep(collarEdge - 0.12, collarEdge + 0.12, depth);
-            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 4.0, depth)) * smoothstep(0.58, 0.66, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
+            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 2.2, depth)) * smoothstep(0.6, 0.68, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
-            foam = clamp(max(max(collar, laceBand * 0.85), max(foam * 0.6, hullWake)), 0.0, 1.0) * (0.06 + 0.94 * dayF);
+            foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
             alpha = max(alpha, 0.72) * smoothstep(0.05, 0.5, depth);
             body = mix(body * 0.12, body, dayF);

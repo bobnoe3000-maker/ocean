@@ -33,7 +33,8 @@ function bushGeometry(rng: Rng, detail: number): THREE.BufferGeometry {
 export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' | 'medium' | 'high'): Promise<Extra> {
   const group = new THREE.Group(); group.name = 'scrub';
   const noiseTex = await loadTex('noise');
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.75, metalness: 0, roughnessMap: noiseTex, color: 0x9fb07a });
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1.0, metalness: 0, color: 0x9fb07a, envMapIntensity: 0.35 });
+  void noiseTex;
   injectWorld(mat);
   injectWorld(mat, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.12 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   const rng = new Rng(seed * 77 + 11);
