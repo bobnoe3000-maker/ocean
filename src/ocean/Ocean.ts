@@ -188,9 +188,9 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // then sparse lace streaks fading out over the next few metres, all breathing with the swell
             vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
             vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
-            float collarEdge = 0.5 + 0.35 * surge + (lace.g - 0.5) * 0.7;
+            float collarEdge = 0.28 + 0.2 * surge + (lace.g - 0.5) * 0.4; // a rim a metre or two wide, never a sheet
             float collar = 1.0 - smoothstep(collarEdge - 0.12, collarEdge + 0.12, depth);
-            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 2.2, depth)) * smoothstep(0.6, 0.68, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
+            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 1.6, depth)) * smoothstep(0.6, 0.68, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
@@ -200,7 +200,9 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.25, -0.18, depthTex));
             if (depthTex < -0.25) discard;
             body = mix(body * 0.04, body, dayF); // near black at night (R2): the moon path and the lanterns do the talking
-            styleEmis = body * 0.35 * dayF + vec3(0.06) * foam * dayF; // the collar is lightly self-lit so it stays cream in shade
+            // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
+            body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
+            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF);
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;

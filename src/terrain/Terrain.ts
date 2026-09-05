@@ -162,7 +162,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // scree and darker damp sand at the cliff foot
           albedo = mix(albedo, albedo * 0.8, rockW * (1.0 - smoothstep(0.0, 6.0, h)) * 0.6);
           // wet band along the waterline
-          float wave = (nz.b - 0.5) * 0.9 + sin(uTime * 0.7 + P.x * 0.05) * 0.15; // broad noise: the cell channel drew a honeycomb wet line
+          float wave = (nz.g - 0.5) * 0.9 + sin(uTime * 0.7 + P.x * 0.05) * 0.15; // broad noise, never the cell channel
           float wet = 1.0 - smoothstep(-0.2, 1.4, h + wave);
           wet = max(wet, 1.0 - smoothstep(-0.05, 0.5, h)) * (1.0 - rockW * 0.4);
           albedo *= mix(1.0, 0.5, wet);
@@ -173,7 +173,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // shore wash: the water's foam collar is painted onto the sand just above and below the waterline,
           // so the terrain mesh's cut through the water plane is invisible (both sides carry the same collar)
           {
-            float lace = texture2D(tNoise, P.xz * 0.08 + uWindDir * uTime * 0.01).b;
+            float lace = texture2D(tNoise, P.xz * 0.08 + uWindDir * uTime * 0.01).g; // the blue channel is a cell noise and drew a honeycomb
             float washEdge = 0.55 + (lace - 0.5) * 0.7 + 0.25 * sin(uTime * 0.7 + P.x * 0.05 + P.z * 0.03);
             float wash = (1.0 - smoothstep(washEdge - 0.25, washEdge + 0.25, h)) * smoothstep(-1.4, -0.4, h) * sandW;
             albedo = mix(albedo, vec3(0.93, 0.95, 0.94), wash * 0.9 * (1.0 - 0.8 * uNight));

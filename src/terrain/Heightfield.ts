@@ -115,6 +115,9 @@ export class Heightfield {
       const rad = smooth(74, 80, r) * (1 - smooth(112, 135, r));
       const terr = ang * rad;
       if (terr > 0) h = mix(h, 1.7 + Math.max(0, r - 80) * 0.045 + this.n.fbm(u * 0.05, w * 0.05, 2) * 0.15, terr);
+      // dredged basin in front of the quay wall: deep water against the stone (R1), no collar of foam along the town
+      const dredge = ang * smooth(56, 64, r) * (1 - smooth(76, 79, r));
+      if (dredge > 0) h = mix(h, Math.min(h, -3.2 + this.n.fbm(u * 0.04, w * 0.04, 2) * 0.3), dredge);
       // agricultural terraces climbing the slope behind the town: stepped contours with soft risers
       const tmask = ang * smooth(132, 150, r) * (1 - smooth(240, 290, r));
       void tmask; // terraces are painted in the terrain shader; geometric steps zig-zag on the mesh
@@ -136,7 +139,8 @@ export class Heightfield {
     const bu = (u - L.beachC[0]) / L.beachR[0], bw = (w - L.beachC[1]) / L.beachR[1];
     const beach = 1 - smooth(0.55, 1.0, Math.sqrt(bu * bu + bw * bw));
     if (beach > 0) {
-      const target = sd > 0 ? -0.5 + sd * 0.09 + smooth(0, 10, sd) * (0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35) : -0.5 + sd * 0.07; // continuous at sd = 0
+      // continuous at sd = 0, and the foreshore climbs out of the water within ~2.5 m so the wet collar is a rim, not a sheet
+      const target = sd > 0 ? -0.5 + sd * 0.09 + smooth(0, 5, sd) * 0.55 + smooth(0, 10, sd) * (0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35) : -0.5 + sd * 0.07;
       h = mix(h, target, beach);
     }
     return h;
