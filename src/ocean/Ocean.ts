@@ -81,7 +81,7 @@ export class Ocean {
             vec2 p = position.xz; float t = uTime;
             float th = terrainH(p);
             float depth = clamp(-th, 0.0, 30.0);
-            float shoal = smoothstep(0.0, 7.0, depth) * smoothstep(0.2, 1.6, depth);           // waves shrink in the shallows and die at the beach
+            float shoal = smoothstep(0.0, 7.0, depth) * smoothstep(0.2, 3.0, depth);           // waves shrink in the shallows and die at the beach
             vec2 wd = normalize(uWindDir);
             mat2 rot = mat2(0.96, 0.28, -0.28, 0.96);
             vec3 disp = vec3(0.0), dPx = vec3(0.0), dPz = vec3(0.0);
@@ -96,6 +96,9 @@ export class Ocean {
             gerstner(wd * mat2(0.87, 0.5, -0.5, 0.87), 6.2, 0.045 * ch, 0.7, 1.15, p, t, disp, dPx, dPz);
             gerstner(wd * mat2(0.87, -0.5, 0.5, 0.87), 4.1, 0.03 * ch, 0.7, 1.2, p, t, disp, dPx, dPz);
             transformed += disp;
+            // on steep shores a trough between two mesh vertices would dip below the seabed and let the sand poke
+            // through as a tooth: keep every shore vertex a hair above the bed (fragments over dry sand are discarded)
+            { float thD = terrainH(transformed.xz); if (thD > -3.0) transformed.y = max(transformed.y, thD + 0.05); }
             vec3 tx = vec3(1.0, 0.0, 0.0) + dPx, tz = vec3(0.0, 0.0, 1.0) + dPz;
             vWN = normalize(cross(tz, tx));
             // Jacobian of the horizontal displacement: < 1 near breaking crests
@@ -188,6 +191,7 @@ export class Ocean {
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
             alpha = max(alpha, 0.72) * smoothstep(0.05, 0.5, depth);
+            if (depthTex < 0.02) discard;
             body = mix(body * 0.12, body, dayF);
             styleEmis = body * 0.35 * dayF;
           }

@@ -52,24 +52,27 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
     const el = THREE.MathUtils.degToRad(55 - 105 * Math.pow(age, 1.1) + rng.range(-8, 8));
     const L = rng.range(3.0, 4.2) * (1 - 0.12 * age);
     const dir = new THREE.Vector3(Math.cos(az) * Math.cos(el), Math.sin(el), Math.sin(az) * Math.cos(el));
-    const droop = rng.range(0.7, 1.3) + age * 0.8;
+    const droop = rng.range(1.0, 1.7) + age * 0.9;
+    const leaflets = 9 + rng.int(4);
     const ph = rng.range(0, 6.28);
     const dead = age > 0.88;
     const base: [number, number, number] = dead ? [0.5, 0.36, 0.18] : [0.16 + 0.06 * rng.next(), 0.36 + 0.1 * rng.next(), 0.13];
     const tip: [number, number, number] = dead ? [0.62, 0.48, 0.26] : [0.36 + 0.08 * rng.next(), 0.56, 0.2];
     const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.0 : 1), 0));
-    const SEG = 7; const b0 = fp.length / 3;
+    const SEG = 12; const b0 = fp.length / 3;
     for (let sgi = 0; sgi <= SEG; sgi++) {
       const t = sgi / SEG; const c = rachis(t); const tang = rachis(Math.min(1, t + 0.02)).sub(rachis(Math.max(0, t - 0.02))).normalize();
       const side = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
       // blade width: narrow at the stem, widest at 40%, rounded tip
-      const wdt = L * 0.085 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.03;
+      // leaflet notches scallop the edge so the blade reads as a pinnate frond, not a flat strap
+      const notch = 0.72 + 0.28 * Math.abs(Math.sin(t * leaflets * Math.PI));
+      const wdt = (L * 0.095 * Math.sin(Math.PI * Math.pow(t, 0.8)) + 0.03) * notch;
       const sag = 0.18 * wdt; // edges fold down into a V
       const l = c.clone().addScaledVector(side, -wdt).add(new THREE.Vector3(0, -sag, 0)), r = c.clone().addScaledVector(side, wdt).add(new THREE.Vector3(0, -sag, 0));
       const nrm = side.clone().cross(tang).normalize().lerp(new THREE.Vector3(0, 1, 0), 0.7).normalize();
       const flex = 0.7 + t * 1.3;
       const col = [base[0] + (tip[0] - base[0]) * t, base[1] + (tip[1] - base[1]) * t, base[2] + (tip[2] - base[2]) * t];
-      for (const [pt, v] of [[l, 0], [c.clone().add(new THREE.Vector3(0, 0.02, 0)), 0.5], [r, 1]] as [THREE.Vector3, number][]) { fp.push(pt.x, pt.y, pt.z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(t, v); fs.push(flex, ph); fc.push(col[0] * (v === 0.5 ? 1.12 : 1), col[1] * (v === 0.5 ? 1.12 : 1), col[2]); }
+      for (const [pt, v] of [[l, 0], [c.clone().add(new THREE.Vector3(0, 0.02, 0)), 0.5], [r, 1]] as [THREE.Vector3, number][]) { fp.push(pt.x, pt.y, pt.z); fn.push(nrm.x, nrm.y, nrm.z); fu.push(t, v); fs.push(flex, ph); fc.push(col[0] * (v === 0.5 ? 0.85 : 1), col[1] * (v === 0.5 ? 0.72 : 1), col[2] * (v === 0.5 ? 0.6 : 1)); } // darker rachis line down the middle
       if (sgi > 0) { const k = b0 + sgi * 3; fi.push(k - 3, k, k - 2, k - 2, k, k + 1, k - 2, k + 1, k - 1, k - 1, k + 1, k + 2); }
     }
   }
