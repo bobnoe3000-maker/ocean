@@ -207,6 +207,8 @@ export class Ocean {
           #include <lights_fragment_end>
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.7 * uNightF;
+          // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
+          reflectedLight.directSpecular *= 1.0 - 0.55 * sunHigh * uStyle;
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
