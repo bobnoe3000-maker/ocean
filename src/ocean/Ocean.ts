@@ -204,7 +204,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             alpha = max(alpha, 0.95 * (1.0 - smoothstep(-0.02, 0.06, depthTex)) * smoothstep(-0.08, -0.03, depthTex));
             foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex));
             if (depthTex < -0.08) discard;
-            body = mix(body * 0.04, body, dayF); // near black at night (R2): the moon path and the lanterns do the talking
+            body = mix(max(body * 0.1, vec3(0.004, 0.009, 0.03)), body, dayF); // R2 navy (#111C3C) at night, never a black hole
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
             body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
             styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF);
@@ -225,7 +225,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.95 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= (1.0 - 0.72 * sunHigh * uStyle) * (1.0 - 0.75 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
+          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.85 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);

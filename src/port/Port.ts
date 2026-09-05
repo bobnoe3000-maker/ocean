@@ -64,7 +64,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         { const ea = a.clone().setY(y1).lerp(po.clone().setY(y1 + 0.35), 0.16), eb = b.clone().setY(y1).lerp(co.clone().setY(y1 + 0.35), 0.16);
           // paving mapped from world position so the stones run continuously across the arc (no radial grid or stitch seams)
           const puv = (p: THREE.Vector3): [number, number] => [(p.x * 0.94 - p.z * 0.34) / 3.4, (p.x * 0.34 + p.z * 0.94) / 3.4];
-          const cO = co.clone().setY(y1 + 0.35), pO = po.clone().setY(y1 + 0.35);
+          const cO = co.clone().setY(y1 + 0.47), pO = po.clone().setY(y1 + 0.47); // lifted clear of the terrain shelf (no ghosting)
           stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [puv(a), puv(b), puv(eb), puv(ea)], [0.5, 0.52, 0.5]);
           stone.quad(ea, eb, cO, pO, [puv(ea), puv(eb), puv(cO), puv(pO)], [0.88, 0.87, 0.84]); }
         // kerb
@@ -226,6 +226,14 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   // ------------------------------------------------------------ materials + meshes
   const plasterMat = pbr(plasterSet, { vertexColors: true, side: THREE.DoubleSide }); const tilesMat = pbr(tilesSet, { vertexColors: true, side: THREE.DoubleSide });
   const planksMat = pbr(planksSet, { vertexColors: true, side: THREE.DoubleSide }); const stoneMat = pbr(stoneSet, { vertexColors: true, side: THREE.DoubleSide });
+  // quay stone: the flagstone module at one scale reads as a diamond grid from 60 m; blend a second, rotated, coarser sample
+  injectWorld(stoneMat, { replace: [['#include <map_fragment>', /* glsl */ `
+    #ifdef USE_MAP
+    { vec2 uv2 = mat2(0.82, 0.57, -0.57, 0.82) * vMapUv * 0.47 + 0.31;
+      vec4 sampledDiffuseColor = mix(texture2D(map, vMapUv), texture2D(map, uv2), 0.5);
+      diffuseColor *= sampledDiffuseColor; }
+    #endif
+  `]] });
   const ropeMat = pbr(ropeSet, { vertexColors: true, color: 0x6f6050 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2b2926, roughness: 0.6, metalness: 0.8, roughnessMap: noise, vertexColors: true }); injectWorld(ironMat);
   const paintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.75, vertexColors: true, roughnessMap: noise }); injectWorld(paintMat);
@@ -273,6 +281,8 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       night = L.night;
       lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 9 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night * (spec.weather === 'fog' ? 0.45 : 1); // windows glow through mist, they do not blow out
+      // by day the panes carry a sky-lit sheen so recessed windows never read as black voids
+      if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 0.12 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257);
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
       { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }
