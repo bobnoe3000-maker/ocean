@@ -149,10 +149,11 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           if (rockW > 0.004) { Surf sR = triplanar(tRockA, tRockN, tRockO, P * 0.14, nz.g, N); albedo += sR.a * rockW; wN += sR.n * rockW; rough += sR.r * rockW; ao += sR.ao * rockW; }
           if (scrubW > 0.004) { Surf sC = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.33, nz.g, N); sC.a *= mix(vec3(0.6, 0.6, 0.52), vec3(1.0, 1.0, 0.95), smoothstep(0.3, 0.7, nz3.r)); sC.a = mix(sC.a, vec3(dot(sC.a, vec3(0.333))) * vec3(0.56, 0.8, 0.46), 0.7); sC.a *= mix(vec3(1.0), vec3(0.5, 0.66, 0.42), smoothstep(0.4, 0.75, nz3.g + nz.a * 0.3)); /* green masses, not tan: the golden sun warms them enough */ albedo += sC.a * scrubW; wN += sC.n * scrubW; rough += sC.r * scrubW; ao += sC.ao * scrubW; }
           if (townW > 0.004) {
-            Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 0.9, nz.g, N);
+            // packed earth with small worn setts: the flagstone module at street scale read as a stamped grid from 60 m
+            Surf sT = planar(tStoneA, tStoneN, tStoneO, vec2(P.x, -P.z) * 2.6, nz.g, N);
             Surf sD = planar(tScrubA, tScrubN, tScrubO, vec2(P.x, -P.z) * 0.5 + 0.37, nz.g, N);
-            float cob = smoothstep(0.35, 0.65, nz2.a + (nz.b - 0.5) * 0.4);
-            vec3 ta = mix(sD.a * vec3(1.05, 0.98, 0.9), sT.a * vec3(0.95, 0.93, 0.9), cob);
+            float cob = smoothstep(0.4, 0.7, nz2.a + (nz.g - 0.5) * 0.4) * 0.6;
+            vec3 ta = mix(sD.a * vec3(0.98, 0.9, 0.8), sT.a * vec3(0.88, 0.85, 0.8), cob);
             albedo += ta * townW; wN += normalize(mix(sD.n, sT.n, cob)) * townW; rough += mix(sD.r, sT.r, cob) * townW; ao += mix(sD.ao, sT.ao, cob) * townW;
           }
           wN = normalize(wN);

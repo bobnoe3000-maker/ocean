@@ -59,7 +59,7 @@ function palmGeometry(rng: Rng): { bark: THREE.BufferGeometry; frond: THREE.Buff
     const base: [number, number, number] = dead ? [0.5, 0.36, 0.18] : [0.16 + 0.06 * rng.next(), 0.36 + 0.1 * rng.next(), 0.13];
     const tip: [number, number, number] = dead ? [0.62, 0.48, 0.26] : [0.36 + 0.08 * rng.next(), 0.56, 0.2];
     const rachis = (t: number) => top.clone().addScaledVector(dir, L * t).add(new THREE.Vector3(0, -droop * t * t * (dead ? 2.0 : 1), 0));
-    const SEG = 12; const b0 = fp.length / 3;
+    const SEG = 10; const b0 = fp.length / 3;
     for (let sgi = 0; sgi <= SEG; sgi++) {
       const t = sgi / SEG; const c = rachis(t); const tang = rachis(Math.min(1, t + 0.02)).sub(rachis(Math.max(0, t - 0.02))).normalize();
       const side = new THREE.Vector3(-tang.z, 0, tang.x).normalize();

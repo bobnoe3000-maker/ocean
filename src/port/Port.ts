@@ -283,7 +283,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 9 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night * (spec.weather === 'fog' ? 0.45 : 1); // windows glow through mist, they do not blow out
       // by day the panes carry a sky-lit sheen so recessed windows never read as black voids
-      if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 0.28 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257);
+      if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 1.5 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257); // day exposure sits near 0.25: the pane needs radiance ~1.5 to read as a sky sheen
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
       { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }

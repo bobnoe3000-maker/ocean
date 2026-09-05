@@ -207,12 +207,12 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             body = mix(max(body * 0.1, vec3(0.004, 0.009, 0.03)), body, dayF); // R2 navy (#111C3C) at night, never a black hole
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
             body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
-            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF);
+            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF) + vec3(0.004, 0.009, 0.03) * 0.7 * uNightF; // night: a self-lit navy floor (R2 #111C3C) so the sea is never a black hole
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.9 * uNightF), 0.85, foam); // night: a near-mirror on flattened normals gives the moon a narrow path
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.6 * uNightF), 0.85, foam); // night: a smoother surface on flattened normals gives the moon a narrow, soft-edged path
           // night: the swell facets would mirror the moon halo as a marbled sheet; flatten them so the moon is a narrow path
           wN = normalize(mix(wN, vec3(0.0, 1.0, 0.0), 0.7 * uNightF * uStyle));
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
@@ -224,8 +224,12 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           #include <lights_fragment_end>
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.95 * uNightF;
+          // stylised: the painted sky's warm halo mirrored across the basin drew a tan band; the sky reflection is
+          // reduced and cooled to a grey-blue sheen so the body colour, not the sky, owns the water
+          { vec3 is = reflectedLight.indirectSpecular; float il = dot(is, vec3(0.2126, 0.7152, 0.0722));
+            reflectedLight.indirectSpecular = mix(is, il * vec3(0.7, 0.86, 1.05) * 0.5, uStyle); }
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.6 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
+          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.5 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
