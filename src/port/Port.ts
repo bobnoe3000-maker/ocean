@@ -84,10 +84,10 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     }
     // cargo on the quay: barrels and crates in stacks, a fishing net heap, a hand cart
     for (const [deg, n] of [[44, 6], [70, 4], [108, 5], [126, 3]] as [number, number][]) {
-      for (let i = 0; i < n; i++) { const p = bayPt(deg + rng.range(-1.5, 1.5), R + 3 + rng.range(0, 3)); if (hf.height(p[0], p[1]) < 1.2) continue; const wp = toW(p[0], p[1]); wp.y = y1 + 0.35;
+      for (let i = 0; i < n; i++) { const p = bayPt(deg + rng.range(-1.5, 1.5), R + 3 + rng.range(0, 3)); if (hf.height(p[0], p[1]) < 2.0 || hf.coastSD(p[0], p[1]) < 6) continue; /* solid quay ground only */ const wp = toW(p[0], p[1]); wp.y = y1 + 0.35;
         if (rng.next() < 0.5) barrel(planks, iron, wp, rng); else { const s = rng.range(0.7, 1.1); planks.geo(box(s, s * 0.8, s, wp.x, wp.y + s * 0.4, wp.z, 1.2).rotateY(rng.range(0, 1.5)), [0.85, 0.8, 0.7]); } }
     }
-    for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); if (hf.height(p[0], p[1]) < 1.2) continue; const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
+    for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); if (hf.height(p[0], p[1]) < 2.0 || hf.coastSD(p[0], p[1]) < 6) continue; const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
     { const p = bayPt(38, R + 6); const wp = toW(p[0], p[1]); planks.geo(box(1.2, 0.6, 2.0, wp.x, y1 + 1.0, wp.z, 1), [0.6, 0.5, 0.4]); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x - 0.7, y1 + 0.85, wp.z)); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x + 0.7, y1 + 0.85, wp.z)); }
     // moored rowing boats along the quay
     for (const d of [58, 96, 124]) {
@@ -218,14 +218,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     flag(cloth, V(lb.x + 2.3, 20.6, lb.z), 1.5, 1.0, hexc(0xb3282d));
   }
 
-  // ------------------------------------------------------------ laundry between two quay houses
-  {
-    const [u0, w0] = bayPt(48, 101), [u1, w1] = bayPt(61, 101); const a = toW(u0, w0), b = toW(u1, w1);
-    a.y = hf.heightWorld(a.x, a.z) + 5.2; b.y = hf.heightWorld(b.x, b.z) + 5.0;
-    rope.geo(tube(a, b, 0.02, 0.02, 4, 12));
-    const cols = [0xe8e1d0, 0x7b98b8, 0xd8b26a, 0xf0f0f0, 0xb3574f, 0xe8e1d0];
-    for (let i = 0; i < 6; i++) { const t = 0.12 + i * 0.15; const p = a.clone().lerp(b, t); p.y -= 0.08 * Math.sin(Math.PI * t) * 4; flag(cloth, p, 0.7, 0.9 + rng.range(-0.2, 0.3), hexc(cols[i]), true); }
-  }
+  // (the laundry line between the quay houses was dropped: from the vista camera it crossed a roof and read as a stray bracket)
 
   // ------------------------------------------------------------ materials + meshes
   const plasterMat = pbr(plasterSet, { vertexColors: true, side: THREE.DoubleSide }); const tilesMat = pbr(tilesSet, { vertexColors: true, side: THREE.DoubleSide });

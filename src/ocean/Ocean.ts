@@ -118,8 +118,11 @@ export class Ocean {
         ['#include <normal_fragment_maps>', /* glsl */ `
           vec3 P = vWPos; float t = uTime;
           vec2 wd = normalize(uWindDir);
-          float depthTex = P.y - texture2D(tHeight, clamp((P.xz - uGrid.xy) / uGrid.z + 0.5, 0.0, 1.0)).r;
+          // depth from the rest water level (sea level 0), not the displaced surface: the shoreline then follows the
+          // smooth 1 m heightfield and never the wave-lifted triangles of the ocean mesh (no sawtooth on the sand)
+          float depthTex = -texture2D(tHeight, clamp((P.xz - uGrid.xy) / uGrid.z + 0.5, 0.0, 1.0)).r;
           float depth = max(mix(vDepth, depthTex, 1.0 - smoothstep(6.0, 12.0, vDepth)), 0.0);
+          float sunHigh = smoothstep(0.45, 0.85, uSunDir.y);
           // detail normals: two scales scrolled with the wind, weaker in the far field
           float distF = clamp((length(P - cameraPosition) - 120.0) / 700.0, 0.0, 1.0);
           // four octaves from two textures, rotated against each other so no direction repeats
@@ -190,7 +193,7 @@ export class Ocean {
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25 + uStyle * 0.22, 0.85, foam);
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 + distF * 0.12 + uNightF * 0.16 + uFogF * 0.25 + uStyle * (0.22 - 0.14 * sunHigh), 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN; vec3 waterStyleEmis = styleEmis;
         `],
@@ -198,6 +201,8 @@ export class Ocean {
         ['#include <roughnessmap_fragment>', 'float roughnessFactor = roughness;'],
         ['#include <lights_fragment_end>', /* glsl */ `
           #include <lights_fragment_end>
+          // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
+          reflectedLight.indirectSpecular *= 1.0 - 0.7 * uNightF;
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
@@ -208,7 +213,8 @@ export class Ocean {
               // replace the sky-only indirect specular where the mirror image has content
               float lum = dot(refl, vec3(0.2126, 0.7152, 0.0722));
               float has = smoothstep(0.0, 0.02, lum);
-              reflectedLight.indirectSpecular = mix(reflectedLight.indirectSpecular, refl * fres * (1.0 - waterFoam) * 1.1, has * uReflF);
+              // under a high sun the mirror image is a white sky sheet smeared by the chop: ease it toward the IBL term
+              reflectedLight.indirectSpecular = mix(reflectedLight.indirectSpecular, refl * fres * (1.0 - waterFoam) * 1.1, has * uReflF * (1.0 - 0.6 * sunHigh));
             }
           }
         `],
