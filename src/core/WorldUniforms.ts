@@ -48,7 +48,14 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
   // the bank is cooler and a touch darker near the water, warmer where it thins with height
   inscatter *= mix(vec3(0.82, 0.86, 0.92), vec3(1.0), smoothstep(0.0, 35.0, wpos.y));
   // graded haze: cool and thin near, warm and dense far (R4 layering)
-  if (uHazeGrade > 0.0) inscatter = mix(inscatter, mix(uHazeNear, uHazeFar, smoothstep(0.1, 0.9, fog)) * dot(inscatter, vec3(0.33)), uHazeGrade);
+  if (uHazeGrade > 0.0) {
+    // three soft depth layers (R4): the grade is quantised into bands with feathered edges so the far hill sits behind
+    // the mid ground as a separate, flatter, bluer plane instead of one continuous veil
+    float g = smoothstep(0.1, 0.9, fog);
+    float gb = (floor(g * 3.0) + smoothstep(0.3, 0.7, fract(g * 3.0))) / 3.0;
+    g = mix(g, gb, 0.65);
+    inscatter = mix(inscatter, mix(uHazeNear, uHazeFar, g) * dot(inscatter, vec3(0.33)), uHazeGrade);
+  }
   return mix(color, inscatter, clamp(fog, 0.0, 1.0));
 }
 `;
