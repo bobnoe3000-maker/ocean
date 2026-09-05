@@ -72,14 +72,7 @@ export class Ocean {
           dPz += vec3(-d.x * d.y * qa * k * s, d.y * A * k * co, -d.y * d.y * qa * k * s);
         }
 
-// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
-// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
-float hfield(sampler2D t, vec2 uv) {
-  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
-  vec2 c = (i0 + 0.5) * o;
-  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
-  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
-}
+float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r; } // hardware bilinear (R16F is filterable on GLES3)
         float terrainH(vec2 xz) { vec2 uv = (xz - uGrid.xy) / uGrid.z + 0.5; return hfield(tHeight, uv); }
       `,
       vertexMain: '',
@@ -120,14 +113,7 @@ float hfield(sampler2D t, vec2 uv) {
       ],
       fragmentPars: /* glsl */ `
         uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl;
-// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
-// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
-float hfield(sampler2D t, vec2 uv) {
-  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
-  vec2 c = (i0 + 0.5) * o;
-  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
-  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
-}
+float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r; } // hardware bilinear (R16F is filterable on GLES3)
  uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;

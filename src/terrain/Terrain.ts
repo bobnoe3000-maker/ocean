@@ -4,14 +4,7 @@ import { injectWorld } from '../core/WorldUniforms';
 import { loadSet, loadTex, PbrSet } from '../materials/Textures';
 
 const HFIELD_GLSL = /* glsl */ `
-// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
-// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
-float hfield(sampler2D t, vec2 uv) {
-  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
-  vec2 c = (i0 + 0.5) * o;
-  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
-  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
-}
+float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r; } // hardware bilinear (R16F is filterable on GLES3)
 `;
 
 export class Terrain {
@@ -36,7 +29,7 @@ export class Terrain {
       data[j * N + i] = THREE.DataUtils.toHalfFloat(this.hf.heightWorld(x, z));
     }
     const t = new THREE.DataTexture(data, N, N, THREE.RedFormat, THREE.HalfFloatType);
-    t.minFilter = t.magFilter = THREE.NearestFilter; // filtered by hand in the shaders (hfield) t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.generateMipmaps = false; t.needsUpdate = true;
+    t.minFilter = t.magFilter = THREE.LinearFilter; t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.generateMipmaps = false; t.needsUpdate = true;
     this.depthTexture = t;
   }
 
@@ -72,14 +65,7 @@ export class Terrain {
         uniform mat3 uVista; uniform vec4 uBay; uniform sampler2D tHeight; uniform vec4 uGrid;
         uniform float uSeaLevel;
         varying vec3 vWNormal;
-// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
-// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
-float hfield(sampler2D t, vec2 uv) {
-  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
-  vec2 c = (i0 + 0.5) * o;
-  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
-  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
-}
+float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r; } // hardware bilinear (R16F is filterable on GLES3)
 
         vec3 unpackN(vec3 c) { return c * 2.0 - 1.0; }
         // Two samples at different scales/rotation, blended: kills visible repetition.

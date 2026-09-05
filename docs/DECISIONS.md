@@ -198,3 +198,16 @@ Recorded as they were made. Newest at the bottom.
     discard from decision 34 removes the slivers. Nine rounds of "sawtooth"
     were three different mechanisms, each only visible after the previous
     one was removed.
+37. **The shoreline, root cause.** The height function jumped at the coast
+    contour: land started at +1.2 m and sea at -0.6 m for the same point,
+    a 1.8 m vertical step (the beach variant had a 1.4 m step). Every mesh
+    and every texture rasterised that cliff as a staircase, which is what
+    nine rounds of "sawtooth" fixes were chasing on the wrong side. The land
+    formula now ramps in from the sea slope over the first 12 m, and the
+    beach target is continuous at the contour. The shore-band discards and
+    the extended water sheet from decisions 34-36 stay as belt and braces.
+    A second lesson repeated itself on the way: a trailing line comment
+    appended by a scripted edit swallowed the rest of a statement (this
+    time the height texture's upload flag), which read as zero heights and
+    cost several diagnostic frames. Scripted edits now never append a `//`
+    comment to an existing line.

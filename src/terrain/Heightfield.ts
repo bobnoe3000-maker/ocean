@@ -81,7 +81,10 @@ export class Heightfield {
     let h: number;
     if (sd > 0) {
       const inland = smooth(0, 200, sd);
-      h = 1.2 + sd * 0.11 + 28 * smooth(50, 190, sd) + this.n.fbm(u * 0.008, w * 0.008, 4) * (2 + 12 * inland) + this.n.fbm(u * 0.05, w * 0.05, 3) * 0.6
+      // the land formula is blended in from the sea slope over the first 12 m so the field is continuous at the coast
+      // contour: a vertical step there was rasterised by every mesh and texture as a stair-stepped shoreline
+      const ramp = smooth(0, 12, sd);
+      h = mix(-0.6 + sd * 0.26, 1.2 + sd * 0.11, ramp) + 28 * smooth(50, 190, sd) + this.n.fbm(u * 0.008, w * 0.008, 4) * (2 + 12 * inland) + this.n.fbm(u * 0.05, w * 0.05, 3) * 0.6
         + (this.n2.ridged(u * 0.006 + 3, w * 0.0075, 3) * 14 + this.n2.ridged(u * 0.018 + 1, w * 0.016 + 4, 3) * 3) * smooth(30, 120, sd) + this.n.fbm(u * 0.025 + 5, w * 0.025 + 2, 3) * 2.5 * smooth(20, 80, sd);
     } else {
       const inBay = Math.hypot(u - L.bayC[0], w - L.bayC[1]) < L.bayR + 5 ? 1 : 0;
@@ -131,7 +134,7 @@ export class Heightfield {
     const bu = (u - L.beachC[0]) / L.beachR[0], bw = (w - L.beachC[1]) / L.beachR[1];
     const beach = 1 - smooth(0.55, 1.0, Math.sqrt(bu * bu + bw * bw));
     if (beach > 0) {
-      const target = sd > 0 ? 0.9 + sd * 0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35 : -0.5 + sd * 0.07;
+      const target = sd > 0 ? -0.5 + sd * 0.09 + smooth(0, 10, sd) * (0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35) : -0.5 + sd * 0.07; // continuous at sd = 0
       h = mix(h, target, beach);
     }
     return h;
