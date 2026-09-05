@@ -53,7 +53,7 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
     // the mid ground as a separate, flatter, bluer plane instead of one continuous veil
     float g = smoothstep(0.1, 0.9, fog);
     float gb = (floor(g * 3.0) + smoothstep(0.3, 0.7, fract(g * 3.0))) / 3.0;
-    g = mix(g, gb, 0.9);
+    g = mix(g, gb, 0.45); // soft planes: hard bands read as rings of distance, not layers of air
     inscatter = mix(inscatter, mix(uHazeNear, uHazeFar, g) * dot(inscatter, vec3(0.33)), uHazeGrade);
   }
   return mix(color, inscatter, clamp(fog, 0.0, 1.0));

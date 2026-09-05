@@ -63,10 +63,11 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         const po = toW(prevOut![0], prevOut![1]), co = toW(out[0], out[1]);
         { const ea = a.clone().setY(y1).lerp(po.clone().setY(y1 + 0.35), 0.16), eb = b.clone().setY(y1).lerp(co.clone().setY(y1 + 0.35), 0.16);
           // paving mapped from world position so the stones run continuously across the arc (no radial grid or stitch seams)
-          const puv = (p: THREE.Vector3): [number, number] => [(p.x * 0.94 - p.z * 0.34) / 3.4, (p.x * 0.34 + p.z * 0.94) / 3.4];
+          const puv = (p: THREE.Vector3): [number, number] => [(p.x * 0.94 - p.z * 0.34) / 5.2, (p.x * 0.34 + p.z * 0.94) / 5.2]; // big slabs from 60 m
+          const pt = 0.86 + rng.range(0, 0.16); const pTint: [number, number, number] = [0.88 * pt, 0.87 * pt, 0.84 * pt]; // per-run tint breaks the stamp
           const cO = co.clone().setY(y1 + 0.47), pO = po.clone().setY(y1 + 0.47); // lifted clear of the terrain shelf (no ghosting)
           stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [puv(a), puv(b), puv(eb), puv(ea)], [0.5, 0.52, 0.5]);
-          stone.quad(ea, eb, cO, pO, [puv(ea), puv(eb), puv(cO), puv(pO)], [0.88, 0.87, 0.84]); }
+          stone.quad(ea, eb, cO, pO, [puv(ea), puv(eb), puv(cO), puv(pO)], pTint); }
         // kerb
         stone.quad(a.clone().setY(y1), b.clone().setY(y1), b.clone().setY(y1 + 0.12).addScaledVector(co.clone().sub(b).normalize(), 0.3), a.clone().setY(y1 + 0.12).addScaledVector(po.clone().sub(a).normalize(), 0.3), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.0], [ua, 1.0]]);
       }
@@ -282,7 +283,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 9 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night * (spec.weather === 'fog' ? 0.45 : 1); // windows glow through mist, they do not blow out
       // by day the panes carry a sky-lit sheen so recessed windows never read as black voids
-      if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 0.12 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257);
+      if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 0.28 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257);
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
       { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }

@@ -200,7 +200,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // the shallows are glass over sand (R1's turquoise over the bar), the collar is opaque paint, and the few
             // centimetres of sheet past the field's shoreline are collar too
             alpha = max(max(alpha, 0.55 * smoothstep(0.0, 0.6, depth)), foam * 0.97);
-            alpha = max(alpha, 0.93 * smoothstep(0.8, 2.2, depth)); // beyond the glassy shallows the body is paint: no milky seabed showing through the bay
+            alpha = max(alpha, 0.985 * smoothstep(0.8, 2.2, depth)); // beyond the glassy shallows the body is paint: even 7% of sand through 4 m of water drew a khaki crescent
             alpha = max(alpha, 0.95 * (1.0 - smoothstep(-0.02, 0.06, depthTex)) * smoothstep(-0.08, -0.03, depthTex));
             foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex));
             if (depthTex < -0.08) discard;
@@ -212,7 +212,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uNightF * 0.04 + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh), 0.85, foam);
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.9 * uNightF), 0.85, foam); // night: a near-mirror on flattened normals gives the moon a narrow path
           // night: the swell facets would mirror the moon halo as a marbled sheet; flatten them so the moon is a narrow path
           wN = normalize(mix(wN, vec3(0.0, 1.0, 0.0), 0.7 * uNightF * uStyle));
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
@@ -225,7 +225,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.95 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.85 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
+          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.6 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
