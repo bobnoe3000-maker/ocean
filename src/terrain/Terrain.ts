@@ -106,7 +106,7 @@ export class Terrain {
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
           // the 2 m terrain grid interpolates above sea level on steep shores where the smooth heightfield is below it,
           // which draws a sawtooth of sand slivers the water cannot cover: drop those fragments so the water plane wins
-          if (hTex < -0.04 - uSeaLevel && P.y > uSeaLevel - 0.01 && abs(P.y) < 4.0) discard;
+          float sliver = (hTex < -0.02 - uSeaLevel && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) ? 1.0 : 0.0;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
           vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
@@ -166,6 +166,15 @@ export class Terrain {
             float wash = (1.0 - smoothstep(washEdge - 0.25, washEdge + 0.25, h)) * smoothstep(-1.4, -0.4, h) * sandW;
             albedo = mix(albedo, vec3(0.93, 0.95, 0.94), wash * 0.9 * (1.0 - 0.8 * uNight));
             rough = mix(rough, 0.6, wash);
+            // slivers the grid lifts above the water plane are painted as the water beside them (shallow body plus the
+            // same collar), so the visible shoreline is the smooth heightfield contour, never the 2 m mesh steps
+            if (sliver > 0.5) {
+              float dd = clamp(-(hTex - uSeaLevel), 0.0, 3.0);
+              vec3 shallow = mix(vec3(0.32, 0.78, 0.70), vec3(0.04, 0.42, 0.50), smoothstep(0.0, 2.5, dd)) * 0.8 * (1.0 - 0.85 * uNight);
+              float collar = 1.0 - smoothstep(0.35, 0.75, dd + (lace - 0.5) * 0.5);
+              albedo = mix(shallow, vec3(0.93, 0.95, 0.94), collar * (1.0 - 0.8 * uNight));
+              rough = mix(0.25, 0.6, collar); wN = N;
+            }
           }
           // wrack line: dark weed and debris left at the high-tide mark
           float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;

@@ -63,7 +63,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         const po = toW(prevOut![0], prevOut![1]), co = toW(out[0], out[1]);
         { const ea = a.clone().setY(y1).lerp(po.clone().setY(y1 + 0.35), 0.16), eb = b.clone().setY(y1).lerp(co.clone().setY(y1 + 0.35), 0.16);
           // paving mapped from world position so the stones run continuously across the arc (no radial grid or stitch seams)
-          const puv = (p: THREE.Vector3): [number, number] => [p.x / 2.6, p.z / 2.6];
+          const puv = (p: THREE.Vector3): [number, number] => [(p.x * 0.94 - p.z * 0.34) / 3.4, (p.x * 0.34 + p.z * 0.94) / 3.4];
           const cO = co.clone().setY(y1 + 0.35), pO = po.clone().setY(y1 + 0.35);
           stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [puv(a), puv(b), puv(eb), puv(ea)], [0.5, 0.52, 0.5]);
           stone.quad(ea, eb, cO, pO, [puv(ea), puv(eb), puv(cO), puv(pO)], [0.88, 0.87, 0.84]); }
@@ -91,7 +91,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         if (rng.next() < 0.5) barrel(planks, iron, wp, rng); else { const s = rng.range(0.7, 1.1); planks.geo(box(s, s * 0.8, s, 0, s * 0.4, 0, 1.2).rotateY(rng.range(0, 1.5)).translate(wp.x, wp.y, wp.z), [0.85, 0.8, 0.7]); } }
     }
     for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); if (hf.height(p[0], p[1]) < 2.0 || hf.coastSD(p[0], p[1]) < 6) continue; const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
-    { const p = bayPt(38, R + 6); const wp = toW(p[0], p[1]); planks.geo(box(1.2, 0.6, 2.0, wp.x, y1 + 1.0, wp.z, 1), [0.6, 0.5, 0.4]); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x - 0.7, y1 + 0.85, wp.z)); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x + 0.7, y1 + 0.85, wp.z)); }
+    { const p = bayPt(38, R + 6); const wp = toW(p[0], p[1]); planks.geo(box(1.2, 0.5, 2.0, wp.x, y1 + 0.95, wp.z, 1), [0.82, 0.72, 0.56]); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x - 0.7, y1 + 0.85, wp.z)); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x + 0.7, y1 + 0.85, wp.z)); }
     // moored rowing boats along the quay
     for (const d of [58, 96, 124]) {
       const p = bayPt(d, R - 3.2); const wp = toW(p[0], p[1]); const ang = (d + 90) * Math.PI / 180 + rng.range(-0.2, 0.2);
@@ -347,7 +347,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
   const H = floors * 3.1; const top = floorY + H;
   const shutterCol = hexc(rng.pick([0x3f6b5a, 0x5a6f8c, 0x7a4a3a, 0x8a8f7a, 0x2f4f6f]));
   const wallTint = tint;
-  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.3, parapet: rng.next() < 0.35, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
+  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.3, parapet: false, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
   // foundation (stone-ish tint plaster)
   plaster.geo(box(w + 0.1, floorY - minY, d + 0.1, 0, (floorY + minY) / 2, 0, 0.25).rotateY(rot).translate(c.x, 0, c.z), [0.7, 0.68, 0.62]);
   // walls with windows
@@ -491,7 +491,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
 }
 
 function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
-  const PER = 22; const n = emitters.length * PER;
+  const PER = 28; const n = emitters.length * PER;
   const pos = new Float32Array(n * 3), seed = new Float32Array(n * 2);
   for (let e = 0; e < emitters.length; e++) for (let i = 0; i < PER; i++) { const k = e * PER + i; pos.set([emitters[e].x, emitters[e].y, emitters[e].z], k * 3); seed[k * 2] = i / PER; seed[k * 2 + 1] = Math.random() * 6.28 + e; }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 2));
@@ -508,10 +508,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (2.2 - 1.2 * g * 0.5) * (1.0 - a * 0.45) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.5 + a * 2.4;
+        float size = 0.6 + a * 2.8;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.8) * smoothstep(0.0, 0.06, a) * 0.3;
+        vAlpha = pow(1.0 - a, 1.8) * smoothstep(0.0, 0.06, a) * 0.4;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
@@ -519,7 +519,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
       void main() {
         vec2 c = gl_PointCoord - 0.5; c = vec2(c.x * vRot.x - c.y * vRot.y, c.x * vRot.y + c.y * vRot.x) + 0.5;
         float a = texture2D(tSmoke, c).a * vAlpha;
-        vec3 col = vec3(0.5, 0.49, 0.48) * uLight / 3.14159;
+        vec3 col = vec3(0.64, 0.63, 0.62) * uLight / 3.14159;
         gl_FragColor = vec4(col, a);
       }`,
   });
