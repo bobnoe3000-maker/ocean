@@ -177,3 +177,14 @@ Recorded as they were made. Newest at the bottom.
     a line comment appended mid-statement had swallowed a closing brace and
     silently removed the whole terrain: GLSL edits are checked with a
     dev-server shot and its console log before any build is judged.
+35. **Mirror images read as shadows.** Round 11 saw "three shadow
+    directions" in the hero: the tower's real shadow, plus the dock's and
+    the brig's planar reflections, which from a 52-degree camera stretch
+    away from the object like hard dark shadows in the wrong direction. The
+    stylised style now blends the mirror at 0.45 (0.07 at night) so
+    reflections stay a soft tint under the IBL, which is how R1 treats
+    them. The discarded shore slivers from decision 34 also went back: an
+    ocean fragment of 10 percent alpha over a discarded seabed showed the
+    clear colour as a pale ledge. The slivers are now painted as the water
+    beside them (shallow body and the same collar) so the eye reads the
+    smooth heightfield contour.
