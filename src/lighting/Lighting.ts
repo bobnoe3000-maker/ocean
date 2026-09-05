@@ -75,7 +75,7 @@ export class Lighting {
     const E = useMoon ? this.moonE : this.sunE;
     const lum = 0.2126 * E.x + 0.7152 * E.y + 0.0722 * E.z;
     this.key.color.setRGB(E.x / Math.max(lum, 1e-4), E.y / Math.max(lum, 1e-4), E.z / Math.max(lum, 1e-4), THREE.LinearSRGBColorSpace);
-    this.key.intensity = lum;
+    this.key.intensity = lum * (spec.weather === 'fog' ? 0.55 : 1); // mist: the sun is a soft source, shadows drop toward the sky fill
     this.key.visible = lum > 1e-4;
     W.uSunColor.value.copy(useMoon ? this.moonE : this.sunE);
     // twilight fill: moon as a second light while the sun is low but up

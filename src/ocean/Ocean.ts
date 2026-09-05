@@ -98,7 +98,7 @@ export class Ocean {
             transformed += disp;
             // on steep shores a trough between two mesh vertices would dip below the seabed and let the sand poke
             // through as a tooth: keep every shore vertex a hair above the bed (fragments over dry sand are discarded)
-            { float thD = terrainH(transformed.xz); if (thD > -3.0) transformed.y = max(transformed.y, thD + 0.05); }
+            { float thD = terrainH(transformed.xz); if (thD >= -0.05) transformed.y = 0.0; else if (thD > -3.0) transformed.y = max(transformed.y, thD + 0.05); } // land vertices sit flat at sea level: no lifted sheet over the sand
             vec3 tx = vec3(1.0, 0.0, 0.0) + dPx, tz = vec3(0.0, 0.0, 1.0) + dPz;
             vWN = normalize(cross(tz, tx));
             // Jacobian of the horizontal displacement: < 1 near breaking crests
@@ -198,7 +198,7 @@ export class Ocean {
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uNightF * 0.16 + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh), 0.85, foam);
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uNightF * 0.04 + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh), 0.85, foam);
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN; vec3 waterStyleEmis = styleEmis;
         `],
@@ -209,7 +209,7 @@ export class Ocean {
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.7 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= 1.0 - 0.55 * sunHigh * uStyle;
+          reflectedLight.directSpecular *= (1.0 - 0.55 * sunHigh * uStyle) * (1.0 - 0.6 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);

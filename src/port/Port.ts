@@ -81,14 +81,14 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         const lp = bayPt(d, R + 5.5); const lw = toW(lp[0], lp[1]);
         iron.geo(new THREE.CylinderGeometry(0.07, 0.12, 3.6, 7).translate(lw.x, y1 + 1.8, lw.z));
         iron.geo(new THREE.CylinderGeometry(0.22, 0.26, 0.25, 8).translate(lw.x, y1 + 0.12, lw.z));
-        lantern(iron, glass, V(lw.x, y1 + 3.55, lw.z), V(lw.x + 0.55, y1 + 3.3, lw.z));
+        lantern(iron, glass, paint, V(lw.x, y1 + 3.55, lw.z), V(lw.x + 0.55, y1 + 3.3, lw.z));
         if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x + 0.45, y1 + 3.2, lw.z); lights.push(l); }
       }
     }
     // cargo on the quay: barrels and crates in stacks, a fishing net heap, a hand cart
     for (const [deg, n] of [[44, 6], [70, 4], [108, 5], [126, 3]] as [number, number][]) {
       for (let i = 0; i < n; i++) { const p = bayPt(deg + rng.range(-1.5, 1.5), R + 3 + rng.range(0, 3)); if (hf.height(p[0], p[1]) < 2.0 || hf.coastSD(p[0], p[1]) < 6) continue; /* solid quay ground only */ const wp = toW(p[0], p[1]); wp.y = y1 + 0.35;
-        if (rng.next() < 0.5) barrel(planks, iron, wp, rng); else { const s = rng.range(0.7, 1.1); planks.geo(box(s, s * 0.8, s, wp.x, wp.y + s * 0.4, wp.z, 1.2).rotateY(rng.range(0, 1.5)), [0.85, 0.8, 0.7]); } }
+        if (rng.next() < 0.5) barrel(planks, iron, wp, rng); else { const s = rng.range(0.7, 1.1); planks.geo(box(s, s * 0.8, s, 0, s * 0.4, 0, 1.2).rotateY(rng.range(0, 1.5)).translate(wp.x, wp.y, wp.z), [0.85, 0.8, 0.7]); } }
     }
     for (const deg of [58, 98]) { const p = bayPt(deg, R + 2.2); if (hf.height(p[0], p[1]) < 2.0 || hf.coastSD(p[0], p[1]) < 6) continue; const wp = toW(p[0], p[1]); rope.geo(new THREE.SphereGeometry(0.9, 10, 6).scale(1.4, 0.35, 1.0).translate(wp.x, y1 + 0.5, wp.z)); rope.geo(new THREE.SphereGeometry(0.6, 8, 5).scale(1.2, 0.3, 0.9).translate(wp.x + 1.1, y1 + 0.45, wp.z + 0.4)); }
     { const p = bayPt(38, R + 6); const wp = toW(p[0], p[1]); planks.geo(box(1.2, 0.6, 2.0, wp.x, y1 + 1.0, wp.z, 1), [0.6, 0.5, 0.4]); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x - 0.7, y1 + 0.85, wp.z)); iron.geo(new THREE.CylinderGeometry(0.5, 0.5, 0.12, 12).rotateZ(Math.PI / 2).translate(wp.x + 0.7, y1 + 0.85, wp.z)); }
@@ -122,10 +122,10 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     // cross braces near the end, bollards, lantern, barrels, crates, rope coils
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, 1.4, y + 0.3).x, y + 0.3, P(len - 1, 1.4, y + 0.3).z));
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, -1.4, y + 0.3).x, y + 0.3, P(len - 1, -1.4, y + 0.3).z));
-    { const lp = P(len - 0.6, 0, y); iron.geo(new THREE.CylinderGeometry(0.06, 0.09, 3.0, 6).translate(lp.x, y + 1.5, lp.z)); lantern(iron, glass, null, V(lp.x, y + 3.2, lp.z));
+    { const lp = P(len - 0.6, 0, y); iron.geo(new THREE.CylinderGeometry(0.06, 0.09, 3.0, 6).translate(lp.x, y + 1.5, lp.z)); lantern(iron, glass, paint, null, V(lp.x, y + 3.2, lp.z));
       const l = new THREE.PointLight(0xffb45a, 0, 24, 1.7); l.position.set(lp.x, y + 3.0, lp.z); lights.push(l); }
-    for (let i = 0; i < 5; i++) { const bp = P(4 + i * 1.1 + rng.range(-0.2, 0.2), -1.2 + (i % 2) * 0.9, y); barrel(planks, iron, bp, rng); }
-    for (let i = 0; i < 4; i++) { const cp = P(9 + i * 1.3, 1.1 - (i % 2) * 0.5, y); const s = rng.range(0.7, 1.0); planks.geo(box(s, s * 0.8, s, cp.x, y + s * 0.4, cp.z, 1.2).rotateY(rng.range(-0.3, 0.3)), [0.85, 0.8, 0.7]); }
+    for (let i = 0; i < 5; i++) { const bp = P(16 + i * 1.1 + rng.range(-0.2, 0.2), -1.2 + (i % 2) * 0.9, y); barrel(planks, iron, bp, rng); }
+    for (let i = 0; i < 4; i++) { const cp = P(9 + i * 1.3, 1.1 - (i % 2) * 0.5, y); const s = rng.range(0.7, 1.0); planks.geo(box(s, s * 0.8, s, 0, s * 0.4, 0, 1.2).rotateY(rng.range(-0.3, 0.3)).translate(cp.x, y, cp.z), [0.85, 0.8, 0.7]); }
     { const cp = P(15, -1.3, y); rope.geo(new THREE.TorusGeometry(0.4, 0.12, 6, 14).rotateX(Math.PI / 2).translate(cp.x, y + 0.12, cp.z)); rope.geo(new THREE.TorusGeometry(0.32, 0.1, 6, 14).rotateX(Math.PI / 2).translate(cp.x + 0.1, y + 0.3, cp.z)); }
     // a boat moored at the dock end
     { const bp = P(len + 3.5, -1.5, 0); smallBoat(planks, bp, Math.atan2(dir.x, dir.y) + 0.4, rng); rope.geo(tube(P(len - 1, -1.4, y + 0.5), V(bp.x, 0.5, bp.z), 0.03, 0.03, 4, 5)); }
@@ -229,7 +229,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   const ropeMat = pbr(ropeSet, { vertexColors: true, color: 0x6f6050 });
   const ironMat = new THREE.MeshStandardMaterial({ color: 0x2b2926, roughness: 0.6, metalness: 0.8, roughnessMap: noise, vertexColors: true }); injectWorld(ironMat);
   const paintMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.75, vertexColors: true, roughnessMap: noise }); injectWorld(paintMat);
-  const glassMat = new THREE.MeshStandardMaterial({ color: 0x2a3038, roughness: 0.12, metalness: 0.1, emissive: 0xffb257, emissiveIntensity: 0, vertexColors: true, transparent: true, opacity: 0.55, side: THREE.DoubleSide }); injectWorld(glassMat);
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x2a3038, roughness: 0.12, metalness: 0.1, emissive: 0xffb257, emissiveIntensity: 0, vertexColors: true, transparent: true, opacity: 0.9, side: THREE.DoubleSide }); injectWorld(glassMat);
   const clothMat = pbr(canvasSet, { vertexColors: true, side: THREE.DoubleSide });
   injectWorld(clothMat, { replace: [['#include <begin_vertex>', /* glsl */ `
     vec3 transformed = vec3(position);
@@ -307,7 +307,7 @@ function barrel(planks: GB, iron: GB, at: THREE.Vector3, rng: Rng): void {
 
 // A quay lantern: a tapered eight-sided glazed body between iron corner posts, a domed cap with a finial,
 // and, when an arm anchor is given, a curved bracket arm with a scroll. Replaces the box-on-a-stick.
-function lantern(iron: GB, glass: GB, arm: THREE.Vector3 | null, at: THREE.Vector3): void {
+function lantern(iron: GB, glass: GB, paint: GB, arm: THREE.Vector3 | null, at: THREE.Vector3): void {
   const c = at.clone();
   if (arm) {
     const mid = arm.clone().lerp(c, 0.5); mid.y += 0.22;
@@ -316,13 +316,13 @@ function lantern(iron: GB, glass: GB, arm: THREE.Vector3 | null, at: THREE.Vecto
     iron.geo(new THREE.TorusGeometry(0.06, 0.018, 5, 10).translate(c.x - 0.06, c.y + 0.44, c.z));
   }
   iron.geo(new THREE.CylinderGeometry(0.1, 0.16, 0.05, 8).translate(c.x, c.y + 0.44, c.z)); // hanger plate
-  iron.geo(new THREE.ConeGeometry(0.34, 0.2, 8).translate(c.x, c.y + 0.36, c.z)); // domed cap (low cone)
+  paint.geo(new THREE.ConeGeometry(0.24, 0.16, 8).translate(c.x, c.y + 0.36, c.z), [0.42, 0.6, 0.52]); // verdigris copper cap, smaller than the glass so the lantern reads from above
   iron.geo(new THREE.CylinderGeometry(0.05, 0.05, 0.1, 6).translate(c.x, c.y + 0.5, c.z)); iron.geo(new THREE.SphereGeometry(0.045, 6, 5).translate(c.x, c.y + 0.56, c.z)); // finial
-  iron.geo(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 8).translate(c.x, c.y + 0.26, c.z)); // top ring
+  paint.geo(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 8).translate(c.x, c.y + 0.26, c.z), [0.36, 0.5, 0.44]); // top ring
   iron.geo(new THREE.CylinderGeometry(0.2, 0.24, 0.05, 8).translate(c.x, c.y - 0.27, c.z)); // base ring
   iron.geo(new THREE.SphereGeometry(0.05, 6, 5).translate(c.x, c.y - 0.32, c.z)); // drip knob
   for (let k = 0; k < 8; k++) { const a = (k + 0.5) * Math.PI / 4; iron.geo(tube(V(c.x + Math.cos(a) * 0.29, c.y + 0.25, c.z + Math.sin(a) * 0.29), V(c.x + Math.cos(a) * 0.21, c.y - 0.25, c.z + Math.sin(a) * 0.21), 0.016, 0.016, 4)); }
-  glass.geo(new THREE.CylinderGeometry(0.27, 0.19, 0.5, 8).translate(c.x, c.y, c.z));
+  glass.geo(new THREE.CylinderGeometry(0.27, 0.19, 0.5, 8).translate(c.x, c.y, c.z), [0.85, 0.88, 0.8]);
 }
 
 function flag(cloth: GB, at: THREE.Vector3, w: number, h: number, col: number[], hang = false): void {
@@ -342,7 +342,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
   const H = floors * 3.1; const top = floorY + H;
   const shutterCol = hexc(rng.pick([0x3f6b5a, 0x5a6f8c, 0x7a4a3a, 0x8a8f7a, 0x2f4f6f]));
   const wallTint = tint;
-  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.45, parapet: rng.next() < 0.6, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
+  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.3, parapet: rng.next() < 0.35, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
   // foundation (stone-ish tint plaster)
   plaster.geo(box(w + 0.1, floorY - minY, d + 0.1, 0, (floorY + minY) / 2, 0, 0.25).rotateY(rot).translate(c.x, 0, c.z), [0.7, 0.68, 0.62]);
   // walls with windows
@@ -399,7 +399,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         stone.quad(P(bx0, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.02, -bd / depth), P(bx0, q.y0 - 0.02, -bd / depth), [[0, 0], [0.6, 0], [0.6, 0.05], [0, 0.05]], [0.7, 0.68, 0.64]);
         if (style.parapet) {
           // solid plaster parapet, 0.9 m high, with a pale stone cap: reads as a mass from 60 m
-          const zf = -bd / depth, ph = 0.9, th = 0.16 / depth;
+          const zf = -bd / depth, ph = 0.7, th = 0.16 / depth;
           const wallQ = (x0: number, x1: number, z0: number, z1: number) => {
             plaster.quad(P(x0, q.y0, z0), P(x1, q.y0, z1), P(x1, q.y0 + ph, z1), P(x0, q.y0 + ph, z0), [[0, 0.3], [0.4, 0.3], [0.4, 0.4], [0, 0.4]], wallTint);
             plaster.quad(P(x1, q.y0, z1), P(x0, q.y0, z0), P(x0, q.y0 + ph, z0), P(x1, q.y0 + ph, z1), [[0, 0.3], [0.4, 0.3], [0.4, 0.4], [0, 0.4]], wallTint);
@@ -483,7 +483,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
 }
 
 function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
-  const PER = 36; const n = emitters.length * PER;
+  const PER = 22; const n = emitters.length * PER;
   const pos = new Float32Array(n * 3), seed = new Float32Array(n * 2);
   for (let e = 0; e < emitters.length; e++) for (let i = 0; i < PER; i++) { const k = e * PER + i; pos.set([emitters[e].x, emitters[e].y, emitters[e].z], k * 3); seed[k * 2] = i / PER; seed[k * 2 + 1] = Math.random() * 6.28 + e; }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 2));
@@ -498,12 +498,12 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         vec2 wd = normalize(uWindDir);
         float g = uWindSpeed / 6.0;
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
-        p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
+        p.y += t * (2.2 - 1.2 * g * 0.5) * (1.0 - a * 0.45) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.7 + a * 3.2;
+        float size = 0.5 + a * 2.4;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.42;
+        vAlpha = pow(1.0 - a, 1.8) * smoothstep(0.0, 0.06, a) * 0.3;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
