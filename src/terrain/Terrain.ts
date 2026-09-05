@@ -104,6 +104,9 @@ export class Terrain {
           rockW = max(rockW, smoothstep(26.0, 40.0, P.y + (nz2.g - 0.5) * 10.0) * smoothstep(0.02, 0.08, slope));
           // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
+          // the 2 m terrain grid interpolates above sea level on steep shores where the smooth heightfield is below it,
+          // which draws a sawtooth of sand slivers the water cannot cover: drop those fragments so the water plane wins
+          if (hTex < -0.04 - uSeaLevel && P.y > uSeaLevel - 0.01 && abs(P.y) < 4.0) discard;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
           vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
