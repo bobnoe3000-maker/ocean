@@ -105,12 +105,13 @@ export class Terrain {
           // height from the 1 m heightfield texture: the shore contour is smooth, not the mesh's polyline
           float hTex = texture2D(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5).r;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
-          float sandW = (1.0 - rockW) * (1.0 - smoothstep(2.2, 5.5, h + (nz2.r - 0.5) * 2.5 + macro * 1.5));
+          vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
+          vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
+          // sand: the shore band everywhere, dunes only around the bay; the interior plateau is scrub and rock, not a tan stain
+          float sandW = (1.0 - rockW) * (1.0 - smoothstep(2.2, 5.5, h + (nz2.r - 0.5) * 2.5 + macro * 1.5)) * max(1.0 - smoothstep(135.0, 165.0, br), 1.0 - smoothstep(1.0, 2.2, h));
           float scrubW = (1.0 - rockW) * (1.0 - sandW) * smoothstep(0.0, 0.8, h);
           sandW = (1.0 - rockW) * (1.0 - scrubW);
           // town terrace: packed earth and worn cobbles between the houses
-          vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
-          vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
           float townW = smoothstep(uBay.z - 4.0, uBay.z + 2.0, br) * (1.0 - smoothstep(uBay.w - 12.0, uBay.w + 6.0, br + (nz2.r - 0.5) * 14.0)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * (1.0 - rockW) * smoothstep(0.3, 1.2, h);
           sandW *= 1.0 - townW; scrubW *= 1.0 - townW;
           // terraces behind the town: dry-stone retaining walls painted along the height contours
