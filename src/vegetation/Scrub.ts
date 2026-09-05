@@ -42,7 +42,7 @@ export async function buildScrub(hf: Heightfield, seed: number, quality: 'low' |
   injectWorld(mat);
   injectWorld(mat, { vertexPars: SWAY_VERTEX_PARS, uniforms: { uSwayAmp: { value: 0.12 } }, replace: [['#include <begin_vertex>', `vec3 transformed = vec3(position);\n${SWAY_VERTEX}`]] });
   const rng = new Rng(seed * 77 + 11);
-  const count = quality === 'low' ? 260 : quality === 'medium' ? 400 : 410;
+  const count = quality === 'low' ? 260 : quality === 'medium' ? 380 : 370;
   const spots: { u: number; w: number; s: number }[] = [];
   const bc = LAYOUT.bayC;
   let tries = 0;
