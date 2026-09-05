@@ -112,7 +112,7 @@ export class Lighting {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);
       // clear weather: a whisper of graded haze beyond 70 m gives the far water and hills a blue-grey shift (aerial perspective)
-      W.uFogDensity.value = 0.00006; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0; W.uFogHaze.value = spec.style === 'stylized' ? 0.0009 : 0.0; W.uHazeGrade.value = spec.style === 'stylized' ? 0.7 : 0;
+      W.uFogDensity.value = 0.00006; W.uFogHeight.value = 600; W.uFogSunPow.value = 10; W.uFogPatch.value = 0; W.uFogHaze.value = spec.style === 'stylized' ? 0.0006 : 0.0; W.uHazeGrade.value = spec.style === 'stylized' ? 0.7 : 0;
       if (spec.style === 'stylized') W.uHazeFar.value.set(0.72, 0.8, 0.92);
     }
     // exposure: key on the brightest lambertian white in the scene
