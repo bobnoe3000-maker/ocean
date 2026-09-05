@@ -191,8 +191,8 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             }
           }
           // wrack line: dark weed and debris left at the high-tide mark
-          float wrack = (1.0 - smoothstep(0.0, 0.35, abs(h - 0.75 + (nz2.g - 0.5) * 0.5))) * smoothstep(0.35, 0.7, nz2.a + nz.b * 0.3) * sandW;
-          albedo = mix(albedo, vec3(0.2, 0.15, 0.1), wrack * 0.95);
+          float wrack = (1.0 - smoothstep(0.0, 0.3, abs(h - 1.1 + (nz2.g - 0.5) * 0.6))) * smoothstep(0.5, 0.8, nz2.a + nz.b * 0.3) * sandW;
+          albedo = mix(albedo, vec3(0.3, 0.24, 0.16), wrack * 0.6); // a sparse weed line above the wash, not a dark seam at the water
           rough = mix(rough, 0.6, wrack * 0.5);
           // underwater: darker, smoother, slightly green
           float under = 1.0 - smoothstep(-0.3, 0.05, h);
