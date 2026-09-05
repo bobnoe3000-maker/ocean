@@ -114,7 +114,8 @@ export class Terrain {
           float townW = smoothstep(uBay.z - 4.0, uBay.z + 2.0, br) * (1.0 - smoothstep(uBay.w - 12.0, uBay.w + 6.0, br + (nz2.r - 0.5) * 14.0)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * (1.0 - rockW) * smoothstep(0.3, 1.2, h);
           sandW *= 1.0 - townW; scrubW *= 1.0 - townW;
           // terraces behind the town: dry-stone retaining walls painted along the height contours
-          float terrW = smoothstep(128.0, 142.0, br) * (1.0 - smoothstep(236.0, 262.0, br)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * smoothstep(2.0, 4.0, hTex);
+          // (terrace walls read as pale contour lines from the vista camera; the stylised hill is painted as masses instead)
+          float terrW = 0.0;
           float contour = fract(hTex / 3.4);
           float wallLine = smoothstep(0.88, 0.93, contour) * (1.0 - smoothstep(0.97, 1.0, contour)) * terrW * smoothstep(0.35, 0.6, nz2.a * 0.6 + nz.g * 0.4) * 0.55;
           float wallShade = smoothstep(0.55, 0.8, contour) * (1.0 - smoothstep(0.8, 0.95, contour)) * terrW * 0.25;

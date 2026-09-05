@@ -504,10 +504,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.9 + a * 4.6;
+        float size = 0.8 + a * 4.0;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.5) * smoothstep(0.0, 0.06, a) * 0.6;
+        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.5;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
