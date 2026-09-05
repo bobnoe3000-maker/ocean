@@ -215,7 +215,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     glass.geo(new THREE.CylinderGeometry(1.5, 1.5, 2.4, 12, 1, true).translate(lb.x, 18.6, lb.z));
     for (let i = 0; i < 8; i++) { const ang = i / 8 * Math.PI * 2; iron.geo(new THREE.CylinderGeometry(0.05, 0.05, 2.4, 4).translate(lb.x + Math.cos(ang) * 1.5, 18.6, lb.z + Math.sin(ang) * 1.5)); }
     paint.geo(new THREE.SphereGeometry(1.7, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2).translate(lb.x, 19.8, lb.z), hexc(0x4f7a6a));
-    const l = new THREE.PointLight(0xfff0c0, 0, 120, 1.6); l.position.set(lb.x, 18.7, lb.z); lights.push(l);
+    const l = new THREE.PointLight(0xfff0c0, 0, 64, 2.0); l.position.set(lb.x, 18.7, lb.z); lights.push(l); // a lamp on the gallery, not a flood over the basin: the halo carries the glow
     // flag pole on the gallery
     iron.geo(new THREE.CylinderGeometry(0.04, 0.05, 3.5, 4).translate(lb.x + 2.3, 19.2, lb.z));
     flag(cloth, V(lb.x + 2.3, 20.6, lb.z), 1.5, 1.0, hexc(0xb3282d));
@@ -271,7 +271,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     },
     apply(spec: SceneSpec, L: Lighting) {
       night = L.night;
-      lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 12 : 7) * night; });
+      lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 9 : 7) * night; });
       glassMat.emissiveIntensity = 3.2 * night;
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
