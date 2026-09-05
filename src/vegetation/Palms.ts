@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Rng } from '../core/Rng';
-import { Heightfield, vistaToWorld } from '../terrain/Heightfield';
+import { Heightfield, LAYOUT, vistaToWorld } from '../terrain/Heightfield';
 import { loadSet, loadTex } from '../materials/Textures';
 import { pbr, SWAY_VERTEX, SWAY_VERTEX_PARS, makeDepthMaterial } from '../materials/Helpers';
 import { injectWorld } from '../core/WorldUniforms';
@@ -100,7 +100,11 @@ export async function buildPalms(hf: Heightfield, seed: number): Promise<Extra> 
     for (let tries = 0; tries < 12; tries++) {
       const a = rng.range(0, 6.28), d = Math.sqrt(rng.next()) * r; const u = cu + Math.cos(a) * d, w = cw + Math.sin(a) * d;
       const h = hf.height(u, w); const sd = hf.coastSD(u, w);
-      if (h > 0.9 && h < 9 && sd > 3 && !spots.some(([su, sw]) => Math.hypot(su - u, sw - w) < 3.2)) { spots.push([u, w]); break; }
+      // keep palms out of the town footprint (house rows sit on radii 88-137 m around the bay centre, 38-142 deg) and off the dock root
+      const rb = Math.hypot(u - LAYOUT.bayC[0], w - LAYOUT.bayC[1]), ab = Math.atan2(w - LAYOUT.bayC[1], u - LAYOUT.bayC[0]) * 180 / Math.PI;
+      const inTown = rb > 86 && rb < 139 && ab > 38 && ab < 142;
+      const nearDock = Math.hypot(u - LAYOUT.dock[0], w - LAYOUT.dock[1]) < 9;
+      if (h > 0.9 && h < 9 && sd > 3 && !inTown && !nearDock && !spots.some(([su, sw]) => Math.hypot(su - u, sw - w) < 3.2)) { spots.push([u, w]); break; }
     }
   }
   const variants = [0, 1, 2].map(() => palmGeometry(rng.fork(rng.int(1000))));

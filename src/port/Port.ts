@@ -78,9 +78,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         const lp = bayPt(d, R + 5.5); const lw = toW(lp[0], lp[1]);
         iron.geo(new THREE.CylinderGeometry(0.07, 0.12, 3.6, 7).translate(lw.x, y1 + 1.8, lw.z));
         iron.geo(new THREE.CylinderGeometry(0.22, 0.26, 0.25, 8).translate(lw.x, y1 + 0.12, lw.z));
-        iron.geo(box(0.5, 0.08, 0.08, lw.x + 0.2, y1 + 3.5, lw.z, 1)); iron.geo(box(0.08, 0.5, 0.08, lw.x + 0.45, y1 + 3.3, lw.z, 1));
-        iron.geo(new THREE.ConeGeometry(0.42, 0.32, 4).rotateY(Math.PI / 4).translate(lw.x + 0.45, y1 + 3.75, lw.z)); iron.geo(box(0.34, 0.1, 0.34, lw.x + 0.45, y1 + 3.02, lw.z, 1));
-        glass.geo(box(0.3, 0.5, 0.3, lw.x + 0.45, y1 + 3.3, lw.z, 1));
+        lantern(iron, glass, V(lw.x, y1 + 3.55, lw.z), V(lw.x + 0.55, y1 + 3.3, lw.z));
         if (lights.length < 4) { const l = new THREE.PointLight(0xffb45a, 0, 26, 1.7); l.position.set(lw.x + 0.45, y1 + 3.2, lw.z); lights.push(l); }
       }
     }
@@ -121,7 +119,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     // cross braces near the end, bollards, lantern, barrels, crates, rope coils
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, 1.4, y + 0.3).x, y + 0.3, P(len - 1, 1.4, y + 0.3).z));
     iron.geo(new THREE.CylinderGeometry(0.14, 0.18, 0.6, 8).translate(P(len - 1, -1.4, y + 0.3).x, y + 0.3, P(len - 1, -1.4, y + 0.3).z));
-    { const lp = P(len - 0.6, 0, y); iron.geo(new THREE.CylinderGeometry(0.06, 0.09, 3.0, 6).translate(lp.x, y + 1.5, lp.z)); iron.geo(box(0.34, 0.5, 0.34, lp.x, y + 3.2, lp.z, 1)); glass.geo(box(0.26, 0.34, 0.26, lp.x, y + 3.15, lp.z, 1));
+    { const lp = P(len - 0.6, 0, y); iron.geo(new THREE.CylinderGeometry(0.06, 0.09, 3.0, 6).translate(lp.x, y + 1.5, lp.z)); lantern(iron, glass, null, V(lp.x, y + 3.2, lp.z));
       const l = new THREE.PointLight(0xffb45a, 0, 24, 1.7); l.position.set(lp.x, y + 3.0, lp.z); lights.push(l); }
     for (let i = 0; i < 5; i++) { const bp = P(4 + i * 1.1 + rng.range(-0.2, 0.2), -1.2 + (i % 2) * 0.9, y); barrel(planks, iron, bp, rng); }
     for (let i = 0; i < 4; i++) { const cp = P(9 + i * 1.3, 1.1 - (i % 2) * 0.5, y); const s = rng.range(0.7, 1.0); planks.geo(box(s, s * 0.8, s, cp.x, y + s * 0.4, cp.z, 1.2).rotateY(rng.range(-0.3, 0.3)), [0.85, 0.8, 0.7]); }
@@ -311,6 +309,26 @@ function barrel(planks: GB, iron: GB, at: THREE.Vector3, rng: Rng): void {
   for (const y of [0.15, 0.85]) iron.geo(new THREE.CylinderGeometry(0.345, 0.345, 0.05, 12, 1, true).translate(at.x, at.y + h * y, at.z));
 }
 
+// A quay lantern: a tapered eight-sided glazed body between iron corner posts, a domed cap with a finial,
+// and, when an arm anchor is given, a curved bracket arm with a scroll. Replaces the box-on-a-stick.
+function lantern(iron: GB, glass: GB, arm: THREE.Vector3 | null, at: THREE.Vector3): void {
+  const c = at.clone();
+  if (arm) {
+    const mid = arm.clone().lerp(c, 0.5); mid.y += 0.22;
+    iron.geo(tube(arm, mid, 0.035, 0.03, 5)); iron.geo(tube(mid, V(c.x, c.y + 0.5, c.z), 0.03, 0.03, 5));
+    iron.geo(tube(V(arm.x, arm.y - 0.35, arm.z), V(c.x - 0.08, c.y + 0.42, c.z), 0.022, 0.022, 4)); // scroll brace
+    iron.geo(new THREE.TorusGeometry(0.06, 0.018, 5, 10).translate(c.x - 0.06, c.y + 0.44, c.z));
+  }
+  iron.geo(new THREE.CylinderGeometry(0.1, 0.16, 0.05, 8).translate(c.x, c.y + 0.44, c.z)); // hanger plate
+  iron.geo(new THREE.ConeGeometry(0.34, 0.2, 8).translate(c.x, c.y + 0.36, c.z)); // domed cap (low cone)
+  iron.geo(new THREE.CylinderGeometry(0.05, 0.05, 0.1, 6).translate(c.x, c.y + 0.5, c.z)); iron.geo(new THREE.SphereGeometry(0.045, 6, 5).translate(c.x, c.y + 0.56, c.z)); // finial
+  iron.geo(new THREE.CylinderGeometry(0.3, 0.3, 0.04, 8).translate(c.x, c.y + 0.26, c.z)); // top ring
+  iron.geo(new THREE.CylinderGeometry(0.2, 0.24, 0.05, 8).translate(c.x, c.y - 0.27, c.z)); // base ring
+  iron.geo(new THREE.SphereGeometry(0.05, 6, 5).translate(c.x, c.y - 0.32, c.z)); // drip knob
+  for (let k = 0; k < 8; k++) { const a = (k + 0.5) * Math.PI / 4; iron.geo(tube(V(c.x + Math.cos(a) * 0.29, c.y + 0.25, c.z + Math.sin(a) * 0.29), V(c.x + Math.cos(a) * 0.21, c.y - 0.25, c.z + Math.sin(a) * 0.21), 0.016, 0.016, 4)); }
+  glass.geo(new THREE.CylinderGeometry(0.27, 0.19, 0.5, 8).translate(c.x, c.y, c.z));
+}
+
 function flag(cloth: GB, at: THREE.Vector3, w: number, h: number, col: number[], hang = false): void {
   const N = 8;
   for (let i = 0; i < N; i++) for (let j = 0; j < 4; j++) {
@@ -328,7 +346,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
   const H = floors * 3.1; const top = floorY + H;
   const shutterCol = hexc(rng.pick([0x3f6b5a, 0x5a6f8c, 0x7a4a3a, 0x8a8f7a, 0x2f4f6f]));
   const wallTint = tint;
-  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.45, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
+  const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.45, parapet: rng.next() < 0.6, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
   // foundation (stone-ish tint plaster)
   plaster.geo(box(w + 0.1, floorY - minY, d + 0.1, 0, (floorY + minY) / 2, 0, 0.25).rotateY(rot).translate(c.x, 0, c.z), [0.7, 0.68, 0.62]);
   // walls with windows
@@ -383,10 +401,26 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         const bx0 = q.x0 - 0.35, bx1 = q.x1 + 0.35, bd = 0.9;
         stone.quad(P(bx0, q.y0 - 0.02, 0), P(bx1, q.y0 - 0.02, 0), P(bx1, q.y0 - 0.02, -bd / depth), P(bx0, q.y0 - 0.02, -bd / depth), [[0, 0], [0.6, 0], [0.6, 0.4], [0, 0.4]], [0.82, 0.8, 0.76]);
         stone.quad(P(bx0, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.14, -bd / depth), P(bx1, q.y0 - 0.02, -bd / depth), P(bx0, q.y0 - 0.02, -bd / depth), [[0, 0], [0.6, 0], [0.6, 0.05], [0, 0.05]], [0.7, 0.68, 0.64]);
-        const rail = (x: number, zf: number) => { const a = P(x, q.y0, zf), b = P(x, q.y0 + 0.95, zf); iron.geo(tube(a, b, 0.02, 0.02, 4)); };
-        for (let k = 0; k <= 6; k++) rail(bx0 + (bx1 - bx0) * k / 6, -bd / depth);
-        rail(bx0, -bd / depth * 0.5); rail(bx1, -bd / depth * 0.5);
-        iron.geo(tube(P(bx0, q.y0 + 0.95, -bd / depth), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx0, q.y0 + 0.95, 0), P(bx0, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5)); iron.geo(tube(P(bx1, q.y0 + 0.95, 0), P(bx1, q.y0 + 0.95, -bd / depth), 0.03, 0.03, 5));
+        if (style.parapet) {
+          // solid plaster parapet, 0.9 m high, with a pale stone cap: reads as a mass from 60 m
+          const zf = -bd / depth, ph = 0.9, th = 0.16 / depth;
+          const wallQ = (x0: number, x1: number, z0: number, z1: number) => {
+            plaster.quad(P(x0, q.y0, z0), P(x1, q.y0, z1), P(x1, q.y0 + ph, z1), P(x0, q.y0 + ph, z0), [[0, 0.3], [0.4, 0.3], [0.4, 0.4], [0, 0.4]], wallTint);
+            plaster.quad(P(x1, q.y0, z1), P(x0, q.y0, z0), P(x0, q.y0 + ph, z0), P(x1, q.y0 + ph, z1), [[0, 0.3], [0.4, 0.3], [0.4, 0.4], [0, 0.4]], wallTint);
+          };
+          wallQ(bx0, bx1, zf, zf); wallQ(bx0, bx1, zf + th, zf + th); wallQ(bx0, bx0, zf, 0); wallQ(bx1, bx1, zf, 0);
+          stone.quad(P(bx0 - 0.04, q.y0 + ph, zf - 0.04 / depth), P(bx1 + 0.04, q.y0 + ph, zf - 0.04 / depth), P(bx1 + 0.04, q.y0 + ph, 0), P(bx0 - 0.04, q.y0 + ph, 0), [[0, 0], [0.6, 0], [0.6, 0.3], [0, 0.3]], [0.86, 0.84, 0.8]);
+          stone.quad(P(bx0 - 0.04, q.y0 + ph, zf - 0.04 / depth), P(bx0 - 0.04, q.y0 + ph + 0.06, zf - 0.04 / depth), P(bx1 + 0.04, q.y0 + ph + 0.06, zf - 0.04 / depth), P(bx1 + 0.04, q.y0 + ph, zf - 0.04 / depth), [[0, 0], [0, 0.02], [0.6, 0.02], [0.6, 0]], [0.86, 0.84, 0.8]);
+        } else {
+          // iron rail: thick posts, few balusters, a heavy top rail with a dark wooden handrail
+          const zf = -bd / depth;
+          const rail = (x: number, z: number, r: number) => { iron.geo(tube(P(x, q.y0, z), P(x, q.y0 + 0.95, z), r, r, 5)); };
+          rail(bx0, zf, 0.045); rail(bx1, zf, 0.045); rail(bx0, zf * 0.5, 0.035); rail(bx1, zf * 0.5, 0.035);
+          for (let k = 1; k < 4; k++) rail(bx0 + (bx1 - bx0) * k / 4, zf, 0.028);
+          planks.geo(tube(P(bx0 - 0.03, q.y0 + 0.97, zf), P(bx1 + 0.03, q.y0 + 0.97, zf), 0.05, 0.05, 6), [0.32, 0.24, 0.18]);
+          planks.geo(tube(P(bx0, q.y0 + 0.97, 0), P(bx0, q.y0 + 0.97, zf), 0.045, 0.045, 6), [0.32, 0.24, 0.18]); planks.geo(tube(P(bx1, q.y0 + 0.97, 0), P(bx1, q.y0 + 0.97, zf), 0.045, 0.045, 6), [0.32, 0.24, 0.18]);
+          iron.geo(tube(P(bx0, q.y0 + 0.5, zf), P(bx1, q.y0 + 0.5, zf), 0.025, 0.025, 5));
+        }
       }
       if (q.door) {
         { const dc = rng.pick([[0.55, 0.42, 0.3], [0.32, 0.45, 0.42], [0.5, 0.52, 0.5], [0.42, 0.3, 0.22], [0.28, 0.36, 0.5]]); planks.quad(P(q.x0, q.y0, 0.6), P(q.x1, q.y0, 0.6), P(q.x1, q.y1, 0.6), P(q.x0, q.y1, 0.6), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], dc);
@@ -398,8 +432,10 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         { const on = rng.next() < 0.62; const warm = rng.range(0.7, 1.15); glass.quad(P(q.x0, q.y0, 0.85), P(q.x1, q.y0, 0.85), P(q.x1, q.y1, 0.85), P(q.x0, q.y1, 0.85), [[0, 0], [1, 0], [1, 1], [0, 1]], on ? [warm, warm * rng.range(0.85, 1.0), warm * 0.9] : [0.05, 0.05, 0.06]); }
         // mullions on some houses only
         const mx = (q.x0 + q.x1) / 2, my = (q.y0 + q.y1) / 2;
-        if (style.winW > 1.0) paint.quad(P(mx - 0.03, q.y0, 0.8), P(mx + 0.03, q.y0, 0.8), P(mx + 0.03, q.y1, 0.8), P(mx - 0.03, q.y1, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
-        if (style.winW > 1.0) paint.quad(P(q.x0, my - 0.03, 0.8), P(q.x1, my - 0.03, 0.8), P(q.x1, my + 0.03, 0.8), P(q.x0, my + 0.03, 0.8), [[0, 0], [1, 0], [1, 1], [0, 1]], [0.9, 0.9, 0.88]);
+        // glazing bars: thin, dark, sitting just in front of the glass (never a white cross on the wall)
+        const barCol = [0.16, 0.13, 0.1];
+        if (style.winW > 1.0) paint.quad(P(mx - 0.018, q.y0, 0.82), P(mx + 0.018, q.y0, 0.82), P(mx + 0.018, q.y1, 0.82), P(mx - 0.018, q.y1, 0.82), [[0, 0], [1, 0], [1, 1], [0, 1]], barCol);
+        if (style.winW > 1.0) paint.quad(P(q.x0, my - 0.018, 0.82), P(q.x1, my - 0.018, 0.82), P(q.x1, my + 0.018, 0.82), P(q.x0, my + 0.018, 0.82), [[0, 0], [1, 0], [1, 1], [0, 1]], barCol);
         // sill
         plaster.quad(P(q.x0 - 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 - 0.06, -0.12), P(q.x1 + 0.08, q.y0 + 0.02, 0.0), P(q.x0 - 0.08, q.y0 + 0.02, 0.0), [[0, 0.6], [0.2, 0.6], [0.2, 0.62], [0, 0.62]], [0.8, 0.78, 0.72]);
         // shutters: open, angled slightly off the wall; some closed; some houses have none
@@ -468,10 +504,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.7 + a * 3.6;
+        float size = 0.9 + a * 4.6;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.7) * smoothstep(0.0, 0.06, a) * 0.36;
+        vAlpha = pow(1.0 - a, 1.5) * smoothstep(0.0, 0.06, a) * 0.6;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
@@ -479,7 +515,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
       void main() {
         vec2 c = gl_PointCoord - 0.5; c = vec2(c.x * vRot.x - c.y * vRot.y, c.x * vRot.y + c.y * vRot.x) + 0.5;
         float a = texture2D(tSmoke, c).a * vAlpha;
-        vec3 col = vec3(0.42, 0.41, 0.4) * uLight / 3.14159;
+        vec3 col = vec3(0.6, 0.58, 0.56) * uLight / 3.14159;
         gl_FragColor = vec4(col, a);
       }`,
   });
