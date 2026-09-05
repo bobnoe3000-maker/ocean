@@ -181,7 +181,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           if (uStyle > 0.5) {
             // stylised realism: banded depth gradient, painted foam rims, opaque saturated body
             float d1 = smoothstep(0.0, 2.5, depth), d2 = smoothstep(2.5, 9.0, depth), d3 = smoothstep(9.0, 26.0, depth);
-            vec3 c0 = vec3(0.32, 0.78, 0.70), c1 = vec3(0.04, 0.42, 0.50), c2 = vec3(0.015, 0.16, 0.36), c3 = vec3(0.006, 0.06, 0.22);
+            vec3 c0 = vec3(0.16, 0.74, 0.78), c1 = vec3(0.03, 0.42, 0.56), c2 = vec3(0.015, 0.16, 0.36), c3 = vec3(0.006, 0.06, 0.22); // a clean turquoise: the old yellow-green c0 went khaki under the golden sun
             body = mix(mix(mix(c0, c1, d1), c2, d2), c3, d3);
             float dayF = 1.0 - uNightF;
             // painted foam: a solid collar along every shore whose inner edge is scalloped by a lace texture,
@@ -207,9 +207,9 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             body = mix(max(body * 0.1, vec3(0.004, 0.009, 0.03)), body, dayF); // R2 navy (#111C3C) at night, never a black hole
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
             body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
-            styleEmis = body * 0.35 * dayF * (1.0 - 0.8 * uFogF) + vec3(0.004, 0.009, 0.03) * 0.1 * uNightF; // night: a faint self-lit navy floor (R2 #111C3C) so the sea is never a black hole
+            styleEmis = body * 0.6 * dayF * (1.0 - 0.8 * uFogF) + vec3(0.004, 0.009, 0.03) * 0.1 * uNightF; // night: a faint self-lit navy floor (R2 #111C3C) so the sea is never a black hole
           }
-          diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
+          diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.55 : 0.5), vec3(0.97), foam); // stylised: less of the body is sun-lit diffuse (which the warm key tints), more is painted emissive
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
           roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.6 * uNightF), 0.85, foam); // night: a smoother surface on flattened normals gives the moon a narrow, soft-edged path

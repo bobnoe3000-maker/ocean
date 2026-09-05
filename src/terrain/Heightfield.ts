@@ -71,7 +71,9 @@ export class Heightfield {
     const wob = this.n.fbm(u * 0.006 + 3, w * 0.006 + 1, 3) * 28;
     const sdE = (1 - e) * 230 + wob;
     const db = Math.hypot(u - L.bayC[0], w - L.bayC[1]) - L.bayR + this.n.fbm(u * 0.02, w * 0.02, 2) * 6;
-    return Math.min(sdE, db);
+    // smooth minimum: a hard min creased the depth along the circle where the bay meets the island outline, and the
+    // water drew that crease as a khaki ring across the harbour mouth
+    const k = 14; return -k * Math.log(Math.exp(-sdE / k) + Math.exp(-db / k));
   }
 
   // Height in metres at vista (u, w). Sea level 0.

@@ -260,7 +260,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
   const gradTex = new THREE.DataTexture(grad, 1, 256, THREE.RGBAFormat); gradTex.needsUpdate = true;
   const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff2c8, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, alphaMap: gradTex });
   const beamGeo = new THREE.CylinderGeometry(0.6, 12, 160, 14, 1, true).rotateX(-Math.PI / 2).translate(0, 0, -80);
-  const beam = new THREE.Mesh(beamGeo, beamMat); beam.position.copy(lights[lights.length - 1].position); beam.visible = false; // a flat wedge from above reads as a quad; halos carry the fog glow
+  const beam = new THREE.Mesh(beamGeo, beamMat); beam.position.copy(lights[lights.length - 1].position); beam.visible = true; // a faint sweeping wedge at night (R2 asks for a beam); the halo still carries most of the glow
 
   // ------------------------------------------------------------ smoke
   const smoke = makeSmoke(emitters, smokeTex); group.add(smoke.points);
@@ -285,7 +285,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
       // by day the panes carry a sky-lit sheen so recessed windows never read as black voids
       if (night < 0.5) { glassMat.emissive.setRGB(0.55, 0.68, 0.85, THREE.LinearSRGBColorSpace); glassMat.emissiveIntensity = 1.5 * (1 - night * 2); } else glassMat.emissive.setHex(0xffb257); // day exposure sits near 0.25: the pane needs radiance ~1.5 to read as a sky sheen
       const fogF = spec.weather === 'fog' ? 1 : 0;
-      haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
+      haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.04 + 0.1 * fogF);
       { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }
       smoke.material.uniforms.uLight.value.copy(L.sunE).multiplyScalar(0.7).add(L.skyE.clone().multiplyScalar(0.6)).add(L.moonE.clone().multiplyScalar(0.5));
       void spec;
@@ -356,7 +356,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
   const corners = [R(-w / 2, 0, -d / 2), R(w / 2, 0, -d / 2), R(w / 2, 0, d / 2), R(-w / 2, 0, d / 2)];
   const gh = corners.map((p) => hf.heightWorld(p.x, p.z)); const floorY = Math.max(...gh) + 0.12, minY = Math.min(...gh) - 1.5;
   const H = floors * 3.1; const top = floorY + H;
-  const shutterCol = hexc(rng.pick([0x3f6b5a, 0x5a6f8c, 0x7a4a3a, 0x8a8f7a, 0x2f4f6f]));
+  const shutterCol = hexc(rng.pick([0x6f9a86, 0x8aa0bd, 0xa8786a, 0xb3b8a4, 0x5f83a3])); // mid-value paint: dark shutters in shade read as black blocks beside every pane
   const wallTint = tint;
   const style = { arched: rng.next() < 0.3, balconies: rng.next() < 0.3, parapet: false, noShutters: rng.next() < 0.25, winW: rng.range(0.85, 1.15), winH: rng.range(1.2, 1.7) };
   // foundation (stone-ish tint plaster)
@@ -435,7 +435,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         }
       }
       if (q.door) {
-        { const dc = rng.pick([[0.55, 0.42, 0.3], [0.32, 0.45, 0.42], [0.5, 0.52, 0.5], [0.42, 0.3, 0.22], [0.28, 0.36, 0.5]]); planks.quad(P(q.x0, q.y0, 0.6), P(q.x1, q.y0, 0.6), P(q.x1, q.y1, 0.6), P(q.x0, q.y1, 0.6), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], dc);
+        { const dc = rng.pick([[0.72, 0.58, 0.44], [0.5, 0.64, 0.6], [0.66, 0.68, 0.66], [0.6, 0.46, 0.36], [0.46, 0.55, 0.7]]); // doors mid-value too planks.quad(P(q.x0, q.y0, 0.6), P(q.x1, q.y0, 0.6), P(q.x1, q.y1, 0.6), P(q.x0, q.y1, 0.6), [[0, 0], [0.4, 0], [0.4, 0.8], [0, 0.8]], dc);
           stone.quad(P(q.x0 - 0.12, q.y1, -0.05), P(q.x1 + 0.12, q.y1, -0.05), P(q.x1 + 0.12, q.y1 + 0.2, -0.05), P(q.x0 - 0.12, q.y1 + 0.2, -0.05), [[0, 0], [0.4, 0], [0.4, 0.06], [0, 0.06]], [0.78, 0.76, 0.72]); }
         // step
         plaster.quad(P(q.x0 - 0.3, -0.02, -1.6), P(q.x1 + 0.3, -0.02, -1.6), P(q.x1 + 0.3, 0.16, -1.6), P(q.x0 - 0.3, 0.16, -1.6), [[0, 0.6], [0.3, 0.6], [0.3, 0.62], [0, 0.62]], [0.75, 0.73, 0.68]);

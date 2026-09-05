@@ -131,7 +131,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   for (const side of [1, -1]) for (let k = 0; k < 4; k++) {
     const z = -8 + k * 5.2; const sIdx = 0.5 - z / L; const hb = deckOutline(sIdx);
     add(box(0.12, 0.7, 0.8, (hb - 0.02) * side, DECK - 0.05, z, 1), ironMat);
-    add(box(0.08, 0.35, 0.85, (hb + 0.08) * side, DECK + 0.45, z, 1).rotateZ(side * 0.9), hullMat);
+    add(box(0.08, 0.35, 0.85, 0, 0, 0, 1).rotateZ(side * 0.9).translate((hb + 0.08) * side, DECK + 0.45, z), hullMat); // lid hinged up: rotated about its own centre, not the ship origin (that flung it onto the water as a dash)
     for (const dz of [-1.2, 0, 1.2]) add(box(0.06, 1.2, 0.12, (hb + 0.03) * side, DECK - 0.55, z + dz + 2.6, 1), ironMat);
   }
   for (const x of [-1.6, -0.55, 0.55, 1.6]) { const g = box(0.8, 0.6, 0.1, x, DECK - 0.25, -L / 2 - 0.1, 1); add(g, ironMat); }
@@ -150,7 +150,7 @@ export async function buildBrig(seed: number): Promise<Extra> {
   for (const side of [1, -1]) for (let k = 0; k < 4; k++) {
     const z = -8 + k * 5.2; const s = 0.5 - z / L; const x = (deckOutline(s) - 1.1) * side;
     add(box(0.9, 0.55, 1.3, x, DECK + 0.28, z, 1), sparMat);
-    add(new THREE.CylinderGeometry(0.11, 0.16, 2.0, 8).rotateZ(Math.PI / 2).translate(x + 0.55 * side, DECK + 0.72, z), ironMat);
+    add(new THREE.CylinderGeometry(0.11, 0.16, 1.5, 8).rotateZ(Math.PI / 2).translate(x + 0.2 * side, DECK + 0.72, z), ironMat); // muzzle just clears the bulwark; from above a run-out barrel read as a dash on the water
     for (const dz of [-0.45, 0.45]) add(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 10).rotateZ(Math.PI / 2).translate(x, DECK + 0.2, z + dz), sparMat);
   }
   // ship's boat on deck (small lofted hull)
