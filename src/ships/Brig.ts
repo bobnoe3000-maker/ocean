@@ -299,6 +299,8 @@ export async function buildBrig(seed: number): Promise<Extra> {
       const night = L.night;
       const k = spec.style === 'stylized' ? 1.7 : 1; ship.scale.set(k, k, k);
       lanternLight.userData.base = 6 * night; (lantern.material as THREE.MeshStandardMaterial).emissiveIntensity = 4 * night;
+      // R2: the hull is a silhouette whose wales and spars catch the moon; a faint cool self-light keeps it readable
+      for (const m of [hullMat, sparMat, deckMat]) { m.emissive.setRGB(0.55, 0.7, 1.0, THREE.LinearSRGBColorSpace); m.emissiveIntensity = 0.0025 * night; }
     },
   };
 }

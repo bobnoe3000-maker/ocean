@@ -123,7 +123,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           vec2 bd = vis - uBay.xy; float br = length(bd); float bth = degrees(atan(bd.y, bd.x));
           // sand: the shore band everywhere, dunes only around the bay; the interior plateau is scrub and rock, not a tan stain
           float sandW = (1.0 - rockW) * (1.0 - smoothstep(2.2, 5.5, h + (nz2.r - 0.5) * 2.5 + macro * 1.5)) * max(1.0 - smoothstep(135.0, 165.0, br), 1.0 - smoothstep(1.0, 2.2, h));
-          float scrubW = (1.0 - rockW) * (1.0 - sandW) * smoothstep(0.0, 0.8, h);
+          float scrubW = (1.0 - rockW) * (1.0 - sandW) * smoothstep(1.0, 2.2, h); // nothing green below the high-water mark
           sandW = (1.0 - rockW) * (1.0 - scrubW);
           // town terrace: packed earth and worn cobbles between the houses
           float townW = smoothstep(uBay.z - 4.0, uBay.z + 2.0, br) * (1.0 - smoothstep(uBay.w - 12.0, uBay.w + 6.0, br + (nz2.r - 0.5) * 14.0)) * smoothstep(26.0, 36.0, bth) * (1.0 - smoothstep(146.0, 156.0, bth)) * (1.0 - rockW) * smoothstep(0.3, 1.2, h);

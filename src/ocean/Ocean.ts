@@ -197,8 +197,11 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // the collar and the first hand-span of water are opaque paint, and the sheet runs a few centimetres past the
             // field's shoreline: where the 2 m terrain grid dips below the plane on the land side, the water covers the
             // wet-sand notch instead of exposing it (the sand wins by depth wherever the grid is above the plane)
-            alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.08, -0.03, depthTex));
-            foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex)); // over the last centimetres of sand the sheet is the collar itself
+            // the shallows are glass over sand (R1's turquoise over the bar), the collar is opaque paint, and the few
+            // centimetres of sheet past the field's shoreline are collar too
+            alpha = max(max(alpha, 0.55 * smoothstep(0.0, 0.6, depth)), foam * 0.97);
+            alpha = max(alpha, 0.95 * (1.0 - smoothstep(-0.02, 0.06, depthTex)) * smoothstep(-0.08, -0.03, depthTex));
+            foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex));
             if (depthTex < -0.08) discard;
             body = mix(body * 0.04, body, dayF); // near black at night (R2): the moon path and the lanterns do the talking
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)

@@ -89,7 +89,7 @@ export class Heightfield {
     } else {
       // the bay floor shelves more gently than the open sea; the change of slope is blended over 40 m so no ring
       // of depth (and so of water colour) is drawn across the bay mouth
-      const inBay = 1 - smooth(L.bayR - 30, L.bayR + 40, Math.hypot(u - L.bayC[0], w - L.bayC[1]) + this.n.fbm(u * 0.02 + 4, w * 0.02 + 7, 2) * 18); // wide, noise-broken: no ring
+      const inBay = 1 - smooth(L.bayR - 45, L.bayR + 70, Math.hypot(u - L.bayC[0], w - L.bayC[1]) + this.n.fbm(u * 0.02 + 4, w * 0.02 + 7, 2) * 28); // very wide, noise-broken: no ring
       const slope = mix(0.26, 0.13, inBay);
       h = -0.6 + sd * slope + this.n.fbm(u * 0.03 + 9, w * 0.03, 3) * 0.8;
     }
