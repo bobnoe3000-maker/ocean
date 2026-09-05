@@ -156,3 +156,14 @@ Recorded as they were made. Newest at the bottom.
     haze now starts 70 m from the camera (near chop and rigging stay crisp)
     and thins and cools under a high sun so the noon mist is a layer, not a
     grey sheet. `style=real` is untouched.
+33. **Round 10 forensics.** Three long-running checklist hits turned out to
+    have mechanical causes rather than art ones. The "milky haze at 60 m"
+    was the chimney smoke: large low-alpha point sprites lying over the
+    roofs (now smaller, thinner and rising faster). The floating chests were
+    crates rotated with `rotateY` after being translated, which swings them
+    around the world origin (now rotated about their own centre). The
+    returning beach sawtooth was the shore clamp lifting ocean vertices that
+    sit over land, which drew a sheet above the sand from the tilted camera
+    (land vertices now sit flat at sea level; only vertices over water are
+    clamped to the bed). Reading the crops before touching the art saved a
+    round each.
