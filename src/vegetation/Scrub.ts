@@ -13,16 +13,20 @@ function bushGeometry(rng: Rng, detail: number): THREE.BufferGeometry {
   // sculpted blob: a flattened icosphere with lumpy noise displacement and a painted top-light gradient
   const g = mergeVertices(new THREE.IcosahedronGeometry(1, detail));
   const pos = g.attributes.position as THREE.BufferAttribute;
-  const lumps = Array.from({ length: 5 }, () => new THREE.Vector3(rng.range(-1, 1), rng.range(-0.3, 1), rng.range(-1, 1)).normalize());
+  // lobes: a few strong bulges so the silhouette is a cluster of rounded masses, never a single sphere
+  const lumps = Array.from({ length: 6 + rng.int(3) }, () => ({ d: new THREE.Vector3(rng.range(-1, 1), rng.range(-0.2, 1), rng.range(-1, 1)).normalize(), k: rng.range(0.3, 0.6), w: rng.range(0.3, 0.55) }));
   const col: number[] = [], sway: number[] = [];
   for (let i = 0; i < pos.count; i++) {
     const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
-    let d = 1; for (const l of lumps) d += 0.18 * Math.max(0, v.dot(l) - 0.55);
-    d += rng.range(-0.03, 0.03);
+    let d = 0.82; for (const l of lumps) d += l.k * Math.max(0, v.dot(l.d) - (1 - l.w)) / l.w;
+    d += rng.range(-0.02, 0.02);
     v.multiplyScalar(d); v.y = v.y * 0.72 + 0.72; v.x *= 1.1;
     pos.setXYZ(i, v.x, v.y, v.z);
+    // two-tone: lit tops warm yellow-green, undersides and clefts a deep blue-green
     const top = THREE.MathUtils.clamp(v.y / 1.5, 0, 1);
-    col.push(0.5 + 0.45 * top, 0.62 + 0.38 * top, 0.28 + 0.2 * top);
+    const cleft = THREE.MathUtils.clamp((d - 0.82) / 0.5, 0, 1);
+    const t2 = THREE.MathUtils.clamp(top * 0.7 + cleft * 0.5, 0, 1);
+    col.push(0.36 + 0.6 * t2, 0.5 + 0.5 * t2, 0.3 + 0.16 * t2);
     void 0;
     sway.push(0.3 + 0.5 * top, i * 0.37);
   }

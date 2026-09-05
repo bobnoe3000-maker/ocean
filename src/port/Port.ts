@@ -62,8 +62,11 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
         stone.quad(a.clone().setY(0.55), b.clone().setY(0.55), b.clone().setY(y1), a.clone().setY(y1), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.4], [ua, 1.4]]);
         const po = toW(prevOut![0], prevOut![1]), co = toW(out[0], out[1]);
         { const ea = a.clone().setY(y1).lerp(po.clone().setY(y1 + 0.35), 0.16), eb = b.clone().setY(y1).lerp(co.clone().setY(y1 + 0.35), 0.16);
-          stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [[ua * 1.6, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 0.5 + ua * 0.2], [ua * 1.6 + 2.1, 0.95 + ua * 0.2], [ua * 1.6, 0.95 + ua * 0.2]], [0.5, 0.52, 0.5]);
-          stone.quad(ea, eb, co.clone().setY(y1 + 0.35), po.clone().setY(y1 + 0.35), [[ua * 1.6, 0.95 + ua * 0.2], [ua * 1.6 + 2.1, 0.95 + ua * 0.2], [ua * 1.6 + 2.1, 3.3 + ua * 0.2], [ua * 1.6, 3.3 + ua * 0.2]], [0.88, 0.87, 0.84]); }
+          // paving mapped from world position so the stones run continuously across the arc (no radial grid or stitch seams)
+          const puv = (p: THREE.Vector3): [number, number] => [p.x / 2.6, p.z / 2.6];
+          const cO = co.clone().setY(y1 + 0.35), pO = po.clone().setY(y1 + 0.35);
+          stone.quad(a.clone().setY(y1), b.clone().setY(y1), eb, ea, [puv(a), puv(b), puv(eb), puv(ea)], [0.5, 0.52, 0.5]);
+          stone.quad(ea, eb, cO, pO, [puv(ea), puv(eb), puv(cO), puv(pO)], [0.88, 0.87, 0.84]); }
         // kerb
         stone.quad(a.clone().setY(y1), b.clone().setY(y1), b.clone().setY(y1 + 0.12).addScaledVector(co.clone().sub(b).normalize(), 0.3), a.clone().setY(y1 + 0.12).addScaledVector(po.clone().sub(a).normalize(), 0.3), [[ua, 0.9], [ua + 1.3, 0.9], [ua + 1.3, 1.0], [ua, 1.0]]);
       }
