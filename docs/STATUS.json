@@ -1,6 +1,6 @@
 {
   "phase": "1 look test",
-  "updated": "2026-09-04T23:28:08.617Z",
+  "updated": "2026-09-05T01:12:58.707Z",
   "rounds": [
     {
       "round": 1,
@@ -448,6 +448,99 @@
         "shots/critic7/sun_check_crop_foreground.png"
       ],
       "commit": "7002400"
+    },
+    {
+      "round": 8,
+      "scores": {
+        "materials": 6.5,
+        "light": 6.5,
+        "atmosphere": 5,
+        "water": 5.5,
+        "scale_motion": 6.5,
+        "composition": 7,
+        "budget_errors": 8.5,
+        "programmer_art": 4
+      },
+      "pass": false,
+      "console_errors": 0,
+      "programmer_art_hits": [
+        "Flat or untextured surfaces: lamp head a faceted box, balcony rails unshaded wire cages (shots/critic8/zoom60_town_crop_lamp.png, shots/critic8/zoom60_town_crop_balconies.png)",
+        "Visible tiling (marginal): beach is one diagonal micro-ripple grain with a moire stripe (shots/critic8/zoom60_beach_crop_sand.png)",
+        "White-stripe foam: uniform ~15 m white collar band around the whole basin; noon basin white-marbled shore to shore (shots/critic8/hero_phone.png, shots/critic8/zoom120_brig_crop_collar.png, shots/critic8/contact_clear_12_crop_basin.png)",
+        "Hard water-to-beach line: large stair-stepped sawtooth where the wash mesh meets the sand (shots/critic8/zoom60_beach_crop_shore.png, shots/critic8/zoom120_brig_crop_shoreline.png)",
+        "Fog as one colour: two-band sepia/blue-grey veil with inverted depth; noon fog an opaque sheet (shots/critic8/fog_phone_crop_near_water.png, shots/critic8/fog_phone_crop_town.png, shots/critic8/contact_fog_12_crop_town.png)",
+        "Placeholder primitives (marginal): bushes are glossy spheres with a specular dot (shots/critic8/hero_phone_crop_hill.png, shots/critic8/sun_check_crop_foreground.png)"
+      ],
+      "report": "docs/critic/round8.md",
+      "screenshots": [
+        "shots/critic8/contact.png",
+        "shots/critic8/contact_clear_12.png",
+        "shots/critic8/contact_clear_12_crop_basin.png",
+        "shots/critic8/contact_clear_12_crop_mole.png",
+        "shots/critic8/contact_clear_175.png",
+        "shots/critic8/contact_clear_22.png",
+        "shots/critic8/contact_fog_12.png",
+        "shots/critic8/contact_fog_12_crop_town.png",
+        "shots/critic8/contact_fog_175.png",
+        "shots/critic8/contact_fog_175_crop_near_water.png",
+        "shots/critic8/contact_fog_175_crop_town.png",
+        "shots/critic8/contact_fog_22.png",
+        "shots/critic8/contact_fog_22_crop_mole.png",
+        "shots/critic8/fog_phone.png",
+        "shots/critic8/fog_phone_crop_brig.png",
+        "shots/critic8/fog_phone_crop_mole.png",
+        "shots/critic8/fog_phone_crop_near_water.png",
+        "shots/critic8/fog_phone_crop_town.png",
+        "shots/critic8/hero_phone.png",
+        "shots/critic8/hero_phone_crop_beach.png",
+        "shots/critic8/hero_phone_crop_bottom.png",
+        "shots/critic8/hero_phone_crop_brig.png",
+        "shots/critic8/hero_phone_crop_dock.png",
+        "shots/critic8/hero_phone_crop_gull.png",
+        "shots/critic8/hero_phone_crop_hill.png",
+        "shots/critic8/hero_phone_crop_mole.png",
+        "shots/critic8/hero_phone_crop_patch.png",
+        "shots/critic8/hero_phone_crop_town.png",
+        "shots/critic8/landscape.png",
+        "shots/critic8/night_phone.png",
+        "shots/critic8/night_phone_crop_basin.png",
+        "shots/critic8/night_phone_crop_brig.png",
+        "shots/critic8/night_phone_crop_dock.png",
+        "shots/critic8/night_phone_crop_hill.png",
+        "shots/critic8/night_phone_crop_mole.png",
+        "shots/critic8/night_phone_crop_town.png",
+        "shots/critic8/sun_check.png",
+        "shots/critic8/sun_check_crop_foreground.png",
+        "shots/critic8/sun_check_crop_glitter.png",
+        "shots/critic8/sun_check_crop_sky.png",
+        "shots/critic8/zoom120_brig.png",
+        "shots/critic8/zoom120_brig_crop_bow.png",
+        "shots/critic8/zoom120_brig_crop_collar.png",
+        "shots/critic8/zoom120_brig_crop_deck.png",
+        "shots/critic8/zoom120_brig_crop_jib.png",
+        "shots/critic8/zoom120_brig_crop_sail.png",
+        "shots/critic8/zoom120_brig_crop_shoreline.png",
+        "shots/critic8/zoom300.png",
+        "shots/critic8/zoom300_crop_bottom.png",
+        "shots/critic8/zoom300_crop_island.png",
+        "shots/critic8/zoom300_crop_top.png",
+        "shots/critic8/zoom60_beach.png",
+        "shots/critic8/zoom60_beach_crop_foam.png",
+        "shots/critic8/zoom60_beach_crop_palm.png",
+        "shots/critic8/zoom60_beach_crop_sand.png",
+        "shots/critic8/zoom60_beach_crop_shore.png",
+        "shots/critic8/zoom60_beach_crop_wetband.png",
+        "shots/critic8/zoom60_town.png",
+        "shots/critic8/zoom60_town_crop_balconies.png",
+        "shots/critic8/zoom60_town_crop_bracket.png",
+        "shots/critic8/zoom60_town_crop_decal.png",
+        "shots/critic8/zoom60_town_crop_eave.png",
+        "shots/critic8/zoom60_town_crop_lamp.png",
+        "shots/critic8/zoom60_town_crop_palm.png",
+        "shots/critic8/zoom60_town_crop_quay.png",
+        "shots/critic8/zoom60_town_crop_shade.png"
+      ],
+      "commit": "41a02d2"
     }
   ],
   "best": {
@@ -455,155 +548,28 @@
     "min_score": 4.5
   },
   "open_issues": [
-    {
-      "rank": 1,
-      "issue": "Night basin is a flat pale sky-blue sheet brighter than every lantern; brig a black cut-out",
-      "evidence": [
-        "shots/critic7/night_phone.png",
-        "shots/critic7/night_phone_crop_basin.png",
-        "shots/critic7/night_phone_crop_brig.png",
-        "shots/critic7/contact_clear_22_crop_basin.png"
-      ],
-      "fix": "night water near #111C3C with a narrow moon path, lantern streaks and a moon rim on sails; darken the foam collar at night"
-    },
-    {
-      "rank": 2,
-      "issue": "Shoreline is a hard stair-stepped mesh edge between water and sand",
-      "evidence": [
-        "shots/critic7/zoom60_beach_crop_shore.png",
-        "shots/critic7/zoom120_brig_crop_shoreline.png"
-      ],
-      "fix": "extend the water plane under the beach and fade it with a depth/alpha shoreline; remove the offset dark stroke"
-    },
-    {
-      "rank": 3,
-      "issue": "Foam collar is a milky haze band with no lace edge; no bow or mole foam; noon comet and confetti remain",
-      "evidence": [
-        "shots/critic7/hero_phone_crop_beach.png",
-        "shots/critic7/zoom60_beach_crop_foam.png",
-        "shots/critic7/hero_phone_crop_brig.png",
-        "shots/critic7/contact_clear_12_crop_mole.png",
-        "shots/critic7/contact_clear_12.png"
-      ],
-      "fix": "painted collar with crisp outer lace, narrow bright band, soft inner fade; bow and mole foam; delete comet and confetti"
-    },
-    {
-      "rank": 4,
-      "issue": "Fog is one colour with inverted depth; noon fog an opaque sheet",
-      "evidence": [
-        "shots/critic7/fog_phone_crop_near_water.png",
-        "shots/critic7/fog_phone_crop_town.png",
-        "shots/critic7/contact_fog_12.png"
-      ],
-      "fix": "density rising with camera distance, per-layer blue-grey shift, crisp near chop, lower noon albedo"
-    },
-    {
-      "rank": 5,
-      "issue": "Sky is a monotone warm-grey haze; glitter clips and floods the harbour; a pale ledge intersects the near slope",
-      "evidence": [
-        "shots/critic7/sun_check_crop_sky.png",
-        "shots/critic7/sun_check_crop_glitter.png",
-        "shots/critic7/sun_check_crop_foreground.png"
-      ],
-      "fix": "painted sky with blue zenith, rose belt and clouds; hold glitter under white; no cards through terrain"
-    },
-    {
-      "rank": 6,
-      "issue": "Hillside still has contour lines; bushes are faceted icospheres",
-      "evidence": [
-        "shots/critic7/hero_phone_crop_hill.png",
-        "shots/critic7/landscape_crop_hill.png",
-        "shots/critic7/sun_check_crop_foreground.png"
-      ],
-      "fix": "delete the contour term, paint scrub/rock/sand masses, smooth two-tone bush volumes in clumps"
-    },
-    {
-      "rank": 7,
-      "issue": "Palm crowns are flat pale blades pinned beside the trunk; fronds clip through a house",
-      "evidence": [
-        "shots/critic7/zoom60_beach_crop_palm.png",
-        "shots/critic7/zoom120_brig_crop_palms.png",
-        "shots/critic7/zoom60_town_crop_palm.png"
-      ],
-      "fix": "fronds with spine, droop and darker underside; crown seated on trunk; placement that respects buildings"
-    },
-    {
-      "rank": 8,
-      "issue": "Beach is one flat peach tint with a single micro grain, no wet band, no debris",
-      "evidence": [
-        "shots/critic7/zoom60_beach_crop_sand.png",
-        "shots/critic7/zoom60_beach.png"
-      ],
-      "fix": "macro dry/damp masses, darker wet band, seaweed line, shells and driftwood"
-    },
-    {
-      "rank": 9,
-      "issue": "Lamp head a faceted box; balcony rails wire cages; white-cross window decal persists",
-      "evidence": [
-        "shots/critic7/zoom60_town_crop_lamp.png",
-        "shots/critic7/zoom60_town_crop_windows.png",
-        "shots/critic7/zoom60_town.png"
-      ],
-      "fix": "modelled lantern with glass, rails with thickness, drop the decal variant"
-    },
-    {
-      "rank": 10,
-      "issue": "Quay is a radial flagstone grid with stitch seams, hard step to hex apron, no wet band",
-      "evidence": [
-        "shots/critic7/zoom60_town_crop_quay.png",
-        "shots/critic7/hero_phone_crop_dock.png"
-      ],
-      "fix": "irregular painted stones, continuous UVs, dark rounded wet band, blended apron"
-    },
-    {
-      "rank": 11,
-      "issue": "Balcony bracket floats inside a roof; roofs paper-thin with no eaves",
-      "evidence": [
-        "shots/critic7/zoom60_town_crop_roof.png"
-      ],
-      "fix": "clamp balcony parts to facades; eave overhang"
-    },
-    {
-      "rank": 12,
-      "issue": "A crate sits on the water at the beach edge",
-      "evidence": [
-        "shots/critic7/zoom60_beach_crop_crate.png"
-      ],
-      "fix": "clamp props to land"
-    },
-    {
-      "rank": 13,
-      "issue": "No warm bounce in the 17:30 shade",
-      "evidence": [
-        "shots/critic7/hero_phone_crop_town.png",
-        "shots/critic7/zoom60_town.png"
-      ],
-      "fix": "sky fill toward #5B6FA6 and a ground-bounce term"
-    },
-    {
-      "rank": 14,
-      "issue": "No chimney smoke visible",
-      "evidence": [
-        "shots/critic7/hero_phone_crop_town.png"
-      ],
-      "fix": "soft-particle plumes with drift"
-    },
-    {
-      "rank": 15,
-      "issue": "No aerial perspective on far water at 300 m; same house masses repeat forty times",
-      "evidence": [
-        "shots/critic7/zoom300_crop_top.png",
-        "shots/critic7/zoom300_crop_island.png"
-      ],
-      "fix": "blue-grey distance shift; three or four more house silhouettes"
-    }
+    "Shoreline is a large stair-stepped sawtooth where the wash mesh meets the sand on every beach (shots/critic8/zoom60_beach_crop_shore.png)",
+    "Foam collar is a uniform ~15 m white band around the whole basin and owns the lower half of the hero (shots/critic8/hero_phone.png, shots/critic8/zoom120_brig_crop_collar.png)",
+    "Two cream lace-edged patches float in the harbour mouth like clouds; noon basin is white marbling shore to shore (shots/critic8/hero_phone_crop_patch.png, shots/critic8/contact_clear_12_crop_basin.png)",
+    "Fog depth still inverted and one colour per band; noon fog an opaque sheet (shots/critic8/fog_phone_crop_near_water.png, shots/critic8/contact_fog_12_crop_town.png)",
+    "Sky has no blue zenith, rose belt or clouds; glitter clips and floods the harbour (shots/critic8/sun_check_crop_sky.png, shots/critic8/sun_check_crop_glitter.png)",
+    "Bushes are glossy plastic spheres; hillside still has contour lines and a dark stain (shots/critic8/hero_phone_crop_hill.png, shots/critic8/zoom300_crop_island.png)",
+    "Lamp head a faceted box, balcony rails wire cages, white-cross window decal persists (shots/critic8/zoom60_town_crop_lamp.png, shots/critic8/zoom60_town_crop_balconies.png, shots/critic8/zoom60_town_crop_decal.png)",
+    "Palm fronds flat blades pinned beside the trunk, through a house, and showing through the mainsail (shots/critic8/zoom60_beach_crop_palm.png, shots/critic8/zoom60_town_crop_palm.png, shots/critic8/zoom120_brig_crop_sail.png)",
+    "Beach one diagonal micro-grain with a moire stripe, no debris (shots/critic8/zoom60_beach_crop_sand.png)",
+    "Night jib a saturated orange-yellow triangle; no rigging glint; basin grey rather than navy (shots/critic8/night_phone_crop_brig.png)",
+    "Quay a radial flagstone grid with stitch seams and a hard step (shots/critic8/zoom60_town_crop_quay.png)",
+    "Bracket floats inside a roof; no eaves; black void under a gable (shots/critic8/zoom60_town_crop_bracket.png, shots/critic8/zoom60_town_crop_eave.png)",
+    "Crate sits on the water at the beach edge (shots/critic8/hero_phone_crop_beach.png)",
+    "No warm bounce in the 17:30 shade; no chimney smoke (shots/critic8/zoom60_town_crop_shade.png, shots/critic8/hero_phone_crop_town.png)",
+    "Aerial perspective at 300 m a hint only; no bow foam plume (shots/critic8/zoom300_crop_top.png, shots/critic8/zoom120_brig_crop_bow.png)"
   ],
   "budget": {
     "reference_device_fps": "not measured (no device reachable; headless SwiftShader only)",
     "draw_calls": 156,
-    "triangles": 1473603,
+    "triangles": 1480531,
     "texture_mb": 41.3,
-    "measured_on": "shots/critic7/hero_phone.json"
+    "measured_on": "shots/critic8/hero_phone.json"
   },
   "notes": "Filled after each critic round by the builder; scores are the critic's, never the builder's."
 }
