@@ -172,8 +172,11 @@ export class Terrain {
               float dd = clamp(-(hTex - uSeaLevel), 0.0, 3.0);
               vec3 shallow = mix(vec3(0.32, 0.78, 0.70), vec3(0.04, 0.42, 0.50), smoothstep(0.0, 2.5, dd)) * 0.8 * (1.0 - 0.85 * uNight);
               float collar = 1.0 - smoothstep(0.35, 0.75, dd + (lace - 0.5) * 0.5);
-              albedo = mix(shallow, vec3(0.93, 0.95, 0.94), collar * (1.0 - 0.8 * uNight));
-              rough = mix(0.25, 0.6, collar); wN = N;
+              // same alpha ramp as the ocean over the seabed, so the sliver and the water beside it match tone for tone
+              float oa = max(0.72 * smoothstep(0.05, 0.5, dd), collar);
+              vec3 waterCol = mix(shallow * 1.35, vec3(0.93, 0.95, 0.94) * (1.0 - 0.8 * uNight), collar);
+              albedo = mix(albedo, waterCol, oa);
+              rough = mix(rough, mix(0.25, 0.6, collar), oa); wN = normalize(mix(wN, N, oa));
             }
           }
           // wrack line: dark weed and debris left at the high-tide mark
