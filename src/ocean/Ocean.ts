@@ -71,7 +71,16 @@ export class Ocean {
           dPx += vec3(-d.x * d.x * qa * k * s, d.x * A * k * co, -d.x * d.y * qa * k * s);
           dPz += vec3(-d.x * d.y * qa * k * s, d.y * A * k * co, -d.y * d.y * qa * k * s);
         }
-        float terrainH(vec2 xz) { vec2 uv = (xz - uGrid.xy) / uGrid.z + 0.5; return texture2D(tHeight, clamp(uv, 0.0, 1.0)).r; }
+
+// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
+// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
+float hfield(sampler2D t, vec2 uv) {
+  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
+  vec2 c = (i0 + 0.5) * o;
+  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
+  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
+}
+        float terrainH(vec2 xz) { vec2 uv = (xz - uGrid.xy) / uGrid.z + 0.5; return hfield(tHeight, uv); }
       `,
       vertexMain: '',
       replace: [
@@ -110,7 +119,16 @@ export class Ocean {
         ['#include <beginnormal_vertex>', 'vec3 objectNormal = vec3(0.0, 1.0, 0.0);'],
       ],
       fragmentPars: /* glsl */ `
-        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl; uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
+        uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl;
+// manual bilinear on the 1024^2 height texture: half-float linear filtering is not guaranteed on every GL, and a
+// nearest-filtered field draws every contour (the shoreline above all) as a 1 m staircase
+float hfield(sampler2D t, vec2 uv) {
+  vec2 st = clamp(uv, 0.0, 1.0) * 1024.0 - 0.5; vec2 i0 = floor(st); vec2 f = st - i0; float o = 1.0 / 1024.0;
+  vec2 c = (i0 + 0.5) * o;
+  float a = texture2D(t, c).r, b = texture2D(t, c + vec2(o, 0.0)).r, cc = texture2D(t, c + vec2(0.0, o)).r, d = texture2D(t, c + vec2(o, o)).r;
+  return mix(mix(a, b, f.x), mix(cc, d, f.x), f.y);
+}
+ uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;
         float sdCapsule(vec2 p, vec2 a, vec2 b, float r) { vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
@@ -123,7 +141,7 @@ export class Ocean {
           vec2 wd = normalize(uWindDir);
           // depth from the rest water level (sea level 0), not the displaced surface: the shoreline then follows the
           // smooth 1 m heightfield and never the wave-lifted triangles of the ocean mesh (no sawtooth on the sand)
-          float depthTex = -texture2D(tHeight, clamp((P.xz - uGrid.xy) / uGrid.z + 0.5, 0.0, 1.0)).r;
+          float depthTex = -hfield(tHeight, (P.xz - uGrid.xy) / uGrid.z + 0.5);
           float depth = max(mix(vDepth, depthTex, 1.0 - smoothstep(6.0, 12.0, vDepth)), 0.0);
           float sunHigh = smoothstep(0.45, 0.85, uSunDir.y);
           // detail normals: two scales scrolled with the wind, weaker in the far field
@@ -157,7 +175,7 @@ export class Ocean {
           float shoreFoam = shoreLine * smoothstep(0.5 - shoreLine * 0.3 - surge * 0.25, 0.9, foamTex) * (0.55 + 0.45 * surge);
           // wash against steep shores: the seabed gradient from the heightfield
           vec2 guv = (P.xz - uGrid.xy) / uGrid.z + 0.5; float gs = 2.5 / uGrid.z;
-          float gx = texture2D(tHeight, guv + vec2(gs, 0.0)).r - texture2D(tHeight, guv - vec2(gs, 0.0)).r; float gz = texture2D(tHeight, guv + vec2(0.0, gs)).r - texture2D(tHeight, guv - vec2(0.0, gs)).r;
+          float gx = hfield(tHeight, guv + vec2(gs, 0.0)) - hfield(tHeight, guv - vec2(gs, 0.0)); float gz = hfield(tHeight, guv + vec2(0.0, gs)) - hfield(tHeight, guv - vec2(0.0, gs));
           float steep = smoothstep(1.2, 3.5, length(vec2(gx, gz)));
           shoreFoam = max(shoreFoam, steep * (1.0 - smoothstep(0.0, 1.5, depth)) * smoothstep(0.45, 0.75, foamTex + 0.25 * surge) * 0.35);
           vec4 fs = texture2D(tFoam, (toWind * P.xz) / vec2(24.0, 4.0) + vec2(t * 0.06, 0.0));
