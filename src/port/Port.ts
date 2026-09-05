@@ -429,7 +429,7 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
         plaster.quad(P(q.x0 - 0.3, -0.02, -1.6), P(q.x1 + 0.3, -0.02, -1.6), P(q.x1 + 0.3, 0.16, -1.6), P(q.x0 - 0.3, 0.16, -1.6), [[0, 0.6], [0.3, 0.6], [0.3, 0.62], [0, 0.62]], [0.75, 0.73, 0.68]);
         plaster.quad(P(q.x0 - 0.3, 0.16, -1.6), P(q.x1 + 0.3, 0.16, -1.6), P(q.x1 + 0.3, 0.16, 0), P(q.x0 - 0.3, 0.16, 0), [[0, 0.6], [0.3, 0.6], [0.3, 0.65], [0, 0.65]], [0.75, 0.73, 0.68]);
       } else {
-        { const on = rng.next() < 0.62; const warm = rng.range(0.7, 1.15); glass.quad(P(q.x0, q.y0, 0.85), P(q.x1, q.y0, 0.85), P(q.x1, q.y1, 0.85), P(q.x0, q.y1, 0.85), [[0, 0], [1, 0], [1, 1], [0, 1]], on ? [warm, warm * rng.range(0.85, 1.0), warm * 0.9] : [0.05, 0.05, 0.06]); }
+        { const on = rng.next() < 0.62; const warm = rng.range(0.7, 1.15); glass.quad(P(q.x0, q.y0, 0.85), P(q.x1, q.y0, 0.85), P(q.x1, q.y1, 0.85), P(q.x0, q.y1, 0.85), [[0, 0], [1, 0], [1, 1], [0, 1]], on ? [warm, warm * rng.range(0.85, 1.0), warm * 0.9] : [0.3, 0.38, 0.46]); }
         // mullions on some houses only
         const mx = (q.x0 + q.x1) / 2, my = (q.y0 + q.y1) / 2;
         // glazing bars: thin, dark, sitting just in front of the glass (never a white cross on the wall)
@@ -504,10 +504,10 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
         p.xz += wd * (t * 1.6 * g) + vec2(sin(t * 0.7 + aSeed.y), cos(t * 0.5 + aSeed.y * 1.3)) * (0.35 + a * 2.2);
         p.y += t * (1.5 - 1.2 * g * 0.5) * (1.0 - a * 0.55) + sin(aSeed.y) * 0.1;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
-        float size = 0.8 + a * 4.0;
+        float size = 0.7 + a * 3.2;
         gl_PointSize = size * uPx / -mv.z;
         gl_Position = projectionMatrix * mv;
-        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.5;
+        vAlpha = pow(1.0 - a, 1.6) * smoothstep(0.0, 0.06, a) * 0.42;
         vRot = vec2(cos(aSeed.y + t * 0.3), sin(aSeed.y + t * 0.3));
       }`,
     fragmentShader: /* glsl */ `
@@ -515,7 +515,7 @@ function makeSmoke(emitters: THREE.Vector3[], tex: THREE.Texture) {
       void main() {
         vec2 c = gl_PointCoord - 0.5; c = vec2(c.x * vRot.x - c.y * vRot.y, c.x * vRot.y + c.y * vRot.x) + 0.5;
         float a = texture2D(tSmoke, c).a * vAlpha;
-        vec3 col = vec3(0.6, 0.58, 0.56) * uLight / 3.14159;
+        vec3 col = vec3(0.5, 0.49, 0.48) * uLight / 3.14159;
         gl_FragColor = vec4(col, a);
       }`,
   });
