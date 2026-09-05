@@ -211,3 +211,11 @@ Recorded as they were made. Newest at the bottom.
     time the height texture's upload flag), which read as zero heights and
     cost several diagnostic frames. Scripted edits now never append a `//`
     comment to an existing line.
+38. **The bay-mouth ring was a slope switch.** The pale arc across the
+    hero's lower third, which grew once the coast ramp was made continuous,
+    is the seabed changing gradient at the bay radius plus five metres: a
+    hard `< r ? 1 : 0` picked the gentle bay floor or the open-sea slope,
+    so the depth (and with it the water's colour band) stepped along a
+    circle. The choice is now blended over 40 m. Same family as decision
+    37: every hard edge in the height function becomes a drawn line on the
+    water.
