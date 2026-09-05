@@ -294,6 +294,11 @@ function smallBoat(planks: GB, at: THREE.Vector3, yaw: number, rng: Rng): void {
     const col = [0.75 + rng.next() * 0.02, 0.72, 0.65];
     if (side > 0) planks.quad(a, d, c, b, uvs, col); else planks.quad(a, b, c, d, uvs, col);
   }
+  // floorboards: a pale bottom inside the hull so the boat reads as a solid shape from above, not a wire outline
+  for (let i = 0; i < NS; i++) {
+    const a = rot(pos[i][1], 1).setY(at.y - 0.06), b = rot(pos[i][1], -1).setY(at.y - 0.06), c = rot(pos[i + 1][1], -1).setY(at.y - 0.06), d = rot(pos[i + 1][1], 1).setY(at.y - 0.06);
+    planks.quad(a, b, c, d, [[0, i / NS * 3], [0.6, i / NS * 3], [0.6, (i + 1) / NS * 3], [0, (i + 1) / NS * 3]], [0.72, 0.66, 0.56]);
+  }
   // thwarts
   for (const s of [0.3, 0.55, 0.78]) { const a = rot(V(-0.6, 0.35, (s - 0.5) * L), 1), b = rot(V(0.6, 0.35, (s - 0.5) * L), 1); planks.geo(tube(a, b, 0.05, 0.05, 4, 1), [0.7, 0.65, 0.55]); }
 }
@@ -454,11 +459,14 @@ function house(plaster: GB, tiles: GB, planks: GB, glass: GB, paint: GB, iron: G
   // roof: gable along the longer axis (w), eaves overhang
   const ov = 0.45, pitch = 0.5, ridgeY = top + (d / 2 + ov) * pitch;
   const RR = (x: number, y: number, z: number) => R(x, y, z);
+  // every roof gets its own tile tint and a UV offset so the tile module never lines up house to house
+  const roofTint = [1 + rng.range(-0.1, 0.08), 1 + rng.range(-0.08, 0.04), 1 + rng.range(-0.06, 0.06)];
+  const uo = rng.range(0, 4), vo = rng.range(0, 4);
   for (const s of [-1, 1]) {
     const a = RR(-w / 2 - ov, top - ov * pitch, s * (d / 2 + ov)), b = RR(w / 2 + ov, top - ov * pitch, s * (d / 2 + ov)), cc = RR(w / 2 + ov, ridgeY, 0), dd = RR(-w / 2 - ov, ridgeY, 0);
     const sl = Math.hypot(d / 2 + ov, ridgeY - (top - ov * pitch));
-    const uvs = [[0, 0], [(w + 2 * ov) / 1.6, 0], [(w + 2 * ov) / 1.6, sl / 1.6], [0, sl / 1.6]];
-    if (s > 0) tiles.quad(a, b, cc, dd, uvs, [1, 1, 1]); else tiles.quad(b, a, dd, cc, uvs, [1, 1, 1]);
+    const uvs = [[uo, vo], [uo + (w + 2 * ov) / 1.6, vo], [uo + (w + 2 * ov) / 1.6, vo + sl / 1.6], [uo, vo + sl / 1.6]];
+    if (s > 0) tiles.quad(a, b, cc, dd, uvs, roofTint); else tiles.quad(b, a, dd, cc, uvs, roofTint);
     // eave underside
     const ea = RR(-w / 2 - ov, top - ov * pitch, s * (d / 2 + ov)), eb = RR(w / 2 + ov, top - ov * pitch, s * (d / 2 + ov)), ec = RR(w / 2 + ov, top, s * d / 2), ed = RR(-w / 2 - ov, top, s * d / 2);
     if (s > 0) plaster.quad(ea, ed, ec, eb, [[0, 0.7], [0, 0.72], [w / 6, 0.72], [w / 6, 0.7]], wallTint); else plaster.quad(ea, eb, ec, ed, [[0, 0.7], [w / 6, 0.7], [w / 6, 0.72], [0, 0.72]], wallTint);
