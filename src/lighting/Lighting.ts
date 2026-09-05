@@ -104,8 +104,10 @@ export class Lighting {
       W.uFogSun.value.copy(bank).multiplyScalar(1.25).add(horizonSun.clone().multiplyScalar(0.15));
       void avgUnused;
       // a bank of mist on the water: dense but shallow, so the hills and mast tops stand clear of it
-      W.uFogDensity.value = spec.style === 'stylized' ? 0.0 : 0.012; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = spec.style === 'stylized' ? 0 : 1; W.uFogHaze.value = spec.style === 'stylized' ? 0.0026 : 0.0045; W.uHazeGrade.value = spec.style === 'stylized' ? 0.7 : 0;
-      if (spec.style === 'stylized') W.uFogSky.value.multiply(new THREE.Vector3(0.9, 0.97, 1.08));
+      // a high sun over mist reads as an opaque grey sheet: thin and cool the noon haze (R4 layers stay bluer, flatter)
+      const sunHigh = THREE.MathUtils.smoothstep(sunDir.y, 0.45, 0.85);
+      W.uFogDensity.value = spec.style === 'stylized' ? 0.0 : 0.012; W.uFogHeight.value = 18; W.uFogSunPow.value = 3; W.uFogPatch.value = spec.style === 'stylized' ? 0 : 1; W.uFogHaze.value = spec.style === 'stylized' ? 0.0028 * (1 - 0.35 * sunHigh) : 0.0045; W.uHazeGrade.value = spec.style === 'stylized' ? 0.7 : 0;
+      if (spec.style === 'stylized') { W.uFogSky.value.multiply(new THREE.Vector3(0.9, 0.97, 1.08)).multiplyScalar(1 - 0.25 * sunHigh); W.uHazeFar.value.set(0.95, 0.88, 0.8).lerp(new THREE.Vector3(0.78, 0.84, 0.92), sunHigh); }
     } else {
       W.uFogSky.value.copy(horizonSide).multiplyScalar(0.7);
       W.uFogSun.value.copy(horizonSun).multiplyScalar(0.8);

@@ -38,7 +38,8 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
   // patchy bank: density modulated by a wind-drifted noise field sampled where the ray ends
   float fpatch = 1.0;
   if (uFogPatch > 0.0) { vec2 wd = normalize(uWindDir); vec4 n = texture2D(tFogNoise, wpos.xz * 0.0035 + wd * uTime * 0.004); vec4 n2 = texture2D(tFogNoise, wpos.xz * 0.012 - wd * uTime * 0.006 + 0.3); fpatch = mix(1.0, 0.25 + 1.5 * smoothstep(0.25, 0.8, n.r * 0.7 + n2.g * 0.3), uFogPatch); }
-  float od = uFogDensity * integ * dist * fpatch + uFogHaze * dist;
+  // the haze starts 70 m out so the near chop, quay and rigging stay crisp while the far hill layers back
+  float od = uFogDensity * integ * dist * fpatch + uFogHaze * max(dist - 70.0, 0.0);
   float fog = 1.0 - exp(-od);
   vec3 ld = mix(uSunDir, uMoonDir, uNight);
   float mu = max(dot(rd, ld), 0.0);

@@ -16,6 +16,7 @@ export class Sky {
     tMoon: { value: null as THREE.Texture | null },
     uFogDensity: W.uFogDensity, uFogHeight: W.uFogHeight, uFogSky: W.uFogSky, uFogSun: W.uFogSun, uFogSunPow: W.uFogSunPow, uNight: W.uNight,
     uFogOnSky: { value: 1 }, tFogNoise: W.tFogNoise, uFogPatch: W.uFogPatch,
+    uStyle: { value: 1 },
   };
 
   constructor() {
@@ -28,7 +29,7 @@ export class Sky {
       fragmentShader: /* glsl */ `
         precision highp float;
         ${ATMO_GLSL}
-        uniform vec3 uSunDir, uMoonDir; uniform float uSunI, uMoonI, uIncludeSun, uStars, uTime, uNight, uFogOnSky;
+        uniform vec3 uSunDir, uMoonDir; uniform float uSunI, uMoonI, uIncludeSun, uStars, uTime, uNight, uFogOnSky, uStyle;
         uniform sampler2D tMoon;
         uniform float uFogDensity, uFogHeight, uFogSunPow; uniform vec3 uFogSky, uFogSun;
         varying vec3 vDir;
@@ -61,6 +62,22 @@ export class Sky {
           vec3 moon = scatter(ro, rd, uMoonDir, vec3(uMoonI) * vec3(0.85, 0.92, 1.0), 8, 3);
           vec3 col = sun + moon;
           float night = 1.0 - smoothstep(-0.12, 0.05, uSunDir.y);
+          if (uStyle > 0.5) {
+            // painted sky (R1/R5): the physical sky keeps its luminance but its hue is pulled toward a cobalt
+            // zenith, a rose belt low on the sun's side, and a warm horizon; the same tint feeds the IBL
+            float day = smoothstep(-0.05, 0.15, uSunDir.y);
+            float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+            float up = clamp(rd.y, 0.0, 1.0);
+            vec3 zen = vec3(0.16, 0.36, 0.78), belt = vec3(0.95, 0.6, 0.55), hor = vec3(1.0, 0.82, 0.6);
+            vec2 rh = normalize(rd.xz + 1e-4), sh = normalize(uSunDir.xz + 1e-4);
+            float sunSide = 0.5 + 0.5 * dot(rh, sh);
+            float low = 1.0 - smoothstep(0.35, 0.9, uSunDir.y);
+            float beltW = exp(-pow((rd.y - 0.09) / 0.08, 2.0)) * mix(0.3, 1.0, sunSide) * low;
+            vec3 painted = mix(hor, zen, smoothstep(0.0, 0.5, up));
+            painted = mix(painted, belt, beltW * 0.75);
+            float pl = dot(painted, vec3(0.2126, 0.7152, 0.0722));
+            col = mix(col, painted * (lum / max(pl, 1e-5)), 0.6 * day);
+          }
           // stars fade with twilight and with atmospheric extinction near the horizon
           if (uStars > 0.5) col += stars(rd) * night * 0.9 * smoothstep(-0.05, 0.25, rd.y) * uSunI * 0.012;
           // moon disc
