@@ -204,6 +204,19 @@ export class Terrain {
     const mesh = new THREE.Mesh(geo, mat);
     mesh.receiveShadow = true; mesh.castShadow = true;
     mesh.frustumCulled = false;
+    // shadow pass: the same shore slivers are dropped here too, otherwise they cast a stepped seam onto the water
+    const depth = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
+    depth.onBeforeCompile = (sh) => {
+      sh.uniforms.tHeight = { value: this.depthTexture }; sh.uniforms.uGrid = { value: new THREE.Vector4(GRID.cx, GRID.cz, GRID.size, 0) }; sh.uniforms.uSeaLevel = { value: LAYOUT.seaLevel };
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vTPos;')
+        .replace('#include <begin_vertex>', 'vec3 transformed = vec3(position);\nvTPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vTPos; uniform sampler2D tHeight; uniform vec4 uGrid; uniform float uSeaLevel;')
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n{ float hT = texture2D(tHeight, (vTPos.xz - uGrid.xy) / uGrid.z + 0.5).r; if (hT < -0.02 - uSeaLevel && vTPos.y > uSeaLevel - 0.02 && abs(vTPos.y) < 4.0) discard; }');
+    };
+    depth.customProgramCacheKey = () => 'terrain-depth';
+    mesh.customDepthMaterial = depth;
     this.mesh = mesh;
     this.group.add(mesh);
   }
