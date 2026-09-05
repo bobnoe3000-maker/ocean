@@ -188,9 +188,9 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // then sparse lace streaks fading out over the next few metres, all breathing with the swell
             vec4 lace = texture2D(tFoam, P.xz / 6.0 + wd * t * 0.02);
             vec4 lace2 = texture2D(tFoam, (toWind * P.xz) / vec2(14.0, 3.0) + vec2(t * 0.05, 0.0) + 0.5);
-            float collarEdge = 0.28 + 0.2 * surge + (lace.g - 0.5) * 0.4; // a rim a metre or two wide, never a sheet
+            float collarEdge = 0.12 + 0.1 * surge + (lace.g - 0.5) * 0.2; // a rim, never a sheet: on a 1-in-14 shelf every 10 cm of depth is 1.4 m of beach
             float collar = 1.0 - smoothstep(collarEdge - 0.12, collarEdge + 0.12, depth);
-            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 1.6, depth)) * smoothstep(0.6, 0.68, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
+            float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 0.35, depth)) * smoothstep(0.64, 0.72, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
@@ -200,6 +200,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // the shallows are glass over sand (R1's turquoise over the bar), the collar is opaque paint, and the few
             // centimetres of sheet past the field's shoreline are collar too
             alpha = max(max(alpha, 0.55 * smoothstep(0.0, 0.6, depth)), foam * 0.97);
+            alpha = max(alpha, 0.93 * smoothstep(0.8, 2.2, depth)); // beyond the glassy shallows the body is paint: no milky seabed showing through the bay
             alpha = max(alpha, 0.95 * (1.0 - smoothstep(-0.02, 0.06, depthTex)) * smoothstep(-0.08, -0.03, depthTex));
             foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex));
             if (depthTex < -0.08) discard;
@@ -236,7 +237,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
               float lum = dot(refl, vec3(0.2126, 0.7152, 0.0722));
               float has = smoothstep(0.0, 0.02, lum);
               // under a high sun the mirror image is a white sky sheet smeared by the chop: ease it toward the IBL term
-              reflectedLight.indirectSpecular = mix(reflectedLight.indirectSpecular, refl * fres * (1.0 - waterFoam) * 1.1, has * uReflF * (1.0 - 0.6 * sunHigh));
+              reflectedLight.indirectSpecular = mix(reflectedLight.indirectSpecular, refl * fres * (1.0 - waterFoam) * 1.1, has * uReflF * (1.0 - 0.6 * sunHigh) * smoothstep(0.3, 1.5, waterDepth)); // no mirror in the glassy shallows
             }
           }
         `],
