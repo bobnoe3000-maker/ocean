@@ -89,7 +89,7 @@ export class Heightfield {
     } else {
       // the bay floor shelves more gently than the open sea; the change of slope is blended over 40 m so no ring
       // of depth (and so of water colour) is drawn across the bay mouth
-      const inBay = 1 - smooth(L.bayR - 15, L.bayR + 25, Math.hypot(u - L.bayC[0], w - L.bayC[1]));
+      const inBay = 1 - smooth(L.bayR - 30, L.bayR + 40, Math.hypot(u - L.bayC[0], w - L.bayC[1]) + this.n.fbm(u * 0.02 + 4, w * 0.02 + 7, 2) * 18); // wide, noise-broken: no ring
       const slope = mix(0.26, 0.13, inBay);
       h = -0.6 + sd * slope + this.n.fbm(u * 0.03 + 9, w * 0.03, 3) * 0.8;
     }
@@ -116,7 +116,7 @@ export class Heightfield {
       const terr = ang * rad;
       if (terr > 0) h = mix(h, 1.7 + Math.max(0, r - 80) * 0.045 + this.n.fbm(u * 0.05, w * 0.05, 2) * 0.15, terr);
       // dredged basin in front of the quay wall: deep water against the stone (R1), no collar of foam along the town
-      const dredge = ang * smooth(56, 64, r) * (1 - smooth(76, 79, r));
+      const dredge = ang * smooth(56, 64, r) * (1 - smooth(80, 84, r)); // right up to the wall: no shallow strip at the stone
       if (dredge > 0) h = mix(h, Math.min(h, -3.2 + this.n.fbm(u * 0.04, w * 0.04, 2) * 0.3), dredge);
       // agricultural terraces climbing the slope behind the town: stepped contours with soft risers
       const tmask = ang * smooth(132, 150, r) * (1 - smooth(240, 290, r));
@@ -140,7 +140,7 @@ export class Heightfield {
     const beach = 1 - smooth(0.55, 1.0, Math.sqrt(bu * bu + bw * bw));
     if (beach > 0) {
       // continuous at sd = 0, and the foreshore climbs out of the water within ~2.5 m so the wet collar is a rim, not a sheet
-      const target = sd > 0 ? -0.5 + sd * 0.09 + smooth(0, 5, sd) * 0.55 + smooth(0, 10, sd) * (0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35) : -0.5 + sd * 0.07;
+      const target = sd > 0 ? -0.5 + sd * 0.09 + smooth(0, 7, sd) * 0.32 + smooth(0, 10, sd) * (0.05 + this.n.fbm(u * 0.03, w * 0.03, 2) * 0.35) : -0.5 + sd * 0.07; // a gentle foreshore, not a bank
       h = mix(h, target, beach);
     }
     return h;

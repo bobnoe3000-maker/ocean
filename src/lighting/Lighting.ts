@@ -10,6 +10,7 @@ import { setPCSSParams } from './PCSS';
 // sky dome, exposure, and the fog colours, all from the one atmosphere model.
 export class Lighting {
   readonly key = new THREE.DirectionalLight(0xffffff, 1);
+  private envBoost = 1;
   readonly fill = new THREE.DirectionalLight(0xffffff, 0); // moon while the sun is still up (twilight), unused otherwise
   exposure = 1;
   private pmrem: THREE.PMREMGenerator;
@@ -50,6 +51,7 @@ export class Lighting {
     W.uSunDir.value.copy(sunDir); W.uMoonDir.value.copy(moonDir);
     const ro = new THREE.Vector3(0, ATMO.Re + 60, 0);
     const fogMul = spec.weather === 'fog' ? 0.35 : 1;
+    this.envBoost = spec.weather === 'fog' ? 1.7 : 1; // mist is a bright sky-fill: shadows drop toward the ambient
     // irradiance of each light at the ground
     const trS = transmittanceCPU(ro, sunDir);
     const sunUp = THREE.MathUtils.smoothstep(sunDir.y, -0.02, 0.06);
@@ -139,7 +141,7 @@ export class Lighting {
     if (this.envRT) this.envRT.dispose();
     this.envRT = this.pmrem.fromScene(s, 0.02, 1, 12000);
     this.scene.environment = this.envRT.texture;
-    this.scene.environmentIntensity = 1.7;
+    this.scene.environmentIntensity = 1.7 * this.envBoost;
     this.sky.uniforms.uIncludeSun.value = 1; this.sky.uniforms.uStars.value = 1;
     this.scene.add(this.sky.mesh);
   }

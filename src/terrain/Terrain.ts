@@ -116,7 +116,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // slivers are dropped and the ocean's opaque foam collar covers the hole, so the visible edge is the field's contour
           // the discard contour sits a hand-span above sea level: the beach profile kinks at the waterline, so the 2 m grid
           // is 10-20 cm off the field there and the water sheet (which runs to +25 cm) has to be the only visible edge
-          if (hTex - uSeaLevel < 0.06 && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) discard;
+          if (hTex - uSeaLevel < 0.03 && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) discard;
           float sliver = 0.0;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
@@ -222,7 +222,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
         .replace('#include <begin_vertex>', 'vec3 transformed = vec3(position);\nvTPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vTPos; uniform sampler2D tHeight; uniform vec4 uGrid; uniform float uSeaLevel;' + HFIELD_GLSL)
-        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n{ float hT = hfield(tHeight, (vTPos.xz - uGrid.xy) / uGrid.z + 0.5); if (hT - uSeaLevel < 0.06 && vTPos.y > uSeaLevel - 0.02 && abs(vTPos.y) < 4.0) discard; }');
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n{ float hT = hfield(tHeight, (vTPos.xz - uGrid.xy) / uGrid.z + 0.5); if (hT - uSeaLevel < 0.03 && vTPos.y > uSeaLevel - 0.02 && abs(vTPos.y) < 4.0) discard; }');
     };
     depth.customProgramCacheKey = () => 'terrain-depth';
     mesh.customDepthMaterial = depth;

@@ -197,8 +197,9 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // the collar and the first hand-span of water are opaque paint, and the sheet runs a few centimetres past the
             // field's shoreline: where the 2 m terrain grid dips below the plane on the land side, the water covers the
             // wet-sand notch instead of exposing it (the sand wins by depth wherever the grid is above the plane)
-            alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.25, -0.18, depthTex));
-            if (depthTex < -0.25) discard;
+            alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.08, -0.03, depthTex));
+            foam = max(foam, 1.0 - smoothstep(-0.02, 0.06, depthTex)); // over the last centimetres of sand the sheet is the collar itself
+            if (depthTex < -0.08) discard;
             body = mix(body * 0.04, body, dayF); // near black at night (R2): the moon path and the lanterns do the talking
             // mist: the body desaturates and its inner glow dies, so the water sits inside the weather (R4)
             body = mix(body, vec3(dot(body, vec3(0.33))) * vec3(0.9, 0.95, 1.0), 0.5 * uFogF);
@@ -208,6 +209,8 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
           roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uNightF * 0.04 + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh), 0.85, foam);
+          // night: the swell facets would mirror the moon halo as a marbled sheet; flatten them so the moon is a narrow path
+          wN = normalize(mix(wN, vec3(0.0, 1.0, 0.0), 0.7 * uNightF * uStyle));
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
           float waterFoam = foam; float waterDepth = depth; vec3 waterN = wN; vec3 waterStyleEmis = styleEmis;
         `],
@@ -216,7 +219,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
         ['#include <lights_fragment_end>', /* glsl */ `
           #include <lights_fragment_end>
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
-          reflectedLight.indirectSpecular *= 1.0 - 0.85 * uNightF;
+          reflectedLight.indirectSpecular *= 1.0 - 0.95 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
           reflectedLight.directSpecular *= (1.0 - 0.72 * sunHigh * uStyle) * (1.0 - 0.75 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
