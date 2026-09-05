@@ -108,7 +108,9 @@ export class Terrain {
           // which draws a sawtooth of sand slivers the water cannot cover: drop those fragments so the water plane wins
           // the 2 m grid interpolates above sea level on steep shores where the smooth heightfield is below it: those
           // slivers are dropped and the ocean's opaque foam collar covers the hole, so the visible edge is the field's contour
-          if (hTex < -0.02 - uSeaLevel && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) discard;
+          // the discard contour sits a hand-span above sea level: the beach profile kinks at the waterline, so the 2 m grid
+          // is 10-20 cm off the field there and the water sheet (which runs to +25 cm) has to be the only visible edge
+          if (hTex - uSeaLevel < 0.06 && P.y > uSeaLevel - 0.02 && abs(P.y) < 4.0) discard;
           float sliver = 0.0;
           float h = mix(P.y, hTex, 1.0 - smoothstep(1.5, 6.0, abs(P.y))) - uSeaLevel;
           vec2 vis = (uVista * vec3(P.x, P.z, 1.0)).xy;
@@ -213,7 +215,7 @@ export class Terrain {
         .replace('#include <begin_vertex>', 'vec3 transformed = vec3(position);\nvTPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vTPos; uniform sampler2D tHeight; uniform vec4 uGrid; uniform float uSeaLevel;')
-        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n{ float hT = texture2D(tHeight, (vTPos.xz - uGrid.xy) / uGrid.z + 0.5).r; if (hT < -0.02 - uSeaLevel && vTPos.y > uSeaLevel - 0.02 && abs(vTPos.y) < 4.0) discard; }');
+        .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n{ float hT = texture2D(tHeight, (vTPos.xz - uGrid.xy) / uGrid.z + 0.5).r; if (hT - uSeaLevel < 0.06 && vTPos.y > uSeaLevel - 0.02 && abs(vTPos.y) < 4.0) discard; }');
     };
     depth.customProgramCacheKey = () => 'terrain-depth';
     mesh.customDepthMaterial = depth;
