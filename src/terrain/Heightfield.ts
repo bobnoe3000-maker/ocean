@@ -87,7 +87,9 @@ export class Heightfield {
       h = mix(-0.6 + sd * 0.26, 1.2 + sd * 0.11, ramp) + 28 * smooth(50, 190, sd) + this.n.fbm(u * 0.008, w * 0.008, 4) * (2 + 12 * inland) + this.n.fbm(u * 0.05, w * 0.05, 3) * 0.6
         + (this.n2.ridged(u * 0.006 + 3, w * 0.0075, 3) * 14 + this.n2.ridged(u * 0.018 + 1, w * 0.016 + 4, 3) * 3) * smooth(30, 120, sd) + this.n.fbm(u * 0.025 + 5, w * 0.025 + 2, 3) * 2.5 * smooth(20, 80, sd);
     } else {
-      const inBay = Math.hypot(u - L.bayC[0], w - L.bayC[1]) < L.bayR + 5 ? 1 : 0;
+      // the bay floor shelves more gently than the open sea; the change of slope is blended over 40 m so no ring
+      // of depth (and so of water colour) is drawn across the bay mouth
+      const inBay = 1 - smooth(L.bayR - 15, L.bayR + 25, Math.hypot(u - L.bayC[0], w - L.bayC[1]));
       const slope = mix(0.26, 0.13, inBay);
       h = -0.6 + sd * slope + this.n.fbm(u * 0.03 + 9, w * 0.03, 3) * 0.8;
     }

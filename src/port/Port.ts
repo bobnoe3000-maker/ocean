@@ -272,7 +272,7 @@ export async function buildPort(hf: Heightfield, seed: number): Promise<Extra> {
     apply(spec: SceneSpec, L: Lighting) {
       night = L.night;
       lights.forEach((l, i) => { l.userData.base = (i === lights.length - 1 ? 9 : 7) * night; });
-      glassMat.emissiveIntensity = 3.2 * night;
+      glassMat.emissiveIntensity = 3.2 * night * (spec.weather === 'fog' ? 0.45 : 1); // windows glow through mist, they do not blow out
       const fogF = spec.weather === 'fog' ? 1 : 0;
       haloBase = night * (0.12 + 0.55 * fogF); beamBase = night * (0.0015 + 0.012 * fogF);
       { const k = spec.style === 'stylized' ? 1.6 : 1; gulls.group.scale.set(k, k, k); }

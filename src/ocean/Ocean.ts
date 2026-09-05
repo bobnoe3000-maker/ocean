@@ -199,8 +199,8 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             // wet-sand notch instead of exposing it (the sand wins by depth wherever the grid is above the plane)
             alpha = max(max(max(alpha, 0.72) * smoothstep(0.05, 0.5, depth), foam * 0.97), 0.95 * (1.0 - smoothstep(0.02, 0.35, depth)) * smoothstep(-0.25, -0.18, depthTex));
             if (depthTex < -0.25) discard;
-            body = mix(body * 0.12, body, dayF);
-            styleEmis = body * 0.35 * dayF;
+            body = mix(body * 0.04, body, dayF); // near black at night (R2): the moon path and the lanterns do the talking
+            styleEmis = body * 0.35 * dayF + vec3(0.06) * foam * dayF; // the collar is lightly self-lit so it stays cream in shade
           }
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.8 : 0.5), vec3(0.97), foam);
           diffuseColor.a = alpha;
@@ -216,7 +216,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // night water is near black (R2): the sky-lit specular floor is cut so only the moon path and lanterns read
           reflectedLight.indirectSpecular *= 1.0 - 0.85 * uNightF;
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= (1.0 - 0.55 * sunHigh * uStyle) * (1.0 - 0.75 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
+          reflectedLight.directSpecular *= (1.0 - 0.72 * sunHigh * uStyle) * (1.0 - 0.75 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
@@ -242,7 +242,8 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           // sun glitter: extra sharp specular lobe from the finest normals
           vec3 Hh = normalize(V + uSunDir);
           float glit = pow(clamp(dot(waterN, Hh), 0.0, 1.0), 900.0) * smoothstep(0.0, 0.05, uSunDir.y);
-          totalEmissiveRadiance += uSunColor * glit * mix(0.0, 0.0, uNightF) * (1.0 - 0.9 * uFogF) * (1.0 - 0.6 * smoothstep(0.5, 0.9, uSunDir.y)) * (1.0 - waterFoam) * (1.0 - distF);
+          // moon glitter: a narrow sparkle path on the wave backs at night (the key is the moon then, so uSunDir is the moon)
+          totalEmissiveRadiance += uSunColor * glit * uNightF * uStyle * 3.0 * (1.0 - 0.9 * uFogF) * (1.0 - waterFoam) * (1.0 - distF);
         `],
     ] });
     const mesh = new THREE.Mesh(geo, mat);
