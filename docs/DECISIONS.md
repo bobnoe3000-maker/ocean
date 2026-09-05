@@ -167,3 +167,13 @@ Recorded as they were made. Newest at the bottom.
     (land vertices now sit flat at sea level; only vertices over water are
     clamped to the bed). Reading the crops before touching the art saved a
     round each.
+34. **Shore slivers and a shader lesson.** The last beach sawtooth was the
+    terrain's own 2 m grid: on a steep shore its triangles interpolate above
+    sea level where the smooth 1 m heightfield is below it, so pale sand
+    slivers stand above the water plane in a tooth pattern. The terrain
+    fragment now discards those slivers (heightfield below sea level, mesh
+    above it) and the water covers them. Diagnosing it needed the compiled
+    fragment shader dumped from the browser, which also caught a build where
+    a line comment appended mid-statement had swallowed a closing brace and
+    silently removed the whole terrain: GLSL edits are checked with a
+    dev-server shot and its console log before any build is judged.
