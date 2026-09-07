@@ -1,0 +1,130 @@
+{
+  "round": 2,
+  "scores": {
+    "world": 8.0,
+    "living_world": 8.0,
+    "adventure_engine": 8.0,
+    "classes_standing": 8.0,
+    "combat_dungeons_autobattle": 7.5,
+    "economy_session_ux": 7.0,
+    "feasibility_honesty": 8.0,
+    "design_smells": 8.0
+  },
+  "pass": false,
+  "smell_hits": [],
+  "smell_watch_items": [
+    "Item 11 (a feature listed without a session example): ADVENTURE_ENGINE Vo3's Parley shape — the ending the twenty-hour trace actually sets up via the ledgers_to_be_read door — is one clause with no journal text and no outcomes; only the Raid shape is written. Also: FIRST_REGION §6's layer 3 is designed to buildable depth and never played, and three of four festivals have no scene (honestly disclosed in §8).",
+    "Item 13 (numbers without a model): the models exist and reproduce, but the derivations do not — four renown discrepancies in FIRST_REGION §7.3a, ~40 act tags in ADVENTURE_ENGINE §7 that are not rows in the printed 64-row deed table, two draft weights contradicting LIVING_WORLD rows 1 and 4, and N2's '20% chance by the Stair's temper' now in flat contradiction with CLASSES §2.5's 'Nothing outside combat is random in the Hearth'.",
+    "Item 7 (a generated quest that reads as a template): ADVENTURE_ENGINE §3.6's O02 'cutters and deserters' is explicitly the generic filler — 'any: this is the fight the engine gives a tired party' — and names nobody. Opposition, not a quest, so not a hit."
+  ],
+  "holes": [
+    {
+      "session": "3min",
+      "missing": "The creation screen. SESSION_UX §8 still counts it among nine screens and §1 still does not describe it; FIRST_REGION §7.2 says only 'Creation: name, trade smith, class Fighter'. DECISIONS logs it open."
+    },
+    {
+      "session": "3min",
+      "missing": "The Firstwater schedule override has no hours. FIRST_REGION §7.2 says 'everyone is at the well because it is Firstwater's hour, an override'; §3 lists only weekday, Stillday and condition variants, so a Rogue cannot tell whether Listen's needs list (two NPCs at the site this hour) is met at 07:00."
+    },
+    {
+      "session": "3min",
+      "missing": "The hour-one three-minute session ends with no world change: no deed, no site state, no memory. SESSION_UX §3's own rule and the brief both require one; the renown ledger's first entry is fifteen world hours later at Thaw 1 22:00."
+    },
+    {
+      "session": "15min",
+      "missing": "The Mage has no rule for the verb 'break'. ADVENTURE_ENGINE §3.8 and V1 both give 'Draw the water through'; CLASSES §2.5's Dry needs an enclosed room and returns room_dry, Flood needs held water above the target and returns site_flooded(hours). Neither produces dam = broken."
+    },
+    {
+      "session": "15min",
+      "missing": "Mist is a field verb in CLASSES §2's table and ADVENTURE_ENGINE §3.8 (the Mage's answer to hide and carry) and has no field resolution in §2.5 — it is a three-second combat fog. Same for the Fighter's 'Rally the village' as the answer to answer, and the Rogue's 'pick the lock instead' as the answer to break."
+    },
+    {
+      "session": "15min",
+      "missing": "No deed row for parley — a refusal met on its own terms — although 14 of 48 motives carry the verb and O15 'a refusal' is one of two unfightable opposition kinds. V1 writes Ondrin's branch with a regard delta, a door flag and no memory weight, and the renown ledger counts him at reach 5 anyway. No mirror to row 19 kept_word for a promise broken, which is why Q13 has to invent 'said_he_would' at w3."
+    },
+    {
+      "session": "15min",
+      "missing": "Still no wait or pass-time action. LIVING_WORLD §1 gives open play, map travel and rest-to-dawn only, while V1's Rogue branch, H2's second branch and Q14 (written this round) all require a named hour or nightfall. DECISIONS logs it open."
+    },
+    {
+      "session": "evening",
+      "missing": "Armour and multiplier order still unstated in COMBAT §1. A tier-2 Mark on a husk (armour 3) is 15 or 12; on a salt-warden (armour 5) 13 or 8 — a 50-100% swing on every armoured enemy in the region. DECISIONS logs it open."
+    },
+    {
+      "session": "evening",
+      "missing": "T12's printed line ('I've been down there. I'll show you') is false of Gulla, who has never been below (FIRST_REGION §3 row 13). ADVENTURE_ENGINE §8.4's mitigation says a drifted precondition 're-phrases'; each twist has exactly one line and there is no rule for producing the re-phrase, so step 9's five-part prose assembly loses its closer."
+    },
+    {
+      "session": "evening",
+      "missing": "No deed row for a promise made aloud and not kept, so the 'say yes and not go' branch of a rolled quest cannot be written from the table (row 38 broke_contract covers Stand, Skerrow bargains and Moot commissions only)."
+    },
+    {
+      "session": "evening",
+      "missing": "ADVENTURE_ENGINE §4's down-scaling rule (a low-tier trigger offered to a high-tier hero becomes a higher quest 'with the village's problem folded in as a twist') is stated with no mechanism and no worked example; all fifteen quests are offered at the hero's tier or one above. FIRST_REGION §7.2's own last three hours are the down-scale case and resolve it by hand-writing a thirteenth quest."
+    },
+    {
+      "session": "evening",
+      "missing": "Layer 3 is designed (FIRST_REGION §6) and never played in any session example; its resource maths cannot be checked, since 'six flasks' at thirty minutes each is three hours of light against a descent whose length in world hours is never stated."
+    }
+  ],
+  "arithmetic_errors": [
+    "FIRST_REGION §7.3a and CLASSES §6, Thaw 7-8 row: cites LIVING_WORLD row 27 broke_our_work, whose receivers include 'the owning power's factor' — Marrock of Thrum, reach 20 (FIRST_REGION §3 row 18). The ledger omits him and introduces him on Thaw 16 instead. Every renown figure from Thaw 7 to Thaw 16 is 20 light; Hand would cross at 56, not 36, and Name would read 144 on Thaw 13, not 124. FIRST DISCREPANCY FOUND.",
+    "FIRST_REGION §7.3a, Thaw 7-8 row: 'Ondrin 5' is supported by no row. The row cites rows 2 and 27; row 2's receivers are the owner and household (Bram, Corva), row 27's are the crew, the foreman and the factor (2 hewers, Rukk, Marrock). ADVENTURE_ENGINE V1 writes Ondrin's branch with no act tag and no weight.",
+    "FIRST_REGION §7.3a, Thaw 34 row: cites LIVING_WORLD row 12 spared_them, whose receivers begin with 'the spared (+2)' — Drusk Fennick, reach 5, decayed out on Thaw 29 and re-written here at w10. The ledger adds Orsa 2 from his band and omits Drusk. Renown on Thaw 34 is 410, not 405; the headline twenty-hour figure is 400, not 395.",
+    "FIRST_REGION §7.3a, Thaw 33 decay row: row 61 posted (w3) is taken by 'every instantiated NPC whose schedule passes the board' as well as eight promoted folk. Merrin Hale (reach 5) keeps the board 8-12 and was added on Thaw 23; she decays to w2 on Thaw 33 exactly as the eight folk do. The row removes the eight and keeps Merrin. Renown on Thaw 33 is 284, not 289.",
+    "ADVENTURE_ENGINE §7, V2: 'Idony (hero, carried_duty, 6)' against LIVING_WORLD row 4 carried_the_dues at w4 — and both ledgers use 4, and the Thaw 29 decay row depends on 4.",
+    "ADVENTURE_ENGINE §7, V3: 'Tobbin (hero, helped_find_flock, 6), Reyne (hero, helped, 4)' against LIVING_WORLD row 1 found_stock, which gives the herder w8 (+2) and the owner w6 — and both ledgers use 8 and 6.",
+    "ADVENTURE_ENGINE §3.1 vs §3.2: fifteen of 110 trigger-to-motive links are broken (the motive's cause list does not contain the trigger, which §3.12 step 2 requires): TR01-M12, TR05-M01, TR10-M45, TR16-M23, TR17-M24, TR19-M35, TR25-M36, TR28-M38, TR29-M27, TR29-M44, TR30-M19, TR32-M09, TR34-M20, TR35-M47, TR36-M09.",
+    "ADVENTURE_ENGINE §6 rule 3 vs §7.1-7.4: 'No verb may carry more than a third of the last twelve offers' — choose carries six of twelve (V1, H1, N2, Vo1, Vo2, Vo3) and break carries zero, unchanged from round one, while §8.3 announces the rule as the fix.",
+    "ADVENTURE_ENGINE §6 rule 2 vs §7.1-7.4: 'a twist family may not appear twice inside four' — the twelve run place, kin, old, agenda, agenda, place, agenda, agenda, paper, door, agenda, kin: four violations (positions 4-5, 5-7, 7-8, 8-11). §7.5's own Q13 (T26) and Q14 (T24) are both season-family and consecutive.",
+    "world/WORLD.md Part One: the footer claims 474 words; I count 551 excluding the 'THE HEARTH' heading (round one counted 535). The file was not opened this round.",
+    "PROGRESSION_ECONOMY §5: 'renown 12' at hour 1 against the ledger's 15; 'renown ~180' at hour 10 against the ledger's 281-294 at that point in the rebuilt clock; §4's 'the Holds, at -35' against §7.3c's -65.",
+    "SESSION_UX §3: the three-minute example still runs Wickery to Sallowford in 3 hours to a 10:00 arrival at Idony's table and calls it a tier gained; FIRST_REGION §7.1 rebuilt the same session to 6 hours at Thaw speed arriving 18:00 at the Ford Inn, and the new ledger crosses Hand on Thaw 9.",
+    "FIRST_REGION §7.2, Thaw 35-39 away page: 'The Salt Pans have closed: a Salted thing walked into them by day' in a run where well_ring_intact is held (Thaw 22) and shelf_dry is a Green flag, so both of TR17's stated setters are false. §5 and §6 make this event a consequence of layer3_open, which never fires here.",
+    "FIRST_REGION §7.2 schedule contradictions: Garrow Tull 'at the forge door as the flock came through' at ~21:00 on Thaw 1 (schedule: 18-21 Ford Inn, 21-6 home); Vesk Idren 'at the counting-house' at ~10:00-11:00 on Thaw 9 (schedule: 10-12 the quay); Kit Ashby 'from the back room' at the same hour (schedule: 10-14 the Shelf; the back room is 16-22).",
+    "docs/STATUS.json is stale: round 1, round-one scores, round-one open issues this round closed, and round-one word counts (ADVENTURE_ENGINE 6,001 against an actual 25,651).",
+    "ADVENTURE_ENGINE §7.5 Q14: 'Draw the meltwater up behind the head of it ... 30 water, 8 Salt' beside a river, where CLASSES §2.5 charges Salt only on a dry skin (the thirst rule) or for Reading dry stone.",
+    "FIRST_REGION §7.1: session one's 'verb-days 6' is a half-day at the forge paying 4 bits; CLASSES §2.5's Mend costs a world day and LIVING_WORLD row 57 worked_the_trade pays 6-10 bits for a world day. No half-day rate exists.",
+    "VERIFIED CORRECT (no error): all eight offline gaps equal real hours x 4 exactly, none exceeds the 168-hour cap, all nine session spans equal open play + travel + rest + verb-days, the column totals sum to 514, real time sums to exactly 20 h 00, and 514 + 484 = 998 world hours = Thaw 1 06:00 to Thaw 42 20:00. The XP ledger totals 4,370 in four categories, each of which re-adds, and all fourteen running checkpoints reconcile. The engine's table counts (36/48/30/25+50/16/14+8/12/315/60/14 = 292 rows + 315 names = 607) are all honest. The deed table really is 64 rows split 26/30/8."
+  ],
+  "round1_status": {
+    "fixed": [
+      "1. The engine's tables are printed in full and every count checks: 36 triggers, 48 motives, 30 twists, 25 site types with 50 description lines, 16 opposition kinds, 14 giver roles, 8 stake types, 12 verbs, 315 names, 60 rumours, 14 notices. I rolled quests sixteen and seventeen from them.",
+      "2. The twelve field verbs now resolve (CLASSES §2.5): cost, world-hours, needs, returns, a 'falls short' and a 'goes wrong', each tied to a numbered deed row. Residue: four class answers elsewhere still route through unresolved abilities.",
+      "4. The 64-entry deed table is printed in full (LIVING_WORLD §4a-c) with weight, counts/gone, receivers, regard, writes and surfacing.",
+      "5. The twenty-hour clock is rebuilt forwards and every gap, span and total checks exactly (FIRST_REGION §7.1).",
+      "9. Layer 3 of the Sunk Court is designed to the standard of layers 1-2 (FIRST_REGION §6), and ADVENTURE_ENGINE §5's new deferral rule generalises the problem.",
+      "14. The three branches with empty consequence lists (V2's Gorse End road, V3's give-up, H2's failed Talk) are written out, and §5 states the general rule."
+    ],
+    "improved": [
+      "3. Renown has a population model (1,020 people, 85 instantiated, a 528-588 ceiling) and the tier floors were rescaled to it (20/120/350/900). The ledger still does not reproduce from the printed rows: four discrepancies.",
+      "6. The planner is declared authoritative over the dated lists, one dawn is worked with scored moves and two illegal moves named, and five dates are shown moving when the hero moves the state. One dawn of 450 power-days; one power of five.",
+      "10. An hour-one three-minute session exists and a second check-in (Thaw 33, two letters), so no session is printed twice. The hour-one one ends with no world change and SESSION_UX §3 still prints the superseded Thaw 11 version.",
+      "13. The recompute rule is stated once and obeyed in three files, and the two V3 renown lists are one list. ADVENTURE_ENGINE §7 still prints pre-deed-table weights for V2 and V3.",
+      "15. All 25 schedules close 24 hours with a stated default and Kit's letter hour is fixed; the trace now breaks three other schedules (Garrow Thaw 1, Idren and Kit Thaw 9)."
+    ],
+    "unchanged": [
+      "7. The Salted husk still has no Rogue-arc entry in COMBAT §1's Weak-to column while COMBAT §2 rule 2 still asserts every immunity has a same-class counter. CLASSES Decision 7 declines to fix it and hands it back; COMBAT.md was not opened this round.",
+      "8. No wait or pass-time action exists; Q14, written this round, adds another by-night branch. Logged open in DECISIONS.",
+      "11. The Still's continued fall still has no stated cause at either depth. WORLD.md was not opened this round.",
+      "12. 'The Stair' still names both the road and the company on the one page; 'the only way anyone gets in' is still absolute against §2.2 and is repeated in PITCH.md; the page claims 474 words and runs to 551."
+    ]
+  },
+  "top_issues": [
+    "1. FIRST_REGION §7.3a and CLASSES §6: the renown ledger does not reproduce from the deed table it says governs it — Marrock missing from Thaw 7 by row 27 (20 renown for nine days), Ondrin's 5 from no row, Drusk missing on Thaw 34 by row 12, Merrin's decay missing on Thaw 33. Re-derive head by head.",
+    "2. ADVENTURE_ENGINE §3.1 vs §3.2: fifteen of 110 trigger-to-motive links are broken, so a hand-roller re-rolls on 13.6% of motive draws and the engine as written would refuse those pairs.",
+    "3. ADVENTURE_ENGINE §6 rules 2-3 vs §7: the showcase breaks the rules §8.3 announces as the fix — choose 6 of 12 against a cap of 4, break 0 of 12, twist family agenda 5 of 12 with four violations, and §7.5's own Q13 and Q14 both season.",
+    "4. ADVENTURE_ENGINE §7: the fifteen quests do not speak the deed table's language — roughly forty free-text act tags that are not rows, and two weights contradicting rows 1 and 4. Rewrite every consequence as 'row N, weight w, receivers'.",
+    "5. LIVING_WORLD §4: no deed row for parley (14 motives carry it; O15 is one of two unfightable oppositions), no mirror to row 19 kept_word for a promise broken, and row 5's 'dividing power -5' is meaningless when both parties belong to one power.",
+    "6. SESSION_UX §3 and PROGRESSION_ECONOMY §4-5: untouched files whose numbers contradict the rebuilt trace — the three-minute example (3 h/10:00/reeve's table vs 6 h/18:00/Ford Inn), renown 12 and ~180, Holds -35.",
+    "7. COMBAT §1-2: state the armour-versus-multiplier order in one sentence; amend §2 rule 2 or put Powder in the husk's Weak-to row.",
+    "8. LIVING_WORLD §1: add a wait-until action with a world-hour cost, and say what the powers do while you wait — the engine keeps writing by-night branches.",
+    "9. ADVENTURE_ENGINE §4: work the down-scale case once (the same trigger at Villager and at Voice, side by side); it is the common case for a hero in a valley he has finished.",
+    "10. CLASSES §2's verb table and ADVENTURE_ENGINE §3.8: four class answers route through abilities §2.5 does not resolve — Mist as a field verb, Rally as an answer, 'Draw the water through' as break, a Rogue lock-pick.",
+    "11. ADVENTURE_ENGINE §3.4: the twist families (agenda 8, paper 5, place 4, old 3, season 3, door 3, kin 2, debt 2) make §6's family rule unsatisfiable under a three-re-roll cap, and each twist has one line with no rule for the re-phrase §8.4 requires.",
+    "12. WORLD Part One and §2.1: no cause for the Still's continued fall; 'the Stair' ambiguous on the page; 'the only way anyone gets in' over-absolute; 474 words claimed against 551.",
+    "13. docs/STATUS.json is stale at round 1 — old scores, old open issues, and a word count for ADVENTURE_ENGINE off by a factor of four.",
+    "14. ADVENTURE_ENGINE Vo3: the Parley shape of the region's own ending — the shape the twenty-hour trace sets up by setting ledgers_to_be_read — is one clause with no journal text and no outcomes.",
+    "15. FIRST_REGION §7.2: the Thaw 39 away page closes the Salt Pans to a Salted walking by day in a run where the seal is intact and shelf_dry is false; plus three schedule contradictions in the trace."
+  ]
+}
