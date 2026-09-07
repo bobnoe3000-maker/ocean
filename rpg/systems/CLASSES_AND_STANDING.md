@@ -319,31 +319,37 @@ Renown falls by forgetting; regard falls by deeds. A death writes row 64, `came_
 
 ## 6. The road from villager to force — five milestones
 
-Every milestone below states what the player **did**, the **arithmetic** from those deeds to the renown number, and what the **world** does about it. Nothing here is granted by a level, a purchase or a quest merely completing. The ledger is the twenty-hour Fighter of [FIRST_REGION](../slice/FIRST_REGION.md) §7, recomputed from the deed table; where §7 prints an older figure for the same day, the table and this ledger govern.
+Every milestone below states what the player **did**, the **arithmetic** from those deeds to the renown number, and what the **world** does about it. Nothing here is granted by a level, a purchase or a quest merely completing. The ledger is the twenty-hour Fighter of [FIRST_REGION](../slice/FIRST_REGION.md) §7, and in round three it was **re-derived forwards from the deed table** — every deed looked up, every receiver in every row written, every decay dawn applied — in `FIRST_REGION` §7.3a. **That derivation is the ledger; this table reproduces it** — grouped by world day where §7.3a splits a day into one row per deed, with identical deltas and identical day-end totals, and where round two's version of this section printed a different figure for the same day (36 on Thaw 8, 124 on Thaw 13, 405 on Thaw 34, a total of 395), it was reading the deed table rather than deriving from it, and it was wrong in seventeen places.
 
-**The running ledger.** Each row adds only *new* heads; a raised memory adds none. Decay rows show renown falling, which it must be able to do.
+**The running ledger.** Each row adds only *new* heads; a raised memory adds none, but it restarts that head's decay clock ([LIVING_WORLD](LIVING_WORLD.md) §2), which is why the last row of the trace is a decay that does not happen. Decay rows show renown falling, which it must be able to do.
 
 | World day | What was done | Heads added (reach) | Renown |
 |---|---|---|---|
-| Thaw 1 | V3, the flock found (row 1, w6) | Tobbin 1, Reyne 5, Hild 5, Garrow 2, 2 ford folk 2 | **15** |
+| Thaw 1 | V3, the flock found (row 1, w6) | Tobbin 1, Reyne 5, Hild 5, Garrow 2 (at the Ford Inn door as the drove passed the ford), 2 ford folk 2 | **15** |
 | Thaw 2 | a day at Garrow's forge (row 57) | **none** — the trade raises Garrow's memory and adds nobody; the anti-grind rule, visible in the ledger | 15 |
-| Thaw 7–8 | V1: the hewers' dam broken, the river loosed at the ring (rows 2, 27) | Bram 2, Corva 2, Ondrin 5, Rukk 2, 2 hewers 2 | 28 |
-| Thaw 8 | the Wrack picket driven off Hobb's Cross (row 6, w8) | Wat Hobb 5, Col 1, 2 folk 2 | **36 — Hand** at dawn on the 9th |
-| Thaw 9 | V2: Sallowford's Quarter-day carried to the counting-house (row 4, w4) | Idren 20, Drusk 5, Sabel 2, Kit 5, 2 Chain folk 2 | 70 |
-| Thaw 11 | Pell's letter carried home to Idony (row 5, w7) | Idony 20, Pell Tarn 5, Osk 5 | 100 |
-| Thaw 13 | H2: Ilune hidden and moved to the Rudd Stones (row 13, w9) | Sarane 20, Ilune 2, 2 village folk 2 | **124 — Name** at dawn on the 14th |
-| Thaw 14 | H1: the levy filled and led to Wickery's wall (row 8, w6) | Dell 5, Aud 20, 3 levy folk 3, Jory 5 (heard at the Post, w4) | 157 |
-| Thaw 16 | H3: the Skerrow contract witnessed at the old ash (row 20, w6) | Marrock 20 (w2 → w6, now counting), 2 crew folk 2 | 179 |
-| Thaw 21–22 | N1: Corrow met, the salvage crew driven off the well-ring (rows 26, 52) | Corrow 100, 2 Wrack sentries 2 | 281 |
-| Thaw 23 | Merrin Hale's notice at Wickery names the hero (row 61, w3) | Merrin 5, 8 promoted folk 8 | 294 |
-| Thaw 27 | Aud's Address answered in person; Gulla met at the iron-yard | Gulla 2 | 296 |
-| Thaw 29 dawn | decay: V2's weight-4 witnesses fall to 2 and stop counting (Kit does not — Corrow's letter rewrote her on the 20th) | Drusk −5, Sabel −2, 2 Chain folk −2 | 287 |
-| Thaw 30 | Drill on Wickery's watch (row 10) | 10 watchmen 10 | 297 |
-| Thaw 33 dawn | decay: the notice's weight-3 memories fall to 2 | 8 promoted folk −8 | 289 |
-| Thaw 34 | Vo1: the Rudd Bridge held, the toll-house stopped, Drusk's yield taken (rows 7, 9, 12) | High Reeve Tull 100, Orsa 2, 6 levy and watch folk 6, 8 folk from the valley's notices 8 | **405 — Voice** at dawn on the 35th |
-| Thaw 40 dawn | decay: the watchmen's weight-3 memories fall to 2 | −10 | 395 |
+| Thaw 7, 10:00 | V1: the hewers' dam broken (row 27, w6) | Rukk the foreman 2, the five other Skerrow of the crew present 5, **Marrock of Thrum, the owning power's factor, 20** | 42 — **Hand** (floor 20), read at dawn on the 8th |
+| Thaw 7, 18:00 | V1: Ondrin moved off his refusal and the Rudd loosed (row 65, w6) | Ondrin 5, **Sarane 20** — she is at the ring at all hours and witnesses it | **67** |
+| Thaw 8 | V1: Fenn's wheel turning (row 2, w9) | Bram 2, Corva 2 | 71 |
+| Thaw 8 | the Wrack picket driven off Hobb's Cross (row 6, w8) | Wat Hobb 5, Col 1, 2 folk 2; no survivors to write to | **79** |
+| Thaw 9 | V2: Sallowford's Quarter-day into Idren's hand at the weighing (row 4, w4) | **Idony the sender 20**, Idren the receiver 20, Sabel the clerk 2, Drusk 5, 2 Chain blades 2 | **128 — Name** (floor 120), read at dawn on the 10th |
+| Thaw 11 | Pell's letter carried home to Idony (row 5, w7) | Pell Tarn 5, Osk 5, Dell Sallow 1 (Idony's kin line); Idony raised to 9 | 139 |
+| Thaw 13 | H2: Ilune hidden and moved to the Rudd Stones (row 13, w9) | Ilune 2, 2 village folk 2; Sarane and Hild are rewritten and add nothing; Drusk takes the row's `hunter` memory at w4 | 143 |
+| Thaw 14 | H1: the levy filled and led to Wickery's wall (row 8, w6) | Dell Coombe 5, Aud 20, Hal and Piet Marrow 2; Jory Quill 5 at w4 by the meeting tick (row 62) | **175** |
+| Thaw 16 | H3: the contract witnessed, the promise kept, the stone-mark held (rows 20, 19, 26) | **none** — all nine receivers are counted already. Five heads rewritten at 8 and 10: four months of counting bought, and no renown | 175 |
+| Thaw 21 | N1: the well-ring kept at the Salt Hall door (rows 26, 52) | **Corrow 100**, 2 Wrack sentries 2 | 277 |
+| Thaw 22 | four sacks of hall bronze cut and sold (rows 53, 63) | Kit Ashby 5, the buyer | 282 |
+| Thaw 23 | Merrin Hale's notice at Wickery (row 61, w3); Gulla asks Marrock why he refused (row 62, w4) | Merrin 5, 8 promoted folk 8, Gulla 2 | **297** |
+| Thaw 27 | Aud's Address answered in person; Gulla met at the Post | **none** — Gulla counted on the 23rd, and a meeting on its own is row 67 at weight 2 | 297 |
+| Thaw 29 dawn | decay: the 9th's weight-4 memories reach 2 | Sabel −2, 2 Chain blades −2. Drusk holds the 13th's w4 and stays; Idony and Idren were written at 6 | 293 |
+| Thaw 30 | Drill on Wickery's watch (row 10) | 10 watchmen 10, at w3 | 303 |
+| Thaw 33 dawn | decay: the 23rd's weight-3 memories reach 2, and the 13th's weight-4 | 8 promoted folk −8, **Merrin −5**, **Drusk −5** | 285 |
+| Thaw 34 dawn | decay: the 14th's weight-4 reaches 2 | Jory Quill −5 | 280 |
+| Thaw 34 | Vo1: the Rudd Bridge held, the toll-house stopped, the band led, Drusk's yield taken (rows 7, 9, 12) | 3 Wickery levy men 3; **High Reeve Tull 100**; **Drusk back at w10, 5**, his 4 surviving Chainmen 4, Pellow Orsa 2. The ten watchmen and three Sallowford men are rewritten at w9 | **394 — Voice** (floor 350), read at dawn on the 35th |
+| Thaw 35 dawn | the notice the bridge queued, at every board in the valley (row 61, w3) | 8 promoted folk 8 | **402** |
+| Thaw 39–42 | "Corrow's Terms" carried twice; Gulla carried out (rows 22, 23) | **none** — every receiver already counted | 402 |
+| Thaw 40 dawn | **no decay**: the drill's w3 was replaced at w9 on the 34th and its clock restarted | — | **402** |
 
-At twenty hours the hero holds **395 of the region's 528–588**, in 50 of the 60 promoted-folk slots — which is why the last board notice was worth less than the first, and why the next one will be worth less again.
+At twenty hours the hero holds **402 of the region's 528–588**, in 54 of the 60 promoted-folk slots — which is why the last board notice was worth less than the first, and why the next one evicts two people to seat eight.
 
 ### Milestone 1 — Villager, renown 0
 
@@ -352,25 +358,27 @@ At twenty hours the hero holds **395 of the region's 528–588**, in 50 of the 6
 **World:** neighbours give errands, in the voice of neighbours. Idony says "Morning." Nobody outside Sallowford knows the hero exists.
 **Can tilt:** a household — a wheel, a flock, a purse.
 
-### Milestone 2 — Hand, renown 20, reached at 36 on Thaw 8 (hour ~3:45)
+### Milestone 2 — Hand, renown 20, crossed at 42 on Thaw 7 at 10:00 (hour ~2:40), read at dawn on the 8th
 
-**Did:** found Tobbin's flock on the Shelf; broke the hewers' dam and climbed to the Rudd Stones for Ondrin's leave, so Fenn's wheel turned again; drove a Wrack picket off Wat Hobb's barn.
-**Arithmetic:** 15 + 0 + 13 + 8 = 36. Four of those heads are notables (Hild, Reyne, Ondrin, Wat Hobb at 5 each) and the rest are folk and trades; not one is a reeve.
+**Did:** found Tobbin's flock on the Shelf and droved it home; broke the hewers' dam above Fenn's Mill.
+**Arithmetic:** 15 + 0 + 27 = 42, and by that evening, with Ondrin moved off his refusal and Sarane watching him do it, **67**.
+**What actually crosses it is worth saying plainly:** twenty-two of the forty-two are two people the hero has not met. Row 27's receivers are "the crew present, the foreman, **the owning power's factor**" — so breaking a dam in the Wend writes to **Marrock of Thrum at Wickery, reach 20, twenty miles away**, and the hero becomes a Hand in a town he has never walked into. That is the deed table doing what a standing system is for: the world decides who hears, and the rule is printed.
 **World:** Reyne uses the *heard* line before he has met the hero, because Tobbin told him at the yard. Bram is at *owes* and will not be moved off it for half a year. Wat Hobb's greeting changes, and Wat Hobb hears every cart in the valley. The engine begins offering Hand-tier quests, which means quests with somebody else's livelihood in them.
 **Can tilt:** a village — who goes to the levy, who is hidden, where a forest line falls.
 
-### Milestone 3 — Name, renown 120, crossed at 124 on Thaw 13 (hour ~5:30)
+### Milestone 3 — Name, renown 120, crossed at 128 on Thaw 9 at 10:00 (hour ~4:30), read at dawn on the 10th
 
-**Did:** carried Sallowford's Quarter-day through a Wrack band at the Rudd Bridge and put it in Vesk Idren's hand; carried Pell Tarn's letter home to his aunt, who is the reeve; hid Ilune from the Chain and walked her to the Rudd Stones.
-**Arithmetic:** 36 + 34 + 30 + 24 = 124. The step that makes Name is not a big fight: it is **the first three reeve-or-factor heads** — Vesk Idren at 20 on the 9th, Idony Sallow at 20 on the 11th, Sarane at 20 on the 13th. Sixty of the hundred and twenty-four is three people who each talk to twenty.
-**World:** Jory Quill names the hero to their face at the Post without being told who they are. Kit Ashby can find the hero. Idren's ledger closes Sallowford's name for a season. Marrock, who has no memory yet, walks up the valley on the 16th — a thing that does not happen. Prices move with regard. The powers' local faces begin to *Address* the hero.
+**Did:** broke the dam and moved the keeper, so Fenn's wheel turned; drove a Wrack picket off Wat Hobb's barn; carried Sallowford's Quarter-day through a Wrack band at the Rudd Bridge and put it into Vesk Idren's hand at the weighing.
+**Arithmetic:** 67 + 4 + 8 + 49 = 128. The step that makes Name is not a big fight: it is **the first four reeve-or-factor heads** — Marrock on the 7th and Sarane the same evening, then Idony and Idren together on the 9th, because row 4 writes to the sender as well as the receiver and the sender is a reeve. **Eighty of the hundred and twenty-eight is four people who each talk to twenty**, and three of those four were written by a row's receiver column rather than by anything the hero said to them.
+**World:** Jory Quill names the hero to their face at the Post without being told who they are. Kit Ashby can find the hero. Idren's ledger closes Sallowford's name for a season. Marrock, who has held a memory since the 7th, walks up the valley on the 16th — a thing that does not happen. Prices move with regard. The powers' local faces begin to *Address* the hero.
+**And one consequence the engine must hold:** Name at dawn on the 10th means the three Hand-tier quests of the 13th, 14th and 16th are offered to a hero one tier above their stake, which is [ADVENTURE_ENGINE](ADVENTURE_ENGINE.md) §4's down-scale case. They pay at the stake's tier, not the hero's ([PROGRESSION_ECONOMY](PROGRESSION_ECONOMY.md) §1), which is what keeps the trace's experience at 4,370.
 **Can tilt:** a town or a road — a mill's debt, a counting-house, a court's first layer.
 
-### Milestone 4 — Voice, renown 350, crossed at 405 on Thaw 34 (hour ~16:00)
+### Milestone 4 — Voice, renown 350, crossed at 394 on Thaw 34 at 07:00 (hour ~15:40), read at dawn on the 35th
 
 **Did:** went down into the Sunk Court with Halse Corrow and kept the well-ring whole against a Stair-paid crew; led Wickery's watch and Sallowford's levy at the Rudd Bridge and stopped the toll-house the Moot has refused for forty years, and took Drusk Fennick's yield rather than his life.
-**Arithmetic:** 124 + 33 + 22 + 102 + 13 + 2 − 9 + 10 − 8 + 116 = 405. Two numbers carry it: **Corrow's 100 on Thaw 21 and High Reeve Tull's 100 on Thaw 34**, and both are leader writes under the leader rule — Corrow because the deed was done at his own camp, Tull because `toll_house = never` moved the Moot's first goal. Neither can be reached by rumour, by a notice or by a hundred errands. Everything else in the crossing is the valley's ordinary people, and twenty-seven points of them decayed away inside the same three weeks.
-**World:** letters from Brenning and Fallgate in the same three days. Marrock offers a Skerrow contract despite regard, because a witness is a witness. Corrow writes a second time. Merrin's notice is on every board in the valley. Sarane sends word by Ilune. The Chain's bands on the Ring Road are *hunting*, because Stair regard has crossed −60. The glyph is a beacon.
+**Arithmetic:** 128 + 11 + 4 + 32 + 0 + 102 + 5 + 15 + 0 − 4 + 10 − 18 − 5 + 114 = **394**, and the notice the bridge queues lands at the next dawn for 8 more: **402** at twenty hours. Two numbers carry it: **Corrow's 100 at 22:00 on Thaw 21 and High Reeve Tull's 100 on Thaw 34**, and both are leader writes under the leader rule — Corrow because he was standing at the Salt Hall door, which is his own seat and his power's third goal; Tull because `toll_house = never` moved the Moot's first. Neither can be reached by rumour, by a notice or by a hundred errands. Everything else in the crossing is the valley's ordinary people, **twenty-seven points of whom decayed away inside the same three weeks**, at four separate dawns, each of them a row in the ledger above.
+**World:** letters from Brenning and Fallgate in the same three days. Marrock offers a Skerrow contract despite regard, because a witness is a witness. Corrow writes a second time. Merrin's notice is on every board in the valley — the same Merrin who stopped counting the day before, which is the ledger's own joke about what a scribe's memory is worth. Sarane sends word by Ilune. The Chain's bands on the Ring Road are *hunting*, because Stair regard has crossed −60. The glyph is a beacon.
 **Can tilt:** a region — a toll-house, a court's depth, a town's quay: the first region's conflict, which is what the brief asks a first region to end in.
 
 ### Milestone 5 — Force, renown 900, not reachable in one valley (about 150 hours, four regions)
@@ -391,4 +399,5 @@ At twenty hours the hero holds **395 of the region's 528–588**, in 50 of the 6
 5. **Renown is recomputed after every deed; the tier is read at dawn.** This resolves the round-one contradiction between the Tick's "after every deed" and the trace's Villager-at-27 without changing either behaviour the player sees.
 6. **A Forge fails when the wrong person reads it**, and one of the three ways is invisible at the moment of use (the paper being carried back), which is what makes the verb a decision rather than a check. The Rogue session plays that failure two days after the success.
 7. **The Rogue has no crust answer and is not given one.** Powder and the ground are the class's answer to the Salted, and the sluice is its way out of the Salt Hall. Whether the husk's immunity list needs changing is COMBAT's question, not this file's.
-8. **Where FIRST_REGION §7 prints renown figures from round one (12, 74, 146, 579), the ledger in §6 supersedes them.** The deed table is the source; the trace is a reading of it.
+8. **The renown ledger is derived in [FIRST_REGION](../slice/FIRST_REGION.md) §7.3a and reproduced in §6 of this file, and both are read off the deed table.** Round two had it the other way round — §6 superseded the trace — and the result was a ledger neither file could re-add: seventeen errors, four of them found by the critic. Round three derives it forwards, deed by deed and receiver by receiver, and the two files now print the same twenty-three rows and the same total.
+9. **The trace's milestone figures moved with the derivation, and the floors did not.** Hand is crossed at 42 on Thaw 7, Name at 128 on Thaw 9, Voice at 394 on Thaw 34, and twenty hours ends at **402**. The floors of §5 — Hand 20, Name 120, Voice 350, Force 900 — the population model behind them and the renown rules are unchanged and remain canonical: what moved is what the twenty hours are worth against them, and it moved because the rows were finally read to the end.
