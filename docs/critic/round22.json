@@ -1,0 +1,254 @@
+{
+  "round": 22,
+  "direction": "stylised realism",
+  "build": "43419a3",
+  "build_note": "43419a3 is a docs-only commit directly on 333d901 'Round 22 builder pass (part 1)'; dist/ written 23:03:02 UTC, first shot 68 s later",
+  "scores": {
+    "materials": 7,
+    "light": 7.5,
+    "atmosphere": 7.5,
+    "water": 7.5,
+    "scale_motion": 7.5,
+    "composition": 7.5,
+    "budget_errors": 8.5,
+    "programmer_art": 7.5
+  },
+  "pass": false,
+  "console_errors": 0,
+  "console_warnings_per_frame": 1,
+  "budget": {
+    "draw_calls": {
+      "min": 109,
+      "max": 156,
+      "limit": 300,
+      "pass": true
+    },
+    "triangles": {
+      "min_high": 1420585,
+      "max_high": 1444731,
+      "medium": 1056683,
+      "limit": 1500000,
+      "pct_of_limit_high": 96.3,
+      "delta_vs_round21_high": -11550,
+      "pass": true
+    },
+    "texture_mb": {
+      "value": 41.3,
+      "limit": 256,
+      "pass": true
+    },
+    "frame_ms_p50_smoke": {
+      "min": 6.2,
+      "max": 10.5,
+      "headless_smoke_only": true
+    },
+    "device_fps": "not measured",
+    "phone_dpr": 2,
+    "phone_dpr_note": "3x exceeds the environment's SwiftShader render time; not a pass"
+  },
+  "pixel_means_rgb": {
+    "hero_bottom": [
+      0,
+      101,
+      135
+    ],
+    "hero_mid": [
+      1,
+      96,
+      139
+    ],
+    "night_bottom": [
+      0,
+      0,
+      25
+    ],
+    "night_left": [
+      3,
+      3,
+      26
+    ],
+    "night_hill": [
+      1,
+      1,
+      0
+    ],
+    "night_moon_sheet": [
+      95,
+      102,
+      109
+    ],
+    "fog_bottom": [
+      68,
+      98,
+      125
+    ],
+    "fog_mid": [
+      88,
+      109,
+      132
+    ],
+    "zoom300_deep": [
+      0,
+      68,
+      117
+    ]
+  },
+  "programmer_art_hits": [
+    "visible tiling (marginal): regular quay slab grid with uniform edge highlight; roof fleck repeat every four rows; sand weave moire (shots/critic22/zoom60_town_crop_quay.png, zoom60_town_crop_roof.png, zoom60_beach_crop_sand.png)",
+    "uniform blue water plane (marginal, softened): khaki band cleared; hero basin a clean gradient with chop but no lace or reflection; near-flat cobalt plane at 300 m; noon cyan pool with cobalt hole; rim a uniform outline at 1x (shots/critic22/hero_phone_crop_water.png, zoom300_crop_deep.png, contact_clear_12_crop_basin.png, landscape_crop_left.png)",
+    "hard water-to-beach line (marginal, softened): scallop row cleared, foam collar with grain; outer edge of the collar a hard stair-step at 3x (shots/critic22/zoom60_beach_crop_wetband.png, zoom60_beach_crop_shallow.png)",
+    "fog as one colour (marginal): crescent gone but one veil with a gradient and no distance planes; hull a silhouette (shots/critic22/fog_phone.png, fog_phone_crop_near_water.png, fog_phone_crop_brig.png)"
+  ],
+  "screenshots": [
+    "shots/critic22/contact.png",
+    "shots/critic22/contact_clear_12.png",
+    "shots/critic22/contact_clear_175.png",
+    "shots/critic22/contact_clear_22.png",
+    "shots/critic22/contact_fog_12.png",
+    "shots/critic22/contact_fog_175.png",
+    "shots/critic22/contact_fog_22.png",
+    "shots/critic22/fog_phone.png",
+    "shots/critic22/hero_phone.png",
+    "shots/critic22/landscape.png",
+    "shots/critic22/night_phone.png",
+    "shots/critic22/sun_check.png",
+    "shots/critic22/zoom120_brig.png",
+    "shots/critic22/zoom300.png",
+    "shots/critic22/zoom60_beach.png",
+    "shots/critic22/zoom60_town.png",
+    "shots/critic22/contact_clear_12_crop_basin.png",
+    "shots/critic22/contact_clear_12_crop_sparkle.png",
+    "shots/critic22/contact_clear_175_crop_basin.png",
+    "shots/critic22/contact_clear_175_crop_bottom.png",
+    "shots/critic22/contact_clear_22_crop_basin.png",
+    "shots/critic22/contact_fog_12_crop_basin.png",
+    "shots/critic22/contact_fog_175_crop_basin.png",
+    "shots/critic22/contact_fog_22_crop_basin.png",
+    "shots/critic22/contact_fog_22_crop_town.png",
+    "shots/critic22/fog_phone_crop_brig.png",
+    "shots/critic22/fog_phone_crop_dock.png",
+    "shots/critic22/fog_phone_crop_hill.png",
+    "shots/critic22/fog_phone_crop_mole.png",
+    "shots/critic22/fog_phone_crop_near_water.png",
+    "shots/critic22/fog_phone_crop_quay_right.png",
+    "shots/critic22/fog_phone_crop_town.png",
+    "shots/critic22/hero_phone_crop_band_edge.png",
+    "shots/critic22/hero_phone_crop_bottom.png",
+    "shots/critic22/hero_phone_crop_brig.png",
+    "shots/critic22/hero_phone_crop_dock.png",
+    "shots/critic22/hero_phone_crop_hill.png",
+    "shots/critic22/hero_phone_crop_lighthouse.png",
+    "shots/critic22/hero_phone_crop_mole.png",
+    "shots/critic22/hero_phone_crop_quay_right.png",
+    "shots/critic22/hero_phone_crop_town.png",
+    "shots/critic22/hero_phone_crop_water.png",
+    "shots/critic22/landscape_crop_basin.png",
+    "shots/critic22/landscape_crop_left.png",
+    "shots/critic22/landscape_crop_right.png",
+    "shots/critic22/night_phone_crop_basin.png",
+    "shots/critic22/night_phone_crop_beam.png",
+    "shots/critic22/night_phone_crop_bottom.png",
+    "shots/critic22/night_phone_crop_brig.png",
+    "shots/critic22/night_phone_crop_dock.png",
+    "shots/critic22/night_phone_crop_hill.png",
+    "shots/critic22/night_phone_crop_left_water.png",
+    "shots/critic22/night_phone_crop_mole.png",
+    "shots/critic22/night_phone_crop_town.png",
+    "shots/critic22/sun_check_crop_bottom.png",
+    "shots/critic22/sun_check_crop_glitter.png",
+    "shots/critic22/sun_check_crop_sky.png",
+    "shots/critic22/sun_check_crop_town.png",
+    "shots/critic22/zoom120_brig_crop_bow.png",
+    "shots/critic22/zoom120_brig_crop_deck.png",
+    "shots/critic22/zoom120_brig_crop_jib.png",
+    "shots/critic22/zoom120_brig_crop_palm.png",
+    "shots/critic22/zoom120_brig_crop_sail.png",
+    "shots/critic22/zoom120_brig_crop_shore_left.png",
+    "shots/critic22/zoom120_brig_crop_stern.png",
+    "shots/critic22/zoom120_brig_crop_wash.png",
+    "shots/critic22/zoom120_brig_crop_water.png",
+    "shots/critic22/zoom300_crop_deep.png",
+    "shots/critic22/zoom300_crop_island.png",
+    "shots/critic22/zoom300_crop_mouth.png",
+    "shots/critic22/zoom300_crop_top.png",
+    "shots/critic22/zoom300_crop_town.png",
+    "shots/critic22/zoom60_beach_crop_foam.png",
+    "shots/critic22/zoom60_beach_crop_fronds.png",
+    "shots/critic22/zoom60_beach_crop_sand.png",
+    "shots/critic22/zoom60_beach_crop_shallow.png",
+    "shots/critic22/zoom60_beach_crop_topleft.png",
+    "shots/critic22/zoom60_beach_crop_water.png",
+    "shots/critic22/zoom60_beach_crop_wetband.png",
+    "shots/critic22/zoom60_town_crop_door.png",
+    "shots/critic22/zoom60_town_crop_flecks.png",
+    "shots/critic22/zoom60_town_crop_ground.png",
+    "shots/critic22/zoom60_town_crop_lamp.png",
+    "shots/critic22/zoom60_town_crop_quay.png",
+    "shots/critic22/zoom60_town_crop_roof.png",
+    "shots/critic22/zoom60_town_crop_shade.png",
+    "shots/critic22/zoom60_town_crop_shutter_shade.png",
+    "shots/critic22/zoom60_town_crop_topright.png",
+    "shots/critic22/zoom60_town_crop_walls.png",
+    "shots/critic22/zoom60_town_crop_window.png"
+  ],
+  "top_issues": [
+    "Night: moon path a white-grey blotchy sheet ~25 m wide; lower half a featureless navy plane (rgb 0,0,25); lamp a hard white crescent with only a bloom fan onto the mole, no beam across the water; hill black (shots/critic22/night_phone_crop_basin.png, night_phone_crop_bottom.png, night_phone_crop_mole.png, night_phone_crop_beam.png, night_phone_crop_hill.png)",
+    "Fog: one veil with no distance planes; hull a slate silhouette under cream sails; dock full-strength; boulders cages; quay sliver; night-fog windows near-white and the lamp a white blob (shots/critic22/fog_phone.png, fog_phone_crop_near_water.png, fog_phone_crop_brig.png, fog_phone_crop_dock.png, fog_phone_crop_mole.png, fog_phone_crop_quay_right.png, contact_fog_22_crop_town.png)",
+    "Town at 60 m: slab grid unchanged; shutters and doorways on every shaded wall still pure black; roof fleck repeat; flat shaded walls with no bounce; translucent flecks and blur over roofs (shots/critic22/zoom60_town_crop_quay.png, zoom60_town_crop_shade.png, zoom60_town_crop_shutter_shade.png, zoom60_town_crop_roof.png, hero_phone_crop_town.png)",
+    "Hero basin at 120 m one near-uniform turquoise plane: no lace at the quay wall or mole, no shallow-to-deep band, no hull or sail reflection, no bow or mole foam; 300 m deep water a cobalt plane with no swell (shots/critic22/hero_phone.png, hero_phone_crop_water.png, hero_phone_crop_mole.png, zoom120_brig_crop_bow.png, zoom300_crop_deep.png)",
+    "Noon basin a cyan pool with a cobalt hole; sparkle field of dense hard white blobs (shots/critic22/contact_clear_12_crop_basin.png, contact_clear_12_crop_sparkle.png)",
+    "Gunport lids thin dark slats floating in open water off both quarters with a gap to the hull; jib a detached triangle with the forestay running past it (shots/critic22/zoom120_brig_crop_stern.png, zoom120_brig_crop_deck.png, zoom120_brig_crop_jib.png, hero_phone_crop_brig.png)",
+    "60 m foam collar outer edge a hard stair-step at 3x; rim a uniform outline at 1x; dry sand a salmon blotch over a weave moire; nothing on the beach (shots/critic22/zoom60_beach_crop_wetband.png, zoom60_beach_crop_shallow.png, landscape_crop_left.png, zoom60_beach_crop_sand.png, zoom60_beach.png)",
+    "Palm shadow on the mainsail reads as a green-tinted stain with a dotted tail (shots/critic22/zoom120_brig_crop_sail.png)",
+    "Fronds flat lime blades in a starburst (shots/critic22/zoom60_beach_crop_fronds.png, zoom120_brig_crop_palm.png)",
+    "Sky into the sun a flat tan-to-grey gradient, no cobalt zenith, rose belt or cloud; hill black with self-lit bushes (shots/critic22/sun_check_crop_sky.png, sun_check_crop_bottom.png)",
+    "Mole boulders grey polygon cages in clear, night and fog; no mole foam (shots/critic22/hero_phone_crop_mole.png, night_phone_crop_mole.png, fog_phone_crop_mole.png)",
+    "Bush lollipops with hard black blobs; dark smear along the hill ridge; pale flecks over roofs and walls (shots/critic22/hero_phone_crop_hill.png, zoom300_crop_island.png, hero_phone_crop_town.png)",
+    "Dock a dark pile of blocks with the rowboat clipping its end by day; white sliver at the quay's right end in clear and fog (shots/critic22/hero_phone_crop_dock.png, hero_phone_crop_quay_right.png, fog_phone_crop_quay_right.png)",
+    "Basin cyan rather than R1's blue-violet; one chop texture at every distance (shots/critic22/hero_phone_crop_bottom.png, hero_phone_crop_water.png, zoom120_brig_crop_water.png)",
+    "Triangles at 96.3% of the limit at high quality (shots/critic22/hero_phone.json)"
+  ],
+  "round21_status": {
+    "fixed": [
+      "1 — khaki band across the hero's bottom third and in every framing: gone; hero bottom rgb 0,101,135 vs mid 1,96,139, no crescent, edge or halo (shots/critic22/hero_phone_crop_bottom.png, hero_phone_crop_band_edge.png, contact_clear_175_crop_bottom.png, contact_clear_12_crop_sparkle.png, landscape_crop_basin.png, fog_phone_crop_near_water.png)"
+    ],
+    "improved": [
+      "2 — night (marginal): bow lantern with reflection on the brig; warm bloom fan from the lamp onto the mole; sheet, navy plane, hotspot, black hill unchanged (shots/critic22/night_phone_crop_brig.png, night_phone_crop_mole.png, night_phone_crop_beam.png, night_phone_crop_basin.png, night_phone_crop_hill.png)",
+      "3 — fog (crescent only): the lower-third crescent is gone; veil, slate hull, dock, cages, sliver, night-fog windows unchanged (shots/critic22/fog_phone_crop_near_water.png, fog_phone_crop_brig.png, fog_phone_crop_dock.png, fog_phone_crop_mole.png, fog_phone_crop_quay_right.png, contact_fog_22_crop_town.png)",
+      "4 — town at 60 m: shutters and doors have a value on lit facades; still black on shaded walls; slab grid, roof repeat, flat shade, flecks unchanged (shots/critic22/zoom60_town_crop_window.png, zoom60_town_crop_door.png, zoom60_town_crop_shade.png, zoom60_town_crop_shutter_shade.png, zoom60_town_crop_quay.png, zoom60_town_crop_roof.png)",
+      "5 — noon (bank only): khaki bank gone; pool, cobalt hole and sparkle blobs unchanged (shots/critic22/contact_clear_12_crop_basin.png, contact_clear_12_crop_sparkle.png)",
+      "6 — 60 m wet band: foam collar with grain and streaks, scallop row gone; hard stair-step outer edge at 3x instead; rim outline at 1x unchanged (shots/critic22/zoom60_beach_crop_foam.png, zoom60_beach_crop_wetband.png, landscape_crop_left.png)",
+      "15 — budget only: high-quality triangles down 11,550 to 96.3% of limit; water items unchanged (shots/critic22/hero_phone.json, zoom300_crop_deep.png, zoom120_brig_crop_bow.png)"
+    ],
+    "unchanged": [
+      "7 — sand blotch and weave moire; empty beach (shots/critic22/zoom60_beach_crop_sand.png, zoom60_beach.png)",
+      "8 — jib detached (shots/critic22/hero_phone_crop_brig.png, zoom120_brig_crop_jib.png)",
+      "9 — palm shadow on the sail reads as a stain (shots/critic22/zoom120_brig_crop_sail.png)",
+      "10 — fronds flat blades (shots/critic22/zoom60_beach_crop_fronds.png, zoom120_brig_crop_palm.png)",
+      "11 — flat sky; black hill with self-lit bushes (shots/critic22/sun_check_crop_sky.png, sun_check_crop_bottom.png)",
+      "12 — boulder cages; no mole foam (shots/critic22/hero_phone_crop_mole.png, night_phone_crop_mole.png, fog_phone_crop_mole.png)",
+      "13 — bush lollipops; hill smear; flecks over the town (shots/critic22/hero_phone_crop_hill.png, hero_phone_crop_town.png, zoom300_crop_island.png)",
+      "14 — dark block dock with clipping rowboat; quay sliver; floating dashes now longer gunport lids still off the hull (shots/critic22/hero_phone_crop_dock.png, hero_phone_crop_quay_right.png, fog_phone_crop_quay_right.png, zoom120_brig_crop_stern.png)"
+    ]
+  },
+  "builder_claims": {
+    "confirmed": [
+      "no crease ring across the harbour mouth (shots/critic22/landscape_crop_basin.png, zoom300.png)",
+      "clean turquoise painted water — khaki band gone (shots/critic22/hero_phone_crop_bottom.png)",
+      "gun barrels inboard (shots/critic22/zoom120_brig_crop_deck.png)"
+    ],
+    "partial": [
+      "mid-value shutters and doors — lit facades only, shaded walls still black (shots/critic22/zoom60_town_crop_window.png, zoom60_town_crop_shutter_shade.png)",
+      "faint night beam — a bloom fan onto the mole, nothing on the water (shots/critic22/night_phone_crop_beam.png)"
+    ],
+    "not_confirmed": [
+      "gunport lids hinged in place — lids float off the hull (shots/critic22/zoom120_brig_crop_stern.png)"
+    ]
+  },
+  "limitations": [
+    "phone shots at dpr 2, not the 390x844 @3 preset",
+    "device fps not measured (headless SwiftShader)",
+    "motion unverifiable from stills",
+    "sky only visible in sun_check (pitch 14)"
+  ]
+}
