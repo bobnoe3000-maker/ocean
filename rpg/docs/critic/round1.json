@@ -1,0 +1,85 @@
+{
+  "round": 1,
+  "scores": {
+    "world": 8.0,
+    "living_world": 7.5,
+    "adventure_engine": 7.0,
+    "classes_standing": 6.5,
+    "combat_dungeons_autobattle": 7.5,
+    "economy_session_ux": 7.5,
+    "feasibility_honesty": 7.5,
+    "design_smells": 5.0
+  },
+  "pass": false,
+  "smell_hits": [
+    "A feature listed without a session example: all four session examples in the bible (SESSION_UX.md §3's three, FIRST_REGION.md §7's twenty-hour trace) are a Fighter, so eight of the twelve field verbs — the Mage's Dowse, Read, Dry/Flood, Ease and the Rogue's Listen, Shadow, Forge, Fence — appear in no session example anywhere, and none of the twelve has any resolution rule. CLASSES_AND_STANDING.md §2's verb table makes these verbs the entire out-of-combat identity of two of three classes. Also unplayed: three of four trade verbs (Dress, Boat, Haul), all nine subclasses, and layer 3 of the Sunk Court."
+  ],
+  "holes": [
+    {
+      "session": "3min",
+      "missing": "The creation flow. SESSION_UX.md §1 counts 'creation' among nine screens and never describes it; CLASSES_AND_STANDING.md §1 names only a trade and a class. The first screen every player sees is unspecified."
+    },
+    {
+      "session": "3min",
+      "missing": "No three-minute session exists in the first hour of play. The bible's only three-minute example is printed twice (SESSION_UX.md §3 and FIRST_REGION.md §7's Thaw 11 check-in) and both sit at hour 4+ after Hand standing; the Firstwater anchor plus V3 is a 45-minute block by the trace's own hour markers (0:00–0:45)."
+    },
+    {
+      "session": "3min",
+      "missing": "What the five powers do on a day the season table does not script. LIVING_WORLD.md §3 specifies a dawn planner; FIRST_REGION.md §4 gives fixed-date opening moves; 450 power-days a season against ~25 shown, with no rule for the rest and no statement of which artefact is authoritative."
+    },
+    {
+      "session": "3min",
+      "missing": "What a Stand day is as play. CLASSES_AND_STANDING.md §2 defines Stand only as a clash weight; FIRST_REGION.md §7 makes it a paid rota with a docking penalty. No document says what the player does, how long it takes, or on which screen."
+    },
+    {
+      "session": "3min",
+      "missing": "NPC night hours. FIRST_REGION.md §3 leaves 8–12 hours a day unassigned for Idony, Reyne, Aud, Marrock, Merrin, Dell and Sabel with no stated default, though LIVING_WORLD.md §2's hourly tick must place every NPC for meetings and memory propagation."
+    },
+    {
+      "session": "15min",
+      "missing": "No wait or pass-time action. LIVING_WORLD.md §1 gives only open play, map travel and rest-to-dawn, so every 'at night' solution in the twelve quests (V1's Rogue branch, H2's move-by-night) is unreachable."
+    },
+    {
+      "session": "15min",
+      "missing": "The twelve field verbs have no resolution rule of any kind — no check, no cost, no time, no failure condition. CLASSES_AND_STANDING.md §2 uses Mist, a three-second combat ability, as a field stealth verb; the one acknowledged failure ('a failed Forge is a weight-8 memory') never says what makes a Forge fail."
+    },
+    {
+      "session": "15min",
+      "missing": "H2's failed-Talk branch has no consequence. ADVENTURE_ENGINE.md §7 gives the success condition (Stair regard ≥ +15 or a Rogue Forge) and never the failure result, violating §5's own 'the engine refuses an outcome whose consequence list is empty'."
+    },
+    {
+      "session": "15min",
+      "missing": "Quests are offered by standing tier alone with no party-rating check (ADVENTURE_ENGINE.md §4). A solo level-4 Mage offered H2 faces ER 118 against PR 31 on the hold-the-door branch, while the other three branches are regard-gated, time-gated or carry a permanent penalty — against COMBAT.md §6(e)'s promise that nothing requires an Overmatched win."
+    },
+    {
+      "session": "evening",
+      "missing": "The Salted husk has no answer on the Rogue's arc: immune to Snare, and its crust-strippers are the Fighter's Break and the Shield's Crack. This breaks COMBAT.md §2 rule 2 ('the counter is always on the same class's arc') against the first region's signature enemy."
+    },
+    {
+      "session": "evening",
+      "missing": "The order of armour subtraction and damage multipliers is unspecified (COMBAT.md §1). A tier-2 Rogue Mark against a salt-warden is either 13 or 8 damage — a 60% swing on every armoured boss in the region."
+    },
+    {
+      "session": "evening",
+      "missing": "Layer 3 of the Sunk Court is one table row with no rooms, no map and no encounter entries (FIRST_REGION.md §6), while ADVENTURE_ENGINE.md Vo2 ships a region-one branch that opens it; COMBAT.md §9's '11 dungeon rooms' and FIRST_REGION.md §8's '4 layers, 23 rooms' do not reconcile."
+    }
+  ],
+  "top_issues": [
+    "rpg/systems/ADVENTURE_ENGINE.md §1/§3/§8 — the engine's tables are counted, never written (13 of 48 motives, 11 of 30 twists, 0 of 22 site types, 0 of 14 opposition kinds, 0 of 60 rumour templates, 0 of the four prose tables); a thirteenth quest cannot be generated from the documented grammar. Fix: print them.",
+    "rpg/systems/CLASSES_AND_STANDING.md §2 — twelve field verbs, the whole out-of-combat identity of three classes, have no resolution rule, cost, duration or failure state. Fix: one line of mechanic per verb.",
+    "rpg/systems/CLASSES_AND_STANDING.md §5–§6 and rpg/slice/FIRST_REGION.md §7 — renown is asserted, not derived, at Name (74→146) and Voice (+305 in two days from ~245 uninstantiated folk); the region's whole population ceiling is ~430–590 against a Voice floor of 500 and a Force floor of 2,000. Fix: re-derive all five floors from a stated population and decay rate.",
+    "rpg/systems/LIVING_WORLD.md §4 — the 64-entry deed table converts play into standing and regard and is counted but never printed, so every regard number in the bible is an assertion. Fix: print all 64 entries.",
+    "rpg/slice/FIRST_REGION.md §7 — six of seven offline advances break LIVING_WORLD.md §1's four-world-hours-per-real-hour rule, the worst by 33 world hours; the trace was written backwards from its dated events. Fix: re-run the clock from the rule.",
+    "rpg/systems/LIVING_WORLD.md §3 vs rpg/slice/FIRST_REGION.md §4 — the dawn planner and the dated opening-move lists are incompatible descriptions of one system; ~425 of 450 power-days are unaccounted for and no ordinary day is ever worked. Fix: declare the planner authoritative and work one ordinary day end to end.",
+    "rpg/systems/COMBAT.md §1–§2 — the Salted husk has no Rogue-arc answer, breaking COMBAT §2 rule 2 in the file that states it. Fix: give the Rogue's arc a crust answer, or make Crack fieldable by every party.",
+    "rpg/systems/LIVING_WORLD.md §1 — no wait or pass-time action, so every 'at night' quest solution is unreachable. Fix: add a wait-until action with a world-hour cost.",
+    "rpg/slice/FIRST_REGION.md §6 and rpg/systems/ADVENTURE_ENGINE.md Vo2 — layer 3 is undesigned while a region-one branch opens it, and the two room counts disagree. Fix: design it or close the branch.",
+    "rpg/systems/SESSION_UX.md §3 and rpg/slice/FIRST_REGION.md §7 — one three-minute session exists and is printed twice, both mid-campaign; the first hour of play is a 45-minute block. Fix: write a genuine hour-one three-minute session and a second distinct one.",
+    "rpg/world/WORLD.md Part One, §2.1, §2.7 — the Still's continued fall, the clock behind every dungeon and dispute, has no stated cause at either depth. Fix: a clause on the page and a paragraph in §2.1.",
+    "rpg/world/WORLD.md Part One — 'the Stair' names both the road and the company with no disambiguation; 'the only way anyone gets in' is contradicted by §2.2's Skerrow; the page claims 474 words and is 535. Fix: four words, a softened absolute, a corrected count.",
+    "rpg/systems/CLASSES_AND_STANDING.md §5 vs rpg/slice/FIRST_REGION.md §7 — 'recomputed at dawn and after every deed' contradicts a renown-27 hero held at Villager until dawn, and the two files give different renown for the same quest (15 vs 12). Fix: one recompute rule, one memory list.",
+    "rpg/systems/ADVENTURE_ENGINE.md §7 (V2, V3, H2) — three showcase branches have empty or site-stateless consequence lists, violating §5's own no-empty-outcome rule. Fix: write the missing consequences.",
+    "rpg/slice/FIRST_REGION.md §3 and §7 — seven of twenty-five schedules leave night hours unassigned, and Kit Ashby's schedule contradicts both of her quay appearances at 14:00. Fix: close every schedule to 24 hours; move Kit's letter scene into her quay block."
+  ],
+  "word_counts_verified": true
+}
