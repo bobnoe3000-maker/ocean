@@ -41,6 +41,7 @@ vec3 applyAerial(vec3 color, vec3 wpos) {
   // the haze starts 70 m out so the near chop, quay and rigging stay crisp while the far hill layers back
   float od = uFogDensity * integ * dist * fpatch + uFogHaze * max(dist - 70.0, 0.0);
   float fog = 1.0 - exp(-od);
+  fog *= mix(0.8, 1.12, smoothstep(120.0, 380.0, dist)); // three planes of air: near stays clearer, far flattens sooner
   vec3 ld = mix(uSunDir, uMoonDir, uNight);
   float mu = max(dot(rd, ld), 0.0);
   float sunW = pow(mu, uFogSunPow);

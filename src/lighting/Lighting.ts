@@ -51,7 +51,6 @@ export class Lighting {
     W.uSunDir.value.copy(sunDir); W.uMoonDir.value.copy(moonDir);
     const ro = new THREE.Vector3(0, ATMO.Re + 60, 0);
     const fogMul = spec.weather === 'fog' ? 0.35 : 1;
-    this.envBoost = spec.weather === 'fog' ? 1.7 : 1; // mist is a bright sky-fill: shadows drop toward the ambient
     // irradiance of each light at the ground
     const trS = transmittanceCPU(ro, sunDir);
     const sunUp = THREE.MathUtils.smoothstep(sunDir.y, -0.02, 0.06);
@@ -71,6 +70,7 @@ export class Lighting {
 
     this.night = 1 - THREE.MathUtils.smoothstep(sunDir.y, -0.10, 0.02);
     W.uNight.value = this.night;
+    this.envBoost = (spec.weather === 'fog' ? 1.7 : 1.25) * (1 + 1.5 * this.night); // mist is a bright sky-fill; by day the shade picks up more sky (R1); at night the moon fills the hill
     // key light: sun, or moon when the sun is down
     const useMoon = sunDir.y < -0.06;
     const dir = useMoon ? moonDir : sunDir;

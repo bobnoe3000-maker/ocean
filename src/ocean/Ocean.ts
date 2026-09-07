@@ -24,6 +24,7 @@ export class Ocean {
     uGrid: { value: new THREE.Vector4(GRID.cx, GRID.cz, GRID.size, 0) },
     uHull: { value: new THREE.Vector4(0, 0, 0, 0) }, // x,z centre, w = heading (rad), y = half length
     uHullW: { value: 3.5 },
+    uMole: { value: new THREE.Vector4(0, 0, 0, 0) }, uMoleW: { value: 4 }, // mole face as a capsule: x1,z1,x2,z2
     uSwell: { value: 1.0 },
     uChop: { value: 1.0 },
     uDeep: { value: new THREE.Color(0x0a2d5e) },
@@ -114,7 +115,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
       fragmentPars: /* glsl */ `
         uniform sampler2D tWaterN, tRipple, tFoam, tNoise, tHeight, tRefl;
 float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r; } // hardware bilinear (R16F is filterable on GLES3)
- uniform vec4 uHull, uGrid; uniform float uHullW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
+ uniform vec4 uHull, uGrid, uMole; uniform float uHullW, uMoleW; uniform float uNightF, uFogF, uReflF, uStyle; uniform mat4 uReflMatrix;
         uniform vec3 uDeep, uShallow, uSSS; uniform vec3 uSunColor;
         varying vec3 vWN; varying float vJ; varying float vDepth; varying float vCrest;
         float sdCapsule(vec2 p, vec2 a, vec2 b, float r) { vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h) - r; }
@@ -192,6 +193,12 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
             float collar = 1.0 - smoothstep(collarEdge - 0.12, collarEdge + 0.12, depth);
             float laceBand = (1.0 - smoothstep(collarEdge, collarEdge + 0.35, depth)) * smoothstep(0.64, 0.72, lace2.r * 0.6 + lace.r * 0.4 + 0.1 * surge);
             float hullWake = (1.0 - smoothstep(0.2, 3.6, dh)) * smoothstep(0.42, 0.55, lace.r + 0.15 * sin(t * 1.1 + lace.g * 5.0));
+            // swell breaking on the mole (R1: foam only where swell meets the mole and at the bow)
+            float dm = sdCapsule(P.xz, uMole.xy, uMole.zw, uMoleW);
+            float moleFoam = (1.0 - smoothstep(0.3, 3.4, dm)) * smoothstep(0.4, 0.56, lace.r + 0.15 * sin(t * 0.9 + lace.g * 4.0)) * 0.9;
+            hullWake = max(hullWake, moleFoam);
+            // a second value in the open water: slow large-scale mottling so the basin is never one flat plane
+            body *= 1.0 + 0.14 * (texture2D(tNoise, P.xz * 0.0055 + wd * t * 0.002).g - 0.5) + 0.06 * (texture2D(tNoise, P.xz * 0.02 - wd * t * 0.003 + 0.4).r - 0.5);
             foam = clamp(max(max(collar, laceBand * 0.8), hullWake), 0.0, 1.0) * (0.06 + 0.94 * dayF);
             // opaque body, but fade out in the last half metre so the terrain mesh never cuts a hard polyline through the collar
             // the collar and the first hand-span of water are opaque paint, and the sheet runs a few centimetres past the
@@ -212,7 +219,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           diffuseColor.rgb = mix(body * (uStyle > 0.5 ? 0.55 : 0.5), vec3(0.97), foam); // stylised: less of the body is sun-lit diffuse (which the warm key tints), more is painted emissive
           diffuseColor.a = alpha;
           // stylised: a tighter lobe so the low-sun glitter is a path with dark water either side, not a gold sheet
-          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.6 * uNightF), 0.85, foam); // night: a smoother surface on flattened normals gives the moon a narrow, soft-edged path
+          roughnessFactor = mix(0.07 + smoothstep(60.0, 300.0, dcam) * 0.07 * (1.0 - 0.6 * uStyle) + distF * mix(0.12, 0.04, uStyle) + uFogF * 0.25 + uStyle * (0.14 - 0.1 * sunHigh) * (1.0 - 0.4 * uNightF), 0.85, foam); // night: a smoother surface on flattened normals gives the moon a narrow, soft-edged path
           // night: the swell facets would mirror the moon halo as a marbled sheet; flatten them so the moon is a narrow path
           wN = normalize(mix(wN, vec3(0.0, 1.0, 0.0), 0.7 * uNightF * uStyle));
           normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz);
@@ -229,7 +236,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
           { vec3 is = reflectedLight.indirectSpecular; float il = dot(is, vec3(0.2126, 0.7152, 0.0722));
             reflectedLight.indirectSpecular = mix(is, il * vec3(0.7, 0.86, 1.05) * 0.5, uStyle); }
           // a high sun over a chopped surface lights the whole near field white: keep the noon glitter to sparse points
-          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.5 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
+          reflectedLight.directSpecular *= (1.0 - 0.82 * sunHigh * uStyle) * (1.0 - 0.7 * uNightF * uStyle); // night: a narrow moon path, not a marbled sheet
           if (uReflF > 0.0) {
             vec4 rc = uReflMatrix * vec4(vWPos, 1.0);
             vec2 ruv = rc.xy / rc.w + waterN.xz * 0.045 * (1.0 - distF);
@@ -264,6 +271,7 @@ float hfield(sampler2D t, vec2 uv) { return texture2D(t, clamp(uv, 0.0, 1.0)).r;
     this.mesh = mesh; this.group.add(mesh);
   }
 
+  setMole(x1: number, z1: number, x2: number, z2: number, halfWidth: number): void { this.uniforms.uMole.value.set(x1, z1, x2, z2); this.uniforms.uMoleW.value = halfWidth; }
   setHull(x: number, z: number, headingRad: number, halfLen: number, halfWidth: number): void {
     this.uniforms.uHull.value.set(x, halfLen, z, headingRad); this.uniforms.uHullW.value = halfWidth;
   }
