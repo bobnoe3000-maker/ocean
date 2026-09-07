@@ -1,0 +1,162 @@
+# Hearthfall — Design Test (phase 1)
+
+## Goal
+
+Prove on paper that a mobile, portrait, one-hero-plus-companions action RPG can
+carry a world as deep as Pathfinder's and as weighty as Middle-earth, and that
+the world stays alive whether or not the player is looking. Write a design
+bible set, judge it, iterate. No code, no art, no engine.
+
+In scope: an original world and its first region, the living-world systems,
+real-time combat with optional autobattle, free-to-play progression and economy
+without gacha, the mobile session, and a first playable region specified to the
+point that a team could build it. Out of scope: engine choice, art direction,
+audio, multiplayer, later regions beyond a sketch, marketing.
+
+## The bar (non-negotiable)
+
+- An original setting. Tolkien and Paizo shape the feel; not one name, place,
+  god, race or artefact comes from either. The world has its own deep history
+  (at least three ages that still matter in play), its own peoples (four to six,
+  each with a way of life the player can see in a town), its own powers (gods,
+  orders, crowns, guilds) with agendas that conflict.
+- A living world, all four at once: people with schedules and memory; factions
+  that act, expand, clash and change the map without the player; world time
+  with days, weather, seasons and festivals that change who is where and what
+  is possible; choices that close doors, alter regions and are remembered for
+  the whole campaign.
+- One hero under direct control, with companions who have their own lives,
+  opinions and fights. Autobattle is a first-class way to play, never a worse
+  one: it plays the same abilities on the same hero and companions, it wins the
+  fights a competent hand would win, and hands-on play earns only expression and
+  edge cases, never mandatory efficiency.
+- Free to play with no gacha and no energy gate. Companions, power and story
+  are earned in play. Money buys cosmetics, expansions and convenience that a
+  patient player gets anyway. The design must say what is sold and prove the
+  world stays credible with it.
+- A phone in one hand, portrait, sessions of three to fifteen minutes that
+  each end with something changed in the world, while a long evening of play is
+  also rewarded.
+- Never a design smell (checklist below fails a round automatically).
+
+## Platform and business (decided)
+
+- Mobile, portrait, one-hand play with a thumb zone; landscape never assumed.
+- Real-time action: the hero moves, dodges and uses abilities directly;
+  companions act on their own AI with orders from the player. Autobattle hands
+  the hero to the same AI. Combat lasts 20 to 90 seconds in the field, longer
+  only for set pieces.
+- Free to play, no gacha, no stamina. Sessions can be offline-safe: the world
+  simulation advances on return, summarised in a "while you were away" page.
+- Tone: mythic land, Pathfinder depth. Landscape and history as characters,
+  understated magic with a price, factions and systems with teeth, adventurers
+  as the lens but never the centre of the world.
+
+## How to work
+
+Work in `rpg/` of this repository. Docs only. Use plain Markdown.
+
+1. **PITCH.md first.** One page: the world in three sentences, the hero's
+   place in it, the loop of a session, the loop of a campaign, why the world is
+   alive, what is sold, the three things that make this unlike its references.
+2. **The bible set.** Write these files, each standing alone and cross-linked:
+   - `rpg/world/WORLD.md` — geography with a map described in words (regions,
+     roads, rivers, borders and why they are where they are), history in ages
+     with what each left behind, peoples, powers, magic and its price, calendar
+     and seasons, the first region placed in all of this.
+   - `rpg/systems/LIVING_WORLD.md` — NPC schedules and memory (what is
+     remembered, for how long, how it surfaces in dialogue and price and
+     access), the faction simulation (goals, resources, moves per world-day,
+     how conflicts resolve, how the map changes, what the player can tilt),
+     time and seasons (what a day, a week and a season change), consequence
+     (how a choice is recorded, propagated and shown later). Every system has
+     inputs, state, a tick, outputs and a worked example.
+   - `rpg/systems/COMBAT.md` — the hero's verbs, companion roles and AI,
+     ability design rules, enemy design rules, the autobattle policy in detail,
+     the parity proof (what hands-on play can and cannot do that autobattle
+     cannot), difficulty, death and its cost, three sample encounters played
+     twice each, once by hand and once on autobattle, with the outcome.
+   - `rpg/systems/PROGRESSION_ECONOMY.md` — hero and companion growth, gear,
+     the sources and sinks of every currency, the fairness model (what a free
+     player has after 1, 10, 50 and 200 hours; what a paying player has), what
+     is sold and why the world survives it, the anti-grind rules.
+   - `rpg/systems/SESSION_UX.md` — the portrait screen described zone by zone,
+     the thumb map, the three-minute session, the fifteen-minute session, the
+     evening session, offline return, how the living world is shown (rumours,
+     notice boards, letters, a map that changes), accessibility.
+   - `rpg/slice/FIRST_REGION.md` — the first region as a buildable proof: map
+     in words, the town and its twenty named people with schedules, three
+     factions present and their opening moves, one season of world events,
+     three quest chains with consequences that cross, one day of play narrated
+     hour by hour showing every system firing.
+3. **No claim without a trace.** A design claim ("factions act without the
+   player") is backed by a worked example in the document: state before, tick,
+   state after, what the player sees.
+4. **One designer writes.** One critic, a brutal AAA design director who writes
+   no design, reads every file and judges by playing it on paper: three
+   narrated sessions (three minutes, fifteen minutes, one evening) traced
+   strictly from what the documents specify. Where the trace has to invent
+   something the documents do not say, that is a hole and is listed.
+5. The critic scores 0–10 per rubric line. 10 = the world reads as deep as
+   Golarion and as weighty as Middle-earth and every system is specified to
+   build; 8.5 = ship-ready design with nits; 7 = a good indie design doc;
+   5 = a feature list. Pass = every line ≥ 8.5 and no design-smell hit.
+6. Below 8.5 the designer gets the ranked issue list with file paths and
+   section names and goes again. Maximum 6 rounds. If still failing, stop and
+   write down exactly what is missing and why.
+7. Commit every round with the scores in the message. Keep
+   `rpg/docs/STATUS.json` current with scores, open issues and word counts.
+   Record every assumption in `rpg/docs/DECISIONS.md`. Critic reports go to
+   `rpg/docs/critic/roundN.md` and `roundN.json`.
+
+## Critic rubric
+
+1. World: original, coherent, deep; history that still matters in play;
+   peoples and powers that could sustain a decade of stories; a map that makes
+   geographic and political sense.
+2. Living world: all four minimums specified with inputs, state, tick, outputs
+   and worked examples; the traces show the world changing without the player
+   and remembering the player.
+3. Combat and autobattle: readable one-thumb action; companions worth having;
+   autobattle at parity; the six sample-encounter outcomes are credible and
+   consistent with the rules.
+4. Progression and economy: the fairness model holds at every hour mark;
+   nothing sold buys power or time; sources and sinks balance on paper; no
+   grind wall.
+5. Session and UX: the three session lengths each end with a world change; the
+   portrait screen works one-handed; the living world is visible on the phone,
+   not only in the simulation.
+6. Narrative and consequence: quests cross, close doors and are remembered;
+   the day-of-play trace fires every system at least once; the hero is a lens,
+   not the axis of the world.
+7. Feasibility and honesty: content volumes counted; the first region buildable
+   by a stated team size in a stated time; risks named; nothing promised
+   that the documents do not specify.
+8. Design-smell checklist: any hit is an automatic fail.
+
+## Design smells (automatic fail)
+
+Gacha or energy under another name (timers, keys, pulls, pity); anything sold
+that buys power or skips the world; a chosen-one hero with no cost or peer;
+factions that only react to the player; lore that never touches play; a system
+with no decision in it; an autobattle that is strictly better or strictly worse
+than play; a feature listed without a session example; placeholder names
+("Kingdom A", "Faction 2"); numbers without a model behind them; a screen
+that needs two hands or landscape; any name, place, god, race or artefact
+recognisable from Tolkien, Paizo or any other IP; "TBD" anywhere in the bible.
+
+## Rules
+
+- Never inflate scores. Real numbers, failed rounds, what is still missing.
+- Do not ask me questions. Decide, record assumptions in
+  `rpg/docs/DECISIONS.md`, keep going.
+- Do not touch anything outside `rpg/` in this repository. Do not depend on
+  or modify bobnoe3000-maker/emberhold.
+
+## Done means
+
+`rpg/PITCH.md`, the five system and world files, `rpg/slice/FIRST_REGION.md`,
+`rpg/docs/STATUS.json`, `rpg/docs/DECISIONS.md` and the critic reports exist.
+Every rubric line scores ≥ 8.5 with no design-smell hit, or the report says
+exactly which lines failed and why. Phase 2 (art direction, engine, first
+playable) is a separate prompt and starts only after this passes.
