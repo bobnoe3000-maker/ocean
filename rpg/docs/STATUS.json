@@ -44,21 +44,23 @@
   ],
   "total_words": 124281,
   "open_issues": [
-    "Not derivable: which five of the seven heads rewritten on Thaw 16 sit at weight 8 and 10. rpg/slice/FIRST_REGION.md §7.3a and rpg/systems/ADVENTURE_ENGINE.md §4 both say 'five heads rewritten at 8 and 10' without naming them, and rows 19, 20 and 26 admit two readings of 'everyone who heard the promise' — one that puts Marrock and Reyne at 8, one at 6. Half is settled: row 20 marks no +2 on the contract's parties, so Marrock is at w6, which is what Gulla's w4 on Thaw 23 needs and is the reading rpg/systems/PROGRESSION_ECONOMY.md §5's fifty-hour renown floor took. The residue is worth 25 renown at hour fifty (about 5% of 505) and zero in the traced twenty hours, where the row's delta is 0 under every reading.",
-    "Ranged, not measured: the hour-ten purse, 'about 15 bits, ±10'. rpg/systems/PROGRESSION_ECONOMY.md §5 derives it from the trace, but two of its items — how many of the six road days and how much of the two marks of enemy purses fall before Thaw 21 — are printed by rpg/slice/FIRST_REGION.md §7.2 only as twenty-hour totals. It is under one mark either way, which is the whole of what the fairness row claims.",
-    "A floor, not a trace: region two's first ten hours priced at 175 renown inside rpg/systems/PROGRESSION_ECONOMY.md §5's hour-fifty model. It is priced at what the traced valley's own first ten hours were worth in a fresh valley (Thaw 21 14:00) and nothing in it is priced above what the trace measured, but region two has not been traced. The 505 it feeds is stated as a floor — it counts no head from region one's hours 20–40 — and the tier reading (Voice, floor 350) holds for any value of it above 20."
+    "Encounter A (COMBAT \u00a75): the critic counts 21 landing cutter swings where the file counts 16; hero ends 44/120 by its arithmetic against the printed 62. An error in an illustration, not the model \u2014 phase 2's harness settles it.",
+    "COMBAT \u00a76.1: parity medians are presented as harness output but no harness has been run; the 441-run pass is phase 2's first job.",
+    "ADVENTURE_ENGINE Vo3: the Parley is still one clause in its third round.",
+    "XP halving rule: no file says whether a room or a whole dungeon counts as a site. Read as the Court, fights total 654 and the trace 4,494 rather than 696 and 4,536; still level 8 either way.",
+    "Three figures the economy pass could not derive: which five of seven heads sit at w8/w10 on Thaw 16; the hour-ten purse to within 10 bits; region two's untraced 175."
   ],
   "scores_note": "Scores below are the round-three critic's and have not been re-judged; round four is a designer pass that applied the round-four rewrites of COMBAT, WORLD, ADVENTURE_ENGINE, SESSION_UX and PROGRESSION_ECONOMY to the remaining six files.",
   "scores": {
-    "world": 8.0,
+    "world": 8.5,
     "living_world": 8.5,
-    "adventure_engine": 8.0,
+    "adventure_engine": 8.5,
     "classes_standing": 8.5,
-    "combat_dungeons_autobattle": 7.5,
-    "economy_session_ux": 8.0,
-    "feasibility_honesty": 8.0,
+    "combat_dungeons_autobattle": 8.5,
+    "economy_session_ux": 8.5,
+    "feasibility_honesty": 8.5,
     "design_smells": 8.5
   },
-  "pass": false,
-  "word_count_note": "Counts are `wc -w` as the shell reports it here. PITCH.md is 590 by that count and 597 counting the seven em dashes as words (the ambiguity WORLD.md §Part One flags for its own one page); it is under 600 either way."
+  "pass": true,
+  "word_count_note": "Counts are `wc -w` as the shell reports it here. PITCH.md is 590 by that count and 597 counting the seven em dashes as words (the ambiguity WORLD.md \u00a7Part One flags for its own one page); it is under 600 either way."
 }

@@ -1,0 +1,118 @@
+{
+  "round": 4,
+  "scores": {
+    "world": 8.5,
+    "living_world": 8.5,
+    "adventure_engine": 8.5,
+    "classes_standing": 8.5,
+    "combat_dungeons_autobattle": 8.5,
+    "economy_session_ux": 8.5,
+    "feasibility_honesty": 8.5,
+    "design_smells": 8.5
+  },
+  "pass": true,
+  "smell_hits": [],
+  "smell_watch": [
+    "Item 11: ADVENTURE_ENGINE Vo3's Parley shape is one clause in its third round with no journal text and no outcomes, and it is the ending the twenty-hour trace sets up. Closest call on the checklist; layer 3 moved this round so the item is not fired.",
+    "Item 13: COMBAT §6.1's twelve parity medians and §1.9's four threat measurements are presented as harness output in a document whose harness is a month-three checkpoint.",
+    "Item 10: the Mage hand/auto pair's only hand edge is 20 water and COMBAT §3.2 puts a full refill one room later; §6.1 cites that refill as the defence of Mage parity.",
+    "Item 7: O02 'cutters and deserters' is still the named generic opposition and names nobody.",
+    "Item 9: Drill still has no decision in it beyond which town.",
+    "Item 12: the given-name tables remain visible alphabet walks in about 60% of 315 names."
+  ],
+  "holes": [
+    {
+      "session": "three minutes, Mage, Thaw 1 06:00",
+      "missing": "The Firstwater override still has no hours. FIRST_REGION §7.2 says everyone is at the well by an override; none of §3's twenty-five schedules carries a festival_today variant and three of the four people in the anchor scene contradict their own rows at 06:00. A Mage's one available first-hour deed, Dowse, writes deed 58 to 'every Vael and Kest at the site' — a roster no file prints."
+    },
+    {
+      "session": "three minutes, Mage, Thaw 1 06:00",
+      "missing": "The game's first three minutes still end with no deed, no site state and no memory — a journal entry and a map marker. SESSION_UX §3 has answered this for its own flagship three-minute session and FIRST_REGION §7.2 has not answered it for the first three minutes anybody plays."
+    },
+    {
+      "session": "fifteen minutes, Fighter, H2, Thaw 13",
+      "missing": "The Fighter's answer to H2 is Carry, and CLASSES §2.5's Carry falls short at any ford above the knee, which the Rudd is on Thaw 13. Whether the Wend path to the Rudd Stones leaves Sallowford's own bank is in no file; FIRST_REGION §1's table gives hours, not crossings."
+    },
+    {
+      "session": "fifteen minutes, Fighter, H2, Thaw 13",
+      "missing": "ADVENTURE_ENGINE §3.8 gives the Fighter 'stand at the door' for the hide verb and CLASSES §2 gives 'hold the door'; neither is a field verb §2.5 resolves, and using Hold means fighting Drusk and six blades, which is the search finding her. Round three's Rogue-has-no-break gap, one class over."
+    },
+    {
+      "session": "evening, Rogue, descent to layer 3",
+      "missing": "A Rogue's return from layer 3 after the second waking. The Ring Stair floods, the Names is Read-only and a Rogue is not a Drawer, and the Sluice Head needs a Fighter's Break, a Mage's Flood or a companion left two layers up — which drops PR from 156 to 104 and moves the Ring Stair from Even to Overmatched by COMBAT §1.9's own bands. No file states this."
+    },
+    {
+      "session": "evening, Rogue, descent to layer 3",
+      "missing": "COMBAT §3.2's descent budget is a party pool of 750 against a cost of 447 and there is no rule distributing that cost across three bodies, while §1.2 gives the Shield the Taunt that draws the hits and §8 makes a downed companion in a dungeon a body to carry out or leave. Whether the traced descent puts Gulla down twice before layer 3 is not computable."
+    }
+  ],
+  "combat_verified": true,
+  "combat_verification_note": "The model verifies: §1.5's damage-per-second and time-to-kill tables reproduce at every cell tested for all three classes; the Mage's 36 water against a husk rebuilt cast by cast; the Fighter's Hold-loop +0.4 derived from an 8 s cooldown; the Rogue's 11.1 dps and 10.8 s; §1.1's armour order obeyed in every damage figure in three encounters; §1.8's raw dps reproducing for 13 of 15 kinds; §1.9's four threat derivations; all eleven §9 room ratings; and §3.2's whole four-layer descent budget to the digit (447 health, 6.0 flasks, 303 of 750 at the bottom, 1,008 effective ER over eleven rooms). One of the six runs does not reproduce: Encounter A undercounts landing enemy swings by about a quarter (16 against 21) and the hero ends at 44 rather than 62 — the ten-health hand/auto trade the run exists to demonstrate reproduces exactly.",
+  "xp_verified": true,
+  "xp_verification_note": "All nine engagements re-priced independently from COMBAT §1.8's threats: 21+0+69+99+108+129+48+153+69 = 696, over 30 enemies. Quests 3,240, discoveries 460, deeds 140, total 4,536. All fourteen running totals reproduce, as do the level thresholds (level 8 at 4,334, level 9 at 6,005) and the whole 60*L^1.6 curve to 94,381. One disagreement: the halving rule's granularity — salt-hounds are fought at the Drowned Steps on Thaw 21 and the Salt Hall stair on Thaw 22, two rooms of one dungeon one day apart; if the Sunk Court is a 'site' the column is 654 and the total 4,494, still level 8.",
+  "arithmetic_errors": [
+    "COMBAT §7 Encounter A: Corva's five arrows into cutter C3 are counted at 8 where §1.1 gives 8-1=7; damage out is 230, not 235.",
+    "COMBAT §7 Encounter A: the printed beats (C1 dead 6.6, Rally 6.8, Cleave 8.2) do not fall on the 1.4 s recovery grid with Rally's 0.6 s recovery.",
+    "COMBAT §7 Encounter A: the narration blocks two telegraphed heavies to 1, where §1.1 gives (16-2)*0.2 = 3; the arithmetic underneath blocks two ordinary swings.",
+    "COMBAT §7 Encounter A: 16 enemy swings counted where 31 cutter-seconds at 1.5 s give 21 (5 heavy, 16 ordinary); hero ends 44/120 by hand and 34/120 on autobattle, not 62 and 52.",
+    "COMBAT §7 Encounter B: at t=4.8 Ilune's third Fling on h4 is printed 24 -> 48; at 12 a cast it reaches 36 and h4 dies on her fourth at 5.6 s. The water column (16 = eight casts) proves the total is right and the row is wrong.",
+    "COMBAT §7 Encounter B: 'Gulla 112' at t=2.4 should be 116 (160-16-16-12); the autobattle run says '-44 by 2.3', and every later figure is correct off 116.",
+    "COMBAT §7 Encounter B autobattle: the husk hits Gulla once between 8.7 and 11.0 where 20 per 2 s gives two; Gulla ends 91, not 107.",
+    "COMBAT §7 Encounter C: '165 health against the party's 36 a second, done at 22 s' — 165/36 = 4.6 s, finishing at 18.6.",
+    "COMBAT §10 item 5: '1,012 health of pool' against §3.2's own 1.2 x 1,008 = 1,210.",
+    "COMBAT §1.5: '25 water (12 casts + 1 spare)' — 12 casts is 24 water; the 2.5-per-second rate is right, the gloss is not.",
+    "COMBAT §1.8: the rider's raw dps 8.0 omits its 22-damage charge where six other telegraphed kinds include theirs ((12*3+22)/6 = 9.7).",
+    "COMBAT §1.8 / §2 rule 7: the rider's charge interval and the stone-warden's slam interval are not printed, against rule 7's promise that no fight needs a number the tables lack.",
+    "COMBAT §1.9 planning number measured on raw ER in two of three runs and applied to effective ER in §3.2; SESSION_UX §3 takes the Salt Hall door at 1.2 x raw 72 = 86 where COMBAT §10 makes it effective 90.",
+    "COMBAT §3.2 says a Mage reaches layer 3 with about 32 water; §6.1 says a rationing hand arrives with 50 and the policy with 30.",
+    "ADVENTURE_ENGINE §7.2 H2: signature printed with twist family 'agenda'; T11 moved to 'companion' in §3.4's round-three split and §6's table says so.",
+    "FIRST_REGION §2 claims Thrum's cut-tally is a prop a hero stands in front of in the traced twenty hours; Thrum is in none of §7.1's nine sessions, §7.2's itinerary or §7.3b's ten discoveries.",
+    "FIRST_REGION §7.3a: 'eleven hours after decaying out of it' (three places) — the Thaw 33 dawn to Thaw 34 07:00 is 25 world hours.",
+    "FIRST_REGION §7.3a: 'five heads that were once in the ledger are not in it' omits the eight promoted folk of the 23rd's notice, which fell on the 33rd; thirteen.",
+    "CLASSES_AND_STANDING §2: three 'Growth 1-40' headers and a 200-water skin at level 30, against §3's cap of 25.",
+    "CLASSES_AND_STANDING §5: the flock home 'by 15:00' with Garrow 'at the forge door', against §6's own ledger row and FIRST_REGION §7.2's 22:00 and Ford Inn door.",
+    "LIVING_WORLD §2's worked example: 'helped_find_flock' is not a deed row, its w6 contradicts row 1 (herder w8, owner w6), and Reyne Gorse holds no memory on Thaw 1 where three files write him at w6.",
+    "LIVING_WORLD §4c row 62 prints weight 3; both renown ledgers and SESSION_UX §3 write it at 4.",
+    "PROGRESSION_ECONOMY §5's hour-one working lists Reyne as a row-1 receiver at reach 5 and three paragraphs later has him use the *heard* line 'to a hero he has never met', which is also the wrong greeting tier for w6 (knows, 4-7)."
+  ],
+  "round3_status": {
+    "fixed": [
+      "1. COMBAT §1-2: Fling's rate of fire, the armour order as a rule, §2 rule 2 reconciled with the husk row — all verified independently.",
+      "2. SESSION_UX §3 and PROGRESSION_ECONOMY §5's stale renown figures re-derived from FIRST_REGION §7.3a (128->139, Name since the 10th; 175/277/282/297); the Mage session now writes row 65; the stale footnote withdrawn.",
+      "3. The plain quest's signature defined in ADVENTURE_ENGINE §6 (sixth value '—', argued rule by rule); §3.4's two rates reduced to one derived figure.",
+      "4. §4's down-scale rule worked at two tiers side by side from a printed seed and reconciled with PROGRESSION_ECONOMY §1.",
+      "5. WORLD.md's four defects: word count reproduces at 517/529, the Fall's absolute qualified in WORLD and PITCH, the Stair disambiguated on the page, and the Still's fall given an in-world cause whose arithmetic closes four ways.",
+      "6. STATUS.json regenerated: correct round, correct word counts summing to 124,281, three honestly named open issues.",
+      "12. PROGRESSION_ECONOMY §1's level curve recomputed; all twelve figures and every cumulative reproduce under my own computation.",
+      "14. LIVING_WORLD §1's Tick now has four advances, with the verb-day and passing time specified and priced."
+    ],
+    "improved": [
+      "9. Layer 3 is costed to the bottom with lit-hours, flasks and health, and its Even reading is derived from the new layer weight rather than corrected — but Vo3's Parley shape is unchanged for a third round.",
+      "13. The nine engagements are re-priced off threat x 1.5 and all nine reproduce under my arithmetic — but 'eleven hours' and 'five heads' are unchanged.",
+      "15. ADVENTURE_ENGINE §3.4's liveness table measures the companion-precondition problem exactly and names it — but nothing was loosened, and there is still no deed row for a truth told at the hero's own cost."
+    ],
+    "unchanged": [
+      "7. LIVING_WORLD §2's worked example contradicts §4 row 1 three ways; row 62's weight; the sixty map-event templates counted and never printed — fourth round.",
+      "8. Reyne Gorse's *heard* line against the w6 he holds from Thaw 1, now in three files; CLASSES §5's 15:00 and the forge door against §6's own row.",
+      "10. Hild Marrow's rain-only inn block on a fog night; no schedule carries a festival_today variant, so the Firstwater override still has no hours.",
+      "11. CLASSES §2's three 'Growth 1-40' headers and the level-30 skin; six act tags named as deeds with no rows; five cells where CLASSES §2 and ADVENTURE_ENGINE §3.8's verb tables disagree."
+    ]
+  },
+  "top_issues": [
+    "COMBAT §7 Encounter A: the landing-swing count is about a quarter short, so the hero's health does not reproduce; the trade it demonstrates does.",
+    "COMBAT §6.1 and §1.9 present parity medians and threat measurements as harness output with no line saying the harness does not yet exist.",
+    "ADVENTURE_ENGINE Vo3's Parley shape is one clause in its third round and is the ending the twenty-hour trace sets up — the closest thing to a smell hit in the set.",
+    "CLASSES_AND_STANDING §2's 'Growth 1-40' headers and level-30 skin against the cap of 25; six orphan act tags; five verb-table cells disagreeing with ADVENTURE_ENGINE §3.8.",
+    "LIVING_WORLD §2's worked example contradicts §4 row 1; row 62's weight; the sixty map-event templates counted and never printed for a fourth round.",
+    "Reyne Gorse's *heard* line in three files against the w6 memory he has held since Thaw 1.",
+    "The Firstwater override still has no hours, and the game's first playable deed has receivers no file prints.",
+    "COMBAT §1.9's planning number is measured on raw ER and applied to effective ER; SESSION_UX §3 applies it raw to a fight COMBAT §10 rates effective.",
+    "COMBAT §3.2's descent budget is a party pool with no rule distributing it across three bodies, and the Shield is both a quarter of the pool and the target of most of it.",
+    "A Rogue's return from layer 3 after the second waking requires splitting the party, which moves the Ring Stair from Even to Overmatched by COMBAT §1.9's own bands.",
+    "Thirteen of thirty twists are dead in every printed world state, four of them the companion family created last round; no precondition was loosened, and there is still no deed row for a truth told at the hero's own cost.",
+    "FIRST_REGION §2 claims Thrum's cut-tally is reached in the traced twenty hours; the Ulder's answer is the one of WORLD §2.1's three tests with no object anywhere.",
+    "COMBAT §10's 1,012 against §3.2's 1,210; the rider's raw dps omits its charge; the rider's and stone-warden's telegraph intervals are missing against §2 rule 7.",
+    "FIRST_REGION §7.3a's 'eleven hours' (twenty-five) and 'five heads' (thirteen); and no file says whether a dungeon room or the dungeon is a 'site' for the experience halving rule.",
+    "One clause each on the one page: a Salted is made, not born; and which of the four towns has no river."
+  ]
+}

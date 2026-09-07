@@ -31,7 +31,7 @@ Each class has four **arc abilities** (the four petals under the thumb, [SESSION
 
 *Field verbs:* **Break** (doors, dams, cistern walls, a stone-cart's axle; anything with a `breakable` state) · **Carry** (a hurt companion, a lame ewe, a sack of bronze, at full speed; other classes carry at half) · **Drill** (train a village's militia: a day at a site with a `militia` state raises its quality by one for a season; Sallowford's band goes from quality 1 to 2) · **Stand** (an escort or a guard contract: the Fighter's presence at a site counts as half a band in a clash, and powers offer *Stand* work at Hand tier).
 
-*Growth 1–40:* Strike chains lengthen (three hits at 1, four at 10, five at 20); Hold's counter grows; Rally reaches further; at 15 the Fighter chooses a subclass. By the campaign's end a Fighter with Voice standing is a **line**: a hero whose Stand counts as a full band, whose Drill makes quality-3 militia, who can Hold a gate against a salt-warden for the two seconds a Mage needs.
+*Growth 1–25:* Strike chains lengthen (three hits at 1, four at 10, five at 18); Hold's counter grows; Rally reaches further; at 15 the Fighter chooses a subclass. By the campaign's end a Fighter with Voice standing is a **line**: a hero whose Stand counts as a full band, whose Drill makes quality-3 militia, who can Hold a gate against a salt-warden for the two seconds a Mage needs.
 
 *Cannot:* find what is hidden (no Dowse, no Listen); talk a door open (no Forge, no Factor); cross water without a boat or a bridge; use Drawing at all. A Fighter alone in the Court's flooded halls is a Fighter who needs a companion.
 
@@ -47,7 +47,7 @@ Each class has four **arc abilities** (the four petals under the thumb, [SESSION
 
 *Field verbs:* **Dowse** (find water and what water has touched: tracks in mud, a hidden door behind a damp seam, a drowned thing, a body; the Mage's answer to *search* and *investigate*) · **Read** (a stone ring or a court's inscription speaks to a Drawer: lore lines and the ages' preambles, and the Skerrow contract's water-clauses) · **Dry / Flood** (open a passage by drying it, at a cost of 40 water per room, or close one by loosing a cistern; the dungeon-shaping verb, and the verb Sarane asks for in Vo2) · **Ease** (tend a companion's wounds with water: 15 health over five seconds; 15 water).
 
-*Growth 1–40:* the skin grows (120 at 10, 150 at 20, 200 at 30); Fling gains a second slow; Bind holds two targets at 20; Mist lengthens; at 15 a subclass. By the campaign's end a Voice Mage can hold a river with a ring, dry a court's hall, and be argued with by the Closers as an equal.
+*Growth 1–25:* the skin grows (120 at 10, 150 at 18, 200 at 25); Fling gains a second slow; Bind holds two targets at 20; Mist lengthens; at 15 a subclass. By the campaign's end a Voice Mage can hold a river with a ring, dry a court's hall, and be argued with by the Closers as an equal.
 
 *Cannot:* hold a line (no Hold, no Stand; a Mage who is struck from the front is a villager being struck); break a door (no Break); fight dry — on the Shelf every working is a wound; hide a working from the Quiet (every Wring on the living is remembered); command (no Rally, no Drill).
 
@@ -63,7 +63,7 @@ Each class has four **arc abilities** (the four petals under the thumb, [SESSION
 
 *Field verbs:* **Listen** (eavesdrop: stand at a site's *listening spot* for a world hour and read every memory passed at that site that hour — the Rogue sees the rumour network directly; the Rogue's answer to *investigate*) · **Shadow** (follow an NPC through a schedule block unseen: learn their next site, their condition, and any door flag on them; opens *hide* and *carry* routes) · **Forge** (a passage-writ, a Company seal, a Moot letter: made from a real one seen; works once per document type per power; a failed Forge is a weight-8 memory with the factor) · **Fence** (sell salvage at Kit Ashby's quay prices without Marrock's questions; buy what the counting-house would not sell; the Rogue's economy).
 
-*Growth 1–40:* Slip chains (two Slips at 10, three at 20); Snare holds two at 20; Powder blinds five; at 15 a subclass. By the campaign's end a Voice Rogue can walk into Fallgate's weigh-house, read the Weighmaster's ledger and leave a Moot letter in it.
+*Growth 1–25:* Slip chains (two Slips at 10, three at 18); Snare holds two at 20; Powder blinds five; at 15 a subclass. By the campaign's end a Voice Rogue can walk into Fallgate's weigh-house, read the Weighmaster's ledger and leave a Moot letter in it.
 
 *Cannot:* stand in front of anything (no Hold; a Rogue who is seen is a Rogue who is being hit); break what is not locked (no Break: a dam is a Fighter's job); Draw (no Dowse — a Rogue tracks by eye, which fails in water); Drill or Rally; strip a Salted husk's crust (no Break, no Crack — the Rogue's arc answer to the Salted is Powder and the ground, and the Rogue's way out of the Salt Hall is the sluice, not the stair).
 
