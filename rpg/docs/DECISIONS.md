@@ -1,119 +1,150 @@
 # Decisions
 
-Forty decisions the round-one bible makes, each with the reason in one line, reconstructed from the files themselves. Numbers are stable; later rounds append rather than renumber. Then the contradictions corrected this round, and what was deliberately left open.
+Every decision the bible makes, each with the reason in one line. **Renumbered cleanly this round**, which overturns round one's own note that "numbers are stable; later rounds append rather than renumber" — after a round in which four files were rewritten and twelve decisions were reversed, an append-only list would have been a list of things that are no longer true with new things after them. Numbers 1–74 are the decisions that hold. The ones round two overturned are struck at the end, as **O1–O13**, with what replaced each.
 
 Files: [PITCH](../PITCH.md) · [World](../world/WORLD.md) · [Living World](../systems/LIVING_WORLD.md) · [Adventure Engine](../systems/ADVENTURE_ENGINE.md) · [Classes and Standing](../systems/CLASSES_AND_STANDING.md) · [Combat](../systems/COMBAT.md) · [Progression and Economy](../systems/PROGRESSION_ECONOMY.md) · [Session and UX](../systems/SESSION_UX.md) · [First Region](../slice/FIRST_REGION.md) · [Status](STATUS.json)
+
+**R1** marks a decision made in round one that still holds. **R2** marks one made this round. An R1 entry with *amended* names the R2 decision that changed its terms without reversing it.
 
 ---
 
 ## The world
 
-1. **The world is one enclosed bowl, the Hearth, not a continent.** A world with an edge you can point at is a world a new player can hold entire, and every mile of depth then has to come from what is already inside it.
-
-2. **The map has one shape — a circle, a dot, a notch, three river lines, a ring road, four towns — and every later region is a wedge of that same drawing.** The test is whether a player can draw it on a table with a finger after seeing it once, and a wedge scales without ever adding a second shape.
-
-3. **Four peoples, each defined by its relation to the water and the ledger rather than by biology, and the hero's people is the Vael, "most of everybody".** Four is the ceiling the brief sets; defining them by what they did to the lake and to each other makes each one a permanent argument rather than a costume, and starting the hero among the many makes ordinariness a fact of the setting.
-
-4. **The caps are absolute: never a fifth people, a sixth power or a fourth age, and no named gods, dragons, beast-peoples or undead beyond the Salted; an expansion adds a valley, a court or a ship.** Each of those would add a *kind* of thing without adding an argument, and the one page has to stay one page for the life of the game.
-
-5. **Three ages, each remembered for one thing, and each leaving something still walked on: the drowned courts, the Lowmark and the Skerrow claim, the debt.** Lore that cannot be stood on is lore that never touches play; this is why every dungeon is Age of Stone, every land dispute is the Cutting, and every quest with money in it is the Age of Ships.
-
-6. **Five powers with one noun each — Moot roads, Stair debt, Holds timber, Quiet water, Wrack ledgers — and the Quiet carry their own split (Patient and Closers) instead of the design adding a sixth power.** One hook per power is what makes five memorable after a single read, and the setting's most dangerous agenda gets pressure without breaking the count.
-
-7. **Magic is Drawing: one working-family, one immediate price (thirst), one permanent ledger (Salt), and the Salted are what it does to a person.** Understated magic with a cost carried on the portrait keeps the tone plain and makes the Mage's resource a decision rather than a blue bar.
-
-8. **The Still is still falling, the year is 360 days in four seasons, and each season has one festival.** The falling lake is a geological clock that surfaces new dungeons and new disputes forever without new lore types; four fixed dates give the whole simulation something to move around.
-
-9. **Dates are counted two ways — 611 C. from the Cutting, 91 S. from the Stair's first winch — and names follow a stated shape per people.** Who counts from what is a political fact worth one line, and only a stated name-shape keeps the engine's sixty promoted folk from reading as generated.
-
-10. **The one page is a contract: Part Two of the world file may contain nothing that does not grow from a line the player has already read, and the campaign's end question is the Fall itself — open or closed, and who holds the door — not a villain.** Depth that cannot be traced to the page is depth the friend test will fail, and a map question is something a Force-standing hero can actually answer, whereas a dark lord can only be killed.
+1. **R1 — The world is one enclosed bowl, the Hearth, not a continent.** A world with an edge you can point at is a world a new player can hold entire, and every mile of depth then has to come from what is already inside it.
+2. **R1 — The map has one shape — a circle, a dot, a notch, three river lines, a ring road, four towns — and every later region is a wedge of that same drawing.** A player must be able to draw it with a finger after seeing it once, and a wedge scales without ever adding a second shape.
+3. **R1 — Four peoples, defined by their relation to the water and the ledger rather than by biology, and the hero's people is the Vael, "most of everybody".** Defining them by what they did to the lake and to each other makes each a permanent argument rather than a costume, and starting the hero among the many makes ordinariness a fact of the setting.
+4. **R1 — The caps are absolute: never a fifth people, a sixth power or a fourth age, and no named gods, dragons, beast-peoples or undead beyond the Salted; an expansion adds a valley, a court or a ship.** Each of those adds a *kind* of thing without adding an argument, and the one page has to stay one page for the life of the game.
+5. **R1 — Three ages, each remembered for one thing, each leaving something still walked on: the drowned courts, the Lowmark and the Skerrow claim, the debt.** Lore that cannot be stood on never touches play.
+6. **R1 — Five powers with one noun each — Moot roads, Stair debt, Holds timber, Quiet water, Wrack ledgers — and the Quiet carry their own split (Patient and Closers) instead of the design adding a sixth power.** One hook per power is what makes five memorable after a single read, and the most dangerous agenda gets pressure without breaking the count.
+7. **R1 — Magic is Drawing: one working-family, one immediate price (thirst), one permanent ledger (Salt), and the Salted are what it does to a person.** Understated magic with a cost carried on the portrait keeps the tone plain and makes the Mage's resource a decision rather than a blue bar.
+8. **R1 — The Still is still falling; the year is 360 days in four seasons; each season has one festival.** The falling lake is a geological clock that surfaces new dungeons and disputes forever without new lore types, and four fixed dates give the simulation something to move around.
+9. **R1 — Dates are counted two ways — 611 C. from the Cutting, 91 S. from the Stair's first winch — and names follow a stated shape per people.** Who counts from what is a political fact worth one line, and only a stated name-shape keeps the engine's promoted folk from reading as generated.
+10. **R1 — The one page is a contract: Part Two may contain nothing that does not grow from a line the player has already read, and the campaign's question is the Fall itself, not a villain.** Depth that cannot be traced to the page fails the friend test, and a map question is something a Force hero can answer, whereas a dark lord can only be killed.
 
 ## Standing
 
-11. **Standing is renown: the sum of `reach` over everyone holding a memory of the hero, computed from the memory tables and nothing else.** The brief demands the world measure the hero, and counting heads (and how much each head talks) is the only measure literally made of the world.
-
-12. **Reach is fixed by role — folk 1, tradesperson 2, notable 5, reeve or factor or Speaker 20, power leader 100.** A hundred errands for one shepherd is one head, so fame must travel outward instead of upward, which kills standing-grind at the root.
-
-13. **Five tiers with hysteresis at 70% of a floor; tiers are crossed by doing something a tier above your station, because a power's Address can carry a stake one tier up; and quests gate by standing, never by level.** Otherwise the design would be a level gate wearing a reputation's clothes, and the road to power would run through fights instead of people.
-
-14. **Regard per power is kept separate from renown, and the hearth glyph burns blue where the hero is more resented than thanked.** Famous and liked are different things, and the difference has to be visible on a phone.
-
-15. **Renown falls only by being forgotten, never as a punishment; standing at creation is 0; there is no prophecy and no chosen one.** Memory decay is already a system, a second punitive loss would make the world a scoreboard, and the other three are automatic fails.
+11. **R1 — Standing is renown: the sum of `reach` over everyone holding a memory of the hero, computed from the memory tables and nothing else.** The brief demands the world measure the hero, and counting heads is the only measure literally made of the world.
+12. **R1 — Reach is fixed by role: folk 1, tradesperson 2, notable 5, reeve or factor or Speaker 20, power leader 100.** A hundred errands for one shepherd is one head, so fame travels outward instead of upward. *Amended by 16, 20, 21 and 22.*
+13. **R1 — Five tiers with hysteresis at 70% of a floor; tiers are crossed by doing something a tier above your station, because a power's Address can carry a stake one tier up; quests gate by standing, never by level.** Otherwise the design is a level gate wearing a reputation's clothes. *Amended by 17 and 18.*
+14. **R1 — Regard per power is kept separate from renown, and the hearth glyph burns blue where the hero is more resented than thanked.** Famous and liked are different things and the difference has to be visible on a phone.
+15. **R1 — Renown falls only by being forgotten, never as a punishment; standing at creation is 0; there is no prophecy and no chosen one.** Memory decay is already a system; a second punitive loss would make the world a scoreboard; the other two are automatic fails.
+16. **R2 — Renown counts only memories at weight 3 or more, for and against, one head at a time.** Round one counted every head at full reach whatever the weight, which let hearsay and board notices inflate the number without bound; "someone mentioned you once" is a name that has stopped travelling.
+17. **R2 — The tier floors are set against the region's real population: Villager 0–19, Hand 20–119, Name 120–349, Voice 350–899, Force 900+.** Round one's Voice 500 and Force 2,000 stood against a region ceiling of 528–588 — Voice was barely possible and Force was arithmetically impossible. Voice is now two thirds of what a valley can hold and Force is deliberately more than one valley can hold.
+18. **R2 — Renown is recomputed after every deed; the tier is read at dawn.** It resolves round one's rule-versus-trace contradiction without changing either behaviour the player sees: the number moves while you watch, the greetings change in the morning.
+19. **R2 — The promoted pool is sixty per region and evicts its weakest memory when a new face arrives.** It turns the memory budget from a save-file note into the design's standing ceiling, and it is why a hero's fourth board notice is worth less than the first.
+20. **R2 — The leader rule: a reach-100 NPC takes a hero-memory only from a deed at their own seat, a deed that moves one of their power's three ranked goals, or a letter they wrote themselves.** Without it one rumour reaching a hold-mother was worth a hundred heads and every tier collapsed.
+21. **R2 — Meeting a leader writes nothing; the deed done in front of them writes.** Halse Corrow's hundred lands at the Salt Hall door, not at the outer stones, so the price of a leader's word is a dungeon and not a conversation ([FIRST_REGION](../slice/FIRST_REGION.md) §3).
+22. **R2 — A reach of 100 must have a biography behind it, not a job title.** Corrow's hundred is sixty Wrack plus forty townspeople who were his when he was Reeve; a leader with no ear is a notable.
 
 ## Classes and companions
 
-16. **Three classes are three ways of solving a problem: four arc abilities and four field verbs each, and every one of the engine's twelve verbs has a per-class answer.** A class with no identity out of combat is a design smell; the verb table is the proof that these three have one.
-
-17. **Every class carries an explicit list of what it cannot do — a Fighter cannot find what is hidden, a Mage cannot hold a line, a Rogue cannot Draw or Break.** The holes are what make companions worth having and what keeps three classes from converging by level 20.
-
-18. **The hero picks a trade as well as a class, each trade giving one field verb and one relationship in the village.** It gives the hero a past instead of a backstory, and it is the mechanical form of "an ordinary person with a trade".
-
-19. **Subclasses arrive at level 15, three per class, and the base classes deliberately leave those rooms empty; knacks are lateral, and there is no purchasable respec (an Ulder keeper re-teaches one for a season's deed).** A roadmap only works if the later thing is not already half-built, and undoing a choice should cost the world's time, not money.
-
-20. **Companions have roles — Shield, Bow, Draw, Blade — never classes, and are met in the world rather than rolled, drawn or bought.** It keeps subclasses from competing with party slots, and it states the anti-gacha rule as fiction rather than policy.
+23. **R1 — Three classes are three ways of solving a problem: four arc abilities and four field verbs each, and every one of the engine's twelve verbs has a per-class answer.** A class with no identity out of combat is a design smell; the verb table is the proof these three have one.
+24. **R1 — Every class carries an explicit list of what it cannot do.** The holes are what make companions worth having and what keeps three classes from converging by level 20.
+25. **R1 — The hero picks a trade as well as a class, each trade giving one field verb and one relationship in the village.** It gives the hero a past instead of a backstory.
+26. **R1 — Subclasses arrive at level 15, three per class, and the base classes deliberately leave those rooms empty; knacks are lateral; there is no purchasable respec (an Ulder keeper re-teaches one for a season's deed).** A roadmap only works if the later thing is not already half-built, and undoing a choice should cost the world's time, not money.
+27. **R1 — Companions have roles — Shield, Bow, Draw, Blade — never classes, and are met in the world rather than rolled, drawn or bought.** It keeps subclasses from competing with party slots and states the anti-gacha rule as fiction rather than policy.
+28. **R2 — Field verbs resolve against stated world state, never against a roll.** The Hearth has no dice outside combat, so a check would have been a new system; instead each verb has a needs list, a cost, a duration, a *falls short* and a *goes wrong*, all three shown on the confirm sheet before the player commits. Readable risk, not luck.
+29. **R2 — Every field verb's failure is a row in the deed table.** A failed verb has to write a memory with a weight, a lifetime and a surfacing, exactly like a success, or the failure is a message box.
+30. **R2 — A Forge fails when the wrong person reads it, and one of the three ways is invisible at the moment of use.** That is what makes the verb a decision rather than a check; the Rogue session plays the failure two days after the success.
+31. **R2 — The Rogue has no answer to a Salted crust and is not given one.** Powder and the ground are the class's answer to the Salted and the sluice is its way out of the Salt Hall; whether the husk's immunity list should change is [COMBAT](../systems/COMBAT.md)'s question and it is still open (see below).
 
 ## The adventure engine
 
-21. **A quest has seven slots but is generated trigger-first from a site state or an NPC condition, and its place is always the site whose state caused the trouble.** Filling slots from tables left to right is exactly how a generator produces "kill ten wolves"; starting from a cause in the simulation is what makes a quest name a person with a reason and sit somewhere on the map.
-
-22. **About a third of quests are offered plain, with no twist.** If every quest has a reversal then the reversal is the template; a plain quest with a real reason still reads as authored.
-
-23. **Every site, motive and opposition carries an age tag; the engine prefers a fill touching two ages and forbids three fills from one age.** It is the mechanism that puts the three-age history inside ordinary quests instead of in a codex.
-
-24. **Repetition is caught by shape signature — giver role, verb, stake type, opposition kind, twist family — and if nothing fits, the engine offers nothing.** A quiet day is cheaper than a stale quest, and silence is the only honest failure mode for a generator.
-
-25. **Hand-written anchors are expressed as site states with triggers and door flags, not as scripts, and no outcome may have an empty consequence list.** The first keeps the seam between authored and generated invisible; the second is what makes generated content feed the simulation rather than drain it.
+32. **R1 — A quest has seven slots but is generated trigger-first from a site state or an NPC condition, and its place is always the site whose state caused the trouble.** Filling slots left to right is how a generator produces "kill ten wolves"; starting from a cause is what makes a quest name a person with a reason.
+33. **R1 — About a third of quests are offered plain, with no twist.** If every quest has a reversal, the reversal is the template.
+34. **R1 — Every site, motive and opposition carries an age tag; the engine prefers a fill touching two ages and forbids three fills from one age.** It puts the three-age history inside ordinary quests instead of in a codex.
+35. **R1 — Repetition is caught by shape signature, and if nothing fits the engine offers nothing.** A quiet day is cheaper than a stale quest, and silence is the only honest failure mode a generator has.
+36. **R1 — Hand-written anchors are expressed as site states with triggers and door flags, not as scripts, and no outcome may have an empty consequence list.** The first keeps the seam invisible; the second makes generated content feed the simulation rather than drain it. *Amended by 39.*
+37. **R2 — Every table the engine draws from is printed in full in the engine file.** Round one counted them and wrote none, and the critic could not generate a thirteenth quest from the grammar; a counted table is a hope, a printed one is an estimate.
+38. **R2 — The repetition rule is four rules, not one.** Four-of-five signature difference against the last twelve, no twist entry inside twelve and no family inside four, no verb above a third of the last twelve, giver cooldowns — because "not twice in a row" let two twists repeat inside the twelve showcase quests and let *choose* carry six of them while *break* carried none.
+39. **R2 — The careful branch still moves the world.** Three showcase branches — the safe road, giving up, the failed conversation — had empty consequence lists and broke the engine's own rule; they are written out, because the world was moving anyway.
+40. **R2 — Three quests are rolled at the table from ordinary undated state, with every die shown.** The twelve showcase quests all sat on dated anchors, which is not where the engine has to work: thirty to forty-five of a season's quests come from days nothing is written against.
 
 ## The living world
 
-26. **One clock: the world-tick is one world hour, two real minutes in the open, paused in menus.** A single unit is what lets combat, schedules, faction moves and offline time be stated once and checked against each other.
+41. **R1 — One clock: the world-tick is one world hour, two real minutes in the open, paused in menus.** A single unit is what lets combat, schedules, faction moves and offline time be stated once and checked against each other.
+42. **R1 — Offline advances four world hours per real hour, capped at seven world days per absence.** The world must move without the player and must not be able to end without them.
+43. **R1 — NPC memory is eight slots with banded decay (weight 10 never decays) while the deed ledger is never pruned.** Bounded memory keeps the simulation cheap and lets the world forget a small kindness; the ledger keeps the campaign's promise that nothing is truly erased.
+44. **R1 — Powers never read the hero's location and never wait for the hero; they read standing only to decide whether the hero is worth a letter; clashes resolve at `own / (own + other)`, and a hero who is present converts the roll into a played fight.** Factions that only react to the hero are an automatic fail, and this is what makes "the hero can tilt a conflict" mechanical rather than rhetorical.
+45. **R2 — The deed table is printed in full, 64 entries split 26 *for* / 30 *against* / 8 *witnessed*, and it is authoritative over every other file.** It is the object that converts play into standing and regard; while it was unprinted, every regard number in the bible was an assertion.
+46. **R2 — Regard has exactly two multipliers: ×2 where the deed's site or state is named in a power's three ranked goals, ×3 where the deed ends one.** It reproduces the showcase quests' larger numbers from base rows instead of inventing them, and it forces every power's three goals to be written down where the deed can read them.
+47. **R2 — A board notice writes only to NPCs the simulation holds and promotes at most eight folk.** Round one's Voice crossing added about 245 unpromoted folk in two days, which the simulation cannot hold and the memory budget forbids.
+48. **R2 — The dawn planner is the authority and a region's dated move list is its printed output for the season's opening state.** One dawn is worked in full so the planner can be checked against the list, and five dates are shown moving when the hero moves the state — otherwise one of the two artefacts was decoration.
 
-27. **Offline advances four world hours per real hour, capped at seven world days per absence.** The world must move without the player and must not be able to end without them; a flat cap is the simplest promise to make and to keep.
+## Combat, dungeons and autobattle
 
-28. **NPC memory is eight slots with banded decay (weight 10 never decays) while the deed ledger is never pruned.** Bounded memory keeps the simulation cheap and lets the world forget a small kindness; the ledger keeps the campaign's promise that nothing is truly erased.
-
-29. **Powers never read the hero's location and never wait for the hero — they read standing only to decide whether the hero is worth a letter; clashes resolve at `own / (own + other)`, and a hero who is present converts the roll into a played fight.** Factions that only react to the hero are an automatic fail, and this is what makes "the hero can tilt a conflict" mechanical rather than rhetorical.
-
-## Combat and autobattle
-
-30. **Parity is achieved by definition: the Fair threshold `ER ≤ PR` is tuned as "what the autobattle policy wins with the party above 40% health", and nothing in the world — no quest, door, threshold or reward — requires an Overmatched win.** An autobattle strictly better or worse than hands is an automatic fail, and making the AI define the balance line is the only version of that promise a team can test (147 simulations a pass).
-
-31. **Nothing crits and nothing in a fight is random except which target a slinger picks first; there is no difficulty setting, and autobattle is the accessibility mode.** Parity can only be argued if the same fight run twice is the same fight, and one honest computed read of an encounter beats three sliders.
-
-32. **Death is graded: downed (two days, carried home), left for dead (three days, a scar, coin gone, the pack at the fall point), and a companion left in a dungeon is dead for good.** The brief asks for a cost the world remembers; a corpse-run and a permanent scar are that cost without a game-over screen.
+49. **R1 — Parity is achieved by definition: the Fair threshold `ER ≤ PR` is tuned as "what the autobattle policy wins with the party above 40% health", and nothing in the world requires an Overmatched win.** Making the AI define the balance line is the only version of that promise a team can test.
+50. **R1 — Nothing crits and nothing in a fight is random except which target a slinger picks first; there is no difficulty setting; autobattle is the accessibility mode.** Parity can only be argued if the same fight run twice is the same fight.
+51. **R1 — Death is graded: downed, left for dead, and a companion left in a dungeon is dead for good.** A corpse-run and a permanent scar are a cost the world remembers without a game-over screen.
+52. **R2 — A dungeon layer is specified or it is cut; it is never a table row with a quest branch that opens it.** Layer 3 of the Sunk Court is designed — five rooms, one Salted waking a day, no resources, three stated returns — because the engine ships two ways to open it.
+53. **R2 — The deepest layer's cure belongs to a later region; the region states the reprieve.** A Read of the Names puts the woken nine down for a season; putting them down for good is a Stonereader's working and region five's business, and pretending otherwise would have been a promise the region cannot keep.
 
 ## Economy, session and what is sold
 
-33. **There is no premium currency and no second earned currency — two coins, three material families, and standing that is never spent.** Every soft-currency layer is where power creeps back into a store, so the design refuses the layer rather than policing it.
+54. **R1 — There is no premium currency and no second earned currency: two coins, three material families, and standing that is never spent.** Every soft-currency layer is where power creeps back into a store.
+55. **R1 — What is sold is cosmetics, side-chapters (whole spare valleys) and conveniences that already exist in the world.** It is the only sale list that cannot buy a level, a door or an hour.
+56. **R1 — The store-line test: every line must name the in-world way to get the same thing, or be cosmetic.** A rule a designer can apply in ten seconds beats a paragraph of intent.
+57. **R1 — A side-chapter may never hold a gear tier, a subclass, a standing tier, a companion the campaign needs, or a door.** Otherwise a paid valley is a paid shortcut.
+58. **R1 — No energy, daily rewards, streaks, timers, keys, chances or pity in any form, and the seven-day offline cap cannot be bought.** They are all one mechanic under different names and any of them fails the round.
+59. **R1 — Gear is named, made and tiered — five tiers, no rarity colours, no random stats, no dropped finished weapons — and the anti-grind rules are structural.** Random loot is a slot machine by another route, and a grind that is merely discouraged will still be done.
+60. **R1 — Three session lengths are designed, not hoped for, each ending in a world change the player can name; the screen is portrait, one thumb, four petals in the corner, with the accepted cost that the hero stops for the instant of a tap.** A feature without a session example is a smell, and naming the one-thumb cost is cheaper than pretending it away.
+61. **R2 — A contract that depends on attendance can be handed back at the gate.** A Stand rota of one day in six is income for a player who is in the world on a Stillday and a `broke_contract` at weight 7 for one who is not, and an offline-safe game may not hang a class's tier income on being logged in.
 
-34. **What is sold is cosmetics, side-chapters (whole spare valleys) and conveniences that already exist in the world.** It is the only sale list that cannot buy a level, a door or an hour.
+## The first region
 
-35. **The store-line test: every line must name the in-world way to get the same thing, or be cosmetic.** A rule a designer can apply to a new line in ten seconds beats a paragraph of intent — the mule names Hobb's Cross, the courier names Wat Hobb's boy, the almanac names Merrin Hale.
-
-36. **A side-chapter may never hold a gear tier, a subclass, a standing tier, a companion the campaign needs, or a door.** Otherwise a paid valley becomes a paid shortcut, which is buying power with a map drawn on it.
-
-37. **No energy, no daily rewards, streaks, timers, keys, chances or pity in any form, and the seven-day offline cap cannot be bought.** They are all the same mechanic under different names, and any one of them fails the round.
-
-38. **Gear is named, made and tiered — five tiers, no rarity colours, no random stats, no dropped finished weapons — and the anti-grind rules are structural: repeated fights halve their experience, enemies respawn only from a simulation cause, quests are about three-quarters of experience, and the trade pays a flat 6–10 bits at every level.** Random loot is a slot machine by another route, and a grind that is merely discouraged is a grind that will still be done.
-
-39. **Three session lengths are designed, not hoped for — three minutes (an errand), fifteen (a venture), an evening (a descent or a season's turn) — each ending in a world change the player can name; and the screen is portrait, one thumb, four petals in the corner, with the accepted cost that the hero stops for the instant of a tap.** A feature without a session example is a smell, and naming the one-thumb cost is cheaper than pretending it away.
-
-40. **The first region is the Rudd valley — thirty miles, forty sites, twenty-five scheduled people, one dungeon, one season, ending at about level 8 and Voice standing — and its season is written out twice, once as the baseline for a player who never plays and once as a traced twenty hours.** It is the smallest slice containing every ring of the bowl, all four peoples, all five powers and all three ages, and the doubled season is both the proof that factions act without the hero and the build's acceptance test.
+62. **R1 — The first region is the Rudd valley — thirty miles, forty sites, twenty-five scheduled people, one dungeon, one season, ending at about level 8 and Voice standing — and its season is written out twice, once as the baseline for a player who never plays and once as a traced twenty hours.** It is the smallest slice containing every ring of the bowl, all four peoples, all five powers and all three ages, and the doubled season is both the proof that factions act without the hero and the build's acceptance test.
+63. **R2 — The twenty-hour trace is built forwards from the clock rule, and where it would not fit, the real hours away moved and the world's days did not.** Six of round one's seven offline advances were impossible, the worst by thirty-three world hours, because the trace was written backwards from the dates it wanted to hit.
+64. **R2 — A session's real length is its open-play hours times two minutes, and the split of every session into open play, travel, rest and verb-days is printed.** It is the only way a reader can check that twenty hours of play and 121 hours away really do produce forty-one world days.
+65. **R2 — Map travel is offered only between sites the hero has stood in, and never while escorting, droving, carrying or leading.** Round one jumped everywhere, which made roads free and sessions arithmetically impossible; first traversals and escorted moves are where the region's real minutes are spent.
+66. **R2 — Sallowford to Wickery is eight miles in three segments of three, three and two.** Round one's segments summed to eleven against the eight stated in two other files, and the two other files were right.
+67. **R2 — Every NPC schedule closes twenty-four hours, with a stated default: home and asleep, or with the band for people who have no home in the region.** Seven of twenty-five had unassigned nights, which left the meeting tick nowhere to run and a night arrival with nobody to meet.
+68. **R2 — Each power's three ranked goals are printed in the region file.** The deed table's regard multipliers read them, so a region that does not print them cannot have its regard numbers checked.
+69. **R2 — The region's experience total is 4,370, itemised into the four categories the economy file models.** Round one had 4,343 here and 4,370 there with neither working shown; the region's trace now adds up to the economy's model rather than beside it.
+70. **R2 — The Court is 23 rooms, of which 11 carry an encounter entry.** The region file and the combat file were counting different objects and printing the numbers as if they were the same one.
+71. **R2 — Where the region file and a system file disagree on a number, the system file governs and the region file is the draft.** The deed table, the reach rule and the clock are the instruments; a trace is a reading of them.
+72. **R2 — A schedule risk is defended with a falsifiable checkpoint and a named cut, not with a comparable the document cannot verify.** If §5's baseline season does not reproduce in the text harness by month three, the region ships with layer 3 sealed and the branch that opens it removed — which costs five rooms and nothing structural.
+73. **R2 — The paused share of a session is stated rather than hidden.** Half of the traced twenty hours is dialogue, the away page, the map, the journal, shops and confirm sheets; if that half is not enjoyable the game is not, and playtesting is pointed at it first.
+74. **R2 — Where two files must both print the same ledger, they print it and are checked against each other.** The renown ledger appears in [CLASSES_AND_STANDING](../systems/CLASSES_AND_STANDING.md) §6 as the road from villager to force and in [FIRST_REGION](../slice/FIRST_REGION.md) §7.3 against the rebuilt clock, and they agree row for row; a number that only exists once cannot be wrong out loud.
 
 ---
 
-## Corrections made this round
+## Overturned in round two
 
-Three outright contradictions between the eight pre-existing files were found and fixed surgically; nothing else in them was touched.
+Struck, with what replaced each. These are not corrections of typing; they are decisions the design has reversed.
 
-- **C1.** [WORLD](../world/WORLD.md) §2.8 said the first region meets "four of the five powers" while listing all five faces. Corrected to "all five powers", and "the fifth-power seat at Fallgate is region two" to "the Stair's own seat at Fallgate is region two", which is what the sentence means and what [FIRST_REGION](../slice/FIRST_REGION.md) §4 already says ("Five powers act on the valley; three have a face and a seat in it").
-- **C2.** [LIVING_WORLD](../systems/LIVING_WORLD.md) counted twenty named NPCs in the first region where [FIRST_REGION](../slice/FIRST_REGION.md) §3 lists twenty-five. Corrected the living-world file to twenty-five, its schedule-row estimate from about 300 to about 375, and its memory-slot maximum from 640 to 680, matching the region file's own count in §8.
-- **C3.** [PROGRESSION_ECONOMY](../systems/PROGRESSION_ECONOMY.md) §7 said quests are 70% of experience where §1 of the same file says three-quarters and the twenty-hour trace works out at 74%. Corrected §7 to "about three-quarters".
+- **O1. "Numbers are stable; later rounds append rather than renumber."** Overturned by this rewrite: after four files were rewritten, an append-only list would have been a list of untrue things with true things after them. Replaced by clean numbering plus this struck section.
+- **O2. Renown counts every head at full reach whatever the memory's weight.** Overturned by **16**: hearsay at weight 1–2 no longer travels, which is what makes renown fall smoothly instead of hanging on rumour.
+- **O3. Voice at renown 500 and Force at 2,000.** Overturned by **17**: the region's whole population ceiling is 528–588, so Voice was barely reachable and Force was impossible by a factor of four.
+- **O4. A board notice reaches a town.** Overturned by **47**: it reaches the instantiated NPCs whose schedules pass the board, and promotes at most eight folk. Round one's Voice crossing added about 245 people the simulation does not hold.
+- **O5. Reach-100 NPCs collect memories like anyone else.** Overturned by **20** and **21**: leaders take memories only from deeds at their seat, deeds that move their goals, or letters they wrote — and the meeting itself writes nothing.
+- **O6. The twelve field verbs are fictional descriptions.** Overturned by **28** and **29**: each has a cost, a duration, a needs list, a *falls short* and a *goes wrong*, and every failure is a deed row. This was the round's one design-smell hit and it is where it lived.
+- **O7. "A twist family may not appear twice in a row."** Overturned by **38**: the rule was too weak to prevent what it was for, and two twists repeated inside the twelve showcase quests.
+- **O8. The engine's tables are counted (about 1,200 lines) and written later.** Overturned by **37**: they are printed, and the honest count is 607 entries in the engine plus 240 site description lines the region owns. Round one's sizes for motive phrasings (576), site-type description lines (132) and names (410) were sized for nothing in particular and are now 60, 50 and 315; site types went 22 → 25 and opposition kinds 14 → 16, because the missing ones were the shapes three of the first region's own sites needed.
+- **O9. The deed table is 64 entries split 26 / 26 / 12.** Overturned in fact by **45**: the count held and the split is 26 / 30 / 8, because each field verb's failure needed a row of its own.
+- **O10. The region's dated power-move lists and the dawn planner are both descriptions of the simulation.** Overturned by **48**: the planner is the authority and the lists are its printed output, moving when the state moves.
+- **O11. Layer 3 of the Sunk Court is one table row and the region ships it sealed.** Overturned by **52**: the engine ships two branches that open it, so it is designed.
+- **O12. The trace's offline advances follow its dated events.** Overturned by **63**: the rule is four world hours per real hour and it is not negotiable; the real hours away move instead.
+- **O13. Sallowford is four miles from Hobb's Cross and four from the Rudd Bridge.** Overturned by **66**: three and three, so the valley's spine is the eight miles the world file always said.
 
-## Left open for round two
+---
 
-Logged in [STATUS.json](STATUS.json) rather than patched, because either side of each could be the one that is wrong and the fix belongs with whoever re-runs the trace.
+## Corrections made across rounds
 
-- The twenty-hour experience total: 4,370 in the economy file's model against 4,343 in the region file's trace.
-- The Sallowford–Wickery distance: eight miles and three hours in the world and living-world files against segments summing to about eleven miles and three hours forty in the region file.
-- The region trace reading renown 27 as still Villager at hour 3:00 when the Hand floor is 20; the intended rule (the tier is recomputed at dawn) wants stating in the standing file rather than being implied in a parenthesis.
+- **C1 (round one).** [WORLD](../world/WORLD.md) §2.8 said the first region meets "four of the five powers" while listing all five faces; corrected to "all five powers".
+- **C2 (round one).** [LIVING_WORLD](../systems/LIVING_WORLD.md) counted twenty named NPCs in the first region where [FIRST_REGION](../slice/FIRST_REGION.md) §3 lists twenty-five; corrected to twenty-five, about 375 schedule rows and 680 memory slots.
+- **C3 (round one).** [PROGRESSION_ECONOMY](../systems/PROGRESSION_ECONOMY.md) §7 said quests are 70% of experience where §1 says three-quarters; corrected to "about three-quarters".
+- **C4 (round two).** The twenty-hour experience total, logged in round one as 4,370 against 4,343: closed at **4,370**, itemised in [FIRST_REGION](../slice/FIRST_REGION.md) §7.3b into the four categories [PROGRESSION_ECONOMY](../systems/PROGRESSION_ECONOMY.md) §1 already models (quests 3,240, fights 530, discoveries 460, witnessed deeds 140).
+- **C5 (round two).** The Sallowford–Wickery distance, logged in round one as eight miles against eleven: closed at **eight**, by correcting the region file's segments (see **O13**).
+- **C6 (round two).** Renown 27 read as Villager: closed by **18** (recomputed after every deed, tier read at dawn) and by the rebuilt ledger, in which the crossing to Hand happens at 36 on the evening of Thaw 8 and the glyph changes at dawn on the 9th.
+- **C7 (round two).** [FIRST_REGION](../slice/FIRST_REGION.md) §4's heading said "three powers present" while its body said five act on the valley; the heading now says five, and names the three with a seat.
+- **C8 (round two).** Kit Ashby's schedule put her at Corrow's Reach at the hour both of her scenes happen on Wickery quay; she now unloads on the quay from 14:00 on a letter day, which is when a letter she carries leaves her hand.
+- **C9 (round two).** The Salt Hall run was supplied with three flasks of oil against a stated need of four; the trace buys four.
+
+## Still open, and whose
+
+Logged rather than patched, because each needs a change in a file its owner did not write this round.
+
+- **The Salted husk and the Rogue.** [COMBAT](../systems/COMBAT.md) §2 rule 2 says no enemy is immune to a whole class and that the counter is always on the same class's arc; the husk's crust-strippers are the Fighter's Break and the Shield's Crack, so a Rogue party without a Shield has none. Decision **31** declines to invent one from outside; the fix is COMBAT's — give Powder's lime a crust effect, or make Crack a role ability every party can field.
+- **The armour and multiplier order.** [COMBAT](../systems/COMBAT.md) §1 does not say whether armour subtracts before or after a Mark's ×2, which swings a Rogue's damage on every armoured enemy in the region by 50–100%.
+- **A wait or pass-time action.** [LIVING_WORLD](../systems/LIVING_WORLD.md) §1 gives three time advances and none of them is "wait until dusk", so every by-night branch in the engine is reachable only by standing in a field for twelve real minutes. The region's trace routes around it — it moves Ilune by day — but the branches are still written.
+- **The creation screen and an hour-one three-minute session.** [SESSION_UX](../systems/SESSION_UX.md) counts creation as one of nine screens and does not describe it. The region's trace now marks where the first three minutes end (a quest accepted and a marker on the map at 07:00 on Thaw 1); the screen itself is still unspecified.
