@@ -1,0 +1,54 @@
+{
+  "round": 1,
+  "files": [
+    {
+      "path": "rpg/PITCH.md",
+      "words": 599
+    },
+    {
+      "path": "rpg/docs/DECISIONS.md",
+      "words": 2564
+    },
+    {
+      "path": "rpg/slice/FIRST_REGION.md",
+      "words": 9225
+    },
+    {
+      "path": "rpg/systems/ADVENTURE_ENGINE.md",
+      "words": 6001
+    },
+    {
+      "path": "rpg/systems/CLASSES_AND_STANDING.md",
+      "words": 3466
+    },
+    {
+      "path": "rpg/systems/COMBAT.md",
+      "words": 4687
+    },
+    {
+      "path": "rpg/systems/LIVING_WORLD.md",
+      "words": 3790
+    },
+    {
+      "path": "rpg/systems/PROGRESSION_ECONOMY.md",
+      "words": 2308
+    },
+    {
+      "path": "rpg/systems/SESSION_UX.md",
+      "words": 2520
+    },
+    {
+      "path": "rpg/world/WORLD.md",
+      "words": 4533
+    }
+  ],
+  "total_words": 39693,
+  "open_issues": [
+    "rpg/systems/PROGRESSION_ECONOMY.md §1 models the twenty-hour trace at 4,370 experience (3,240 + 530 + 460 + 140) and states 'level 8 with thirty to spare'; rpg/slice/FIRST_REGION.md §7 totals the same trace at 4,343, which is level 8 with five to spare. Not a design smell; one of the two arithmetics needs re-running.",
+    "Distances disagree: rpg/world/WORLD.md §2.8 and rpg/systems/LIVING_WORLD.md §1 put Sallowford eight miles and three hours from Wickery, while rpg/slice/FIRST_REGION.md §1 gives segments (four miles to Hobb's Cross, four to the Rudd Bridge, one hour on to Wickery) summing to about eleven miles and three hours forty.",
+    "rpg/slice/FIRST_REGION.md §7, hour 3:00 reads renown 27 as 'still Villager' although rpg/systems/CLASSES_AND_STANDING.md §5 sets the Hand floor at 20; the parenthetical implies the dawn recompute has not run, but the standing file does not state that the tier is only recomputed at dawn for display.",
+    "rpg/slice/FIRST_REGION.md §4 is headed 'Three powers present' while its body correctly says five powers act on the valley and three have a face and a seat in it; the heading matches the brief's wording but reads as a contradiction on its own.",
+    "Design-smell audit found no hits: no unnamed or unfinished-marker names anywhere in the bible; no name, place, god, race or artefact traceable to any other IP; four peoples, five powers, three ages exactly; no prophecy or chosen-one framing (the one page says 'a trade and no destiny'); every sample quest names people and sits on a mapped site whose state caused it; no gacha, energy, stamina gate, timer, pity or pull under any name (the Fighter's and Rogue's 'stamina' is a per-fight combat resource, not a session gate); nothing sold buys power or skips the world."
+  ],
+  "scores": null
+}

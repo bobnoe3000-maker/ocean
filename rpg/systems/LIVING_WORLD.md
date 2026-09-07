@@ -35,7 +35,7 @@ The clock and weather glyphs on the top strip; road speeds; who is where (schedu
 
 ## 2. People: schedules and memory
 
-Every named NPC (twenty in the first region; see [FIRST_REGION](../slice/FIRST_REGION.md) §3) has a schedule, a memory, and a role in a power (or none). Unnamed folk ("a carter", "two fishers") are drawn from name tables when the engine needs them to speak, and then become named and keep a memory like anyone else (the engine promotes them; see [ADVENTURE_ENGINE](ADVENTURE_ENGINE.md) §3).
+Every named NPC (twenty-five in the first region; see [FIRST_REGION](../slice/FIRST_REGION.md) §3) has a schedule, a memory, and a role in a power (or none). Unnamed folk ("a carter", "two fishers") are drawn from name tables when the engine needs them to speak, and then become named and keep a memory like anyone else (the engine promotes them; see [ADVENTURE_ENGINE](ADVENTURE_ENGINE.md) §3).
 
 ### Inputs
 World hour; season flags; the NPC's home site, workplace and haunts; the NPC's `condition` (well, hurt, indebted, bereaved, ruined, fled, dead); events witnessed or heard (from the consequence system).
@@ -141,8 +141,8 @@ Memories, regard, standing, site states, notices, letters, door flags, and — r
 
 ## 5. Sizes, costs and risks
 
-- **NPCs**: 20 scheduled in the first region, each with 3 schedule variants (weekday, Stillday, condition override) of 4–6 hour-blocks: about 300 schedule rows. Folk are unscheduled until promoted; a promoted folk NPC gets the generic schedule for their role (10 role schedules).
-- **Memory**: 8 slots × (20 named + up to 60 promoted) = 640 memory slots maximum; trivial to hold and to save.
+- **NPCs**: 25 scheduled in the first region, each with 3 schedule variants (weekday, Stillday, condition override) of 4–6 hour-blocks: about 375 schedule rows. Folk are unscheduled until promoted; a promoted folk NPC gets the generic schedule for their role (10 role schedules).
+- **Memory**: 8 slots × (25 named + up to 60 promoted) = 680 memory slots maximum; trivial to hold and to save.
 - **Powers**: 5 planners × ~14 moves × ~40 sites in the region: the dawn tick evaluates about 2,800 move-site pairs per day, cheap; the offline cap of seven days bounds it.
 - **Runaway risk**: a power could win the region while the hero is away. Dampers: the offline cap; clash odds are `own/(own+other)`, so nobody wins a run of clashes cheaply; `Raise band` costs coin the Wrack and Moot mostly lack; and a town's wall (defence 30) means a town needs three bands against a garrison of one. The Wrack cannot take Wickery on its own in one season; that is by construction, and the season's arc ([FIRST_REGION](../slice/FIRST_REGION.md) §5) shows what it does instead.
 - **Legibility risk**: the player must be able to see why the world changed. Every map event carries a plain-language line written from a 60-entry template table per event type, filled with the names involved; the away page lists at most seven lines, prioritised by proximity to the hero's home and by the hero's regard with the powers involved.

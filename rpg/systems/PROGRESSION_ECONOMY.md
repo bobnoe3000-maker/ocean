@@ -78,7 +78,7 @@ Everything sold is priced once, in the store, in money. Nothing is sold for a cu
 ## 7. Anti-grind rules
 
 1. **Experience from a repeated fight halves** each time the same enemy kind is fought at the same site within a world-week, and from the fourth fight it is 2 or less. Enemies do not respawn without a simulation cause (a band is *Sent* or *Raised*; a court's Salted wake by state), so there is nothing to farm that the world did not put there for a reason.
-2. **Quests are 70% of experience and nearly all coin**, and the engine offers at most six at once, so the fastest road is always the world's road.
+2. **Quests are about three-quarters of experience and nearly all coin**, and the engine offers at most six at once, so the fastest road is always the world's road.
 3. **Standing cannot be ground.** Renown counts people, not deeds; a hundred errands for Tobbin are one memory in one head. A new tier needs new heads, and new heads are at new sites and higher stakes.
 4. **The trade is a floor, not a ladder**: a day at the forge pays 6–10 bits at every level and never more; it exists so a player who is broke and out of quests can eat, sleep, and make a tier-1 blade, not so that they can buy tier 3 by smithing for a week.
 5. **Companion shares** keep coin from accumulating: a full party costs 40% of every quest's pay.
