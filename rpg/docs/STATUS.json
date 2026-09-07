@@ -1,55 +1,54 @@
 {
-  "round": 3,
+  "round": 4,
   "files": [
     {
       "path": "rpg/PITCH.md",
-      "words": 599
+      "words": 590
     },
     {
       "path": "rpg/docs/DECISIONS.md",
-      "words": 2564
+      "words": 7089
     },
     {
       "path": "rpg/slice/FIRST_REGION.md",
-      "words": 9225
+      "words": 23640
     },
     {
       "path": "rpg/systems/ADVENTURE_ENGINE.md",
-      "words": 6001
+      "words": 34220
     },
     {
       "path": "rpg/systems/CLASSES_AND_STANDING.md",
-      "words": 3466
+      "words": 13227
     },
     {
       "path": "rpg/systems/COMBAT.md",
-      "words": 4687
+      "words": 13388
     },
     {
       "path": "rpg/systems/LIVING_WORLD.md",
-      "words": 3790
+      "words": 10883
     },
     {
       "path": "rpg/systems/PROGRESSION_ECONOMY.md",
-      "words": 2308
+      "words": 7308
     },
     {
       "path": "rpg/systems/SESSION_UX.md",
-      "words": 2520
+      "words": 7765
     },
     {
       "path": "rpg/world/WORLD.md",
-      "words": 4533
+      "words": 6171
     }
   ],
-  "total_words": 39693,
+  "total_words": 124281,
   "open_issues": [
-    "rpg/systems/PROGRESSION_ECONOMY.md \u00a71 models the twenty-hour trace at 4,370 experience (3,240 + 530 + 460 + 140) and states 'level 8 with thirty to spare'; rpg/slice/FIRST_REGION.md \u00a77 totals the same trace at 4,343, which is level 8 with five to spare. Not a design smell; one of the two arithmetics needs re-running.",
-    "Distances disagree: rpg/world/WORLD.md \u00a72.8 and rpg/systems/LIVING_WORLD.md \u00a71 put Sallowford eight miles and three hours from Wickery, while rpg/slice/FIRST_REGION.md \u00a71 gives segments (four miles to Hobb's Cross, four to the Rudd Bridge, one hour on to Wickery) summing to about eleven miles and three hours forty.",
-    "rpg/slice/FIRST_REGION.md \u00a77, hour 3:00 reads renown 27 as 'still Villager' although rpg/systems/CLASSES_AND_STANDING.md \u00a75 sets the Hand floor at 20; the parenthetical implies the dawn recompute has not run, but the standing file does not state that the tier is only recomputed at dawn for display.",
-    "rpg/slice/FIRST_REGION.md \u00a74 is headed 'Three powers present' while its body correctly says five powers act on the valley and three have a face and a seat in it; the heading matches the brief's wording but reads as a contradiction on its own.",
-    "Design-smell audit found no hits: no unnamed or unfinished-marker names anywhere in the bible; no name, place, god, race or artefact traceable to any other IP; four peoples, five powers, three ages exactly; no prophecy or chosen-one framing (the one page says 'a trade and no destiny'); every sample quest names people and sits on a mapped site whose state caused it; no gacha, energy, stamina gate, timer, pity or pull under any name (the Fighter's and Rogue's 'stamina' is a per-fight combat resource, not a session gate); nothing sold buys power or skips the world."
+    "Not derivable: which five of the seven heads rewritten on Thaw 16 sit at weight 8 and 10. rpg/slice/FIRST_REGION.md §7.3a and rpg/systems/ADVENTURE_ENGINE.md §4 both say 'five heads rewritten at 8 and 10' without naming them, and rows 19, 20 and 26 admit two readings of 'everyone who heard the promise' — one that puts Marrock and Reyne at 8, one at 6. Half is settled: row 20 marks no +2 on the contract's parties, so Marrock is at w6, which is what Gulla's w4 on Thaw 23 needs and is the reading rpg/systems/PROGRESSION_ECONOMY.md §5's fifty-hour renown floor took. The residue is worth 25 renown at hour fifty (about 5% of 505) and zero in the traced twenty hours, where the row's delta is 0 under every reading.",
+    "Ranged, not measured: the hour-ten purse, 'about 15 bits, ±10'. rpg/systems/PROGRESSION_ECONOMY.md §5 derives it from the trace, but two of its items — how many of the six road days and how much of the two marks of enemy purses fall before Thaw 21 — are printed by rpg/slice/FIRST_REGION.md §7.2 only as twenty-hour totals. It is under one mark either way, which is the whole of what the fairness row claims.",
+    "A floor, not a trace: region two's first ten hours priced at 175 renown inside rpg/systems/PROGRESSION_ECONOMY.md §5's hour-fifty model. It is priced at what the traced valley's own first ten hours were worth in a fresh valley (Thaw 21 14:00) and nothing in it is priced above what the trace measured, but region two has not been traced. The 505 it feeds is stated as a floor — it counts no head from region one's hours 20–40 — and the tier reading (Voice, floor 350) holds for any value of it above 20."
   ],
+  "scores_note": "Scores below are the round-three critic's and have not been re-judged; round four is a designer pass that applied the round-four rewrites of COMBAT, WORLD, ADVENTURE_ENGINE, SESSION_UX and PROGRESSION_ECONOMY to the remaining six files.",
   "scores": {
     "world": 8.0,
     "living_world": 8.5,
@@ -60,5 +59,6 @@
     "feasibility_honesty": 8.0,
     "design_smells": 8.5
   },
-  "pass": false
+  "pass": false,
+  "word_count_note": "Counts are `wc -w` as the shell reports it here. PITCH.md is 590 by that count and 597 counting the seven em dashes as words (the ambiguity WORLD.md §Part One flags for its own one page); it is under 600 either way."
 }
