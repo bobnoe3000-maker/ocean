@@ -241,7 +241,7 @@ The bible's other session traces are Fighters ([SESSION_UX](SESSION_UX.md) §3, 
 
 ## 3. Growth to the campaign's end
 
-Levels 1–40 ([PROGRESSION_ECONOMY](PROGRESSION_ECONOMY.md) §1 gives the curve). Region one carries the hero to about level 9. Each level: +10 health, and every fourth level a **knack** — a small permanent change to one arc ability chosen from three (Shove throws further; Bind holds a heartbeat longer; Slip costs less). Knacks are the expression layer; there are 12 per class and the campaign gives 10 picks, so no two heroes of a class are the same and none is stronger. Subclass at 15 replaces two arc abilities with their subclass versions and adds one field verb. There is no respec by purchase: an Ulder keeper will re-teach a knack for a season's deed, once.
+Levels 1–25 ([PROGRESSION_ECONOMY](PROGRESSION_ECONOMY.md) §1 gives the curve). Region one carries the hero to about level 11. Each level: +10 health, and every third level a **knack** — a small permanent change to one arc ability chosen from three (Shove throws further; Bind holds a heartbeat longer; Slip costs less). Knacks are the expression layer; there are 12 per class and the campaign gives 8 picks (levels 3, 6, 9, 12, 15, 18, 21 and 24), so no two heroes of a class are the same and none is stronger. Subclass at 15 replaces two arc abilities with their subclass versions and adds one field verb. There is no respec by purchase: an Ulder keeper will re-teach a knack for a season's deed, once.
 
 ## 4. Companions are not classes
 
