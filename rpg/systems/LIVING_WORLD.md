@@ -113,7 +113,7 @@ Map events; site states; notices and letters; band positions (which decide road 
 
 ## 4. Consequence: recording, propagating, showing
 
-A **deed** is anything the hero does that the deed table lists, and the deed table is printed in full below. It has **64 entries** for the first region: 26 *for* someone, 29 *against* someone, 9 *witnessed* (neither for nor against, but seen). Every memory weight, regard delta and renown figure anywhere in this bible is read off these rows. If a number in another file disagrees with a row here, the row is right and the number is a draft that has not been recomputed.
+A **deed** is anything the hero does that the deed table lists, and the deed table is printed in full below. It has **64 entries** for the first region: 26 *for* someone, 30 *against* someone, 8 *witnessed* (neither for nor against, but seen). Every memory weight, regard delta and renown figure anywhere in this bible is read off these rows. If a number in another file disagrees with a row here, the row is right and the number is a draft that has not been recomputed.
 
 ### How to read a row
 
@@ -156,7 +156,7 @@ A **deed** is anything the hero does that the deed table lists, and the deed tab
 | 25 | `taught_them` | a trade, a knack or a drill taught to one named person | 6 · 60/80 | the taught (+2), their master, the village | none | `taught(name)` | that person returns as a promoted NPC with the hero's habits; a smith who works at cost |
 | 26 | `kept_the_charge` | an Ulder or Skerrow charge kept: a ring, a well-ring, a stone-mark, a contract's iron | 10 · never | the keeper (+2), the Speaker, every Ulder in the region | that power +20 | `well_ring_intact`, `stone_mark_held` | the campaign's doors; the Quiet Address at any tier; the Closers begin to count the hero as an argument |
 
-### 4b. Twenty-nine deeds *against* someone
+### 4b. Thirty deeds *against* someone
 
 | # | Act tag | The deed | w · counts/gone | Who takes it (beyond witnesses, targets, kin) | Regard | Writes | Surfaces as |
 |---|---|---|---|---|---|---|---|
@@ -191,7 +191,7 @@ A **deed** is anything the hero does that the deed table lists, and the deed tab
 | 55 | `broke_the_road` | a bridge, ford, slide or ferry destroyed | 8 · 120/140 | every settlement the road serves through its reeve (w6), the carters, whoever built it | Moot −25; whoever wanted it broken +15 | `road_broken(segment)`, travel +2 h | the whole valley's prices; a Moot plea; a Voice quest to rebuild it |
 | 56 | `hunted_them` | pursued and taken a person for a power's bounty | 7 · 90/110 | the taken (+2, w9), their kin, their band, the paying factor (w6, positive) | paying power +20; the taken's power −25 | `taken(name)` | the kin's door; the band's ambushes on that road; the bounty in coin and in the greeting of everyone who saw the rope |
 
-### 4c. Nine deeds the world merely *witnessed*
+### 4c. Eight deeds the world merely *witnessed*
 
 Neither for nor against: seen, and remembered as a fact about the hero. These are how a reputation acquires a colour rather than a size.
 
@@ -238,7 +238,7 @@ Memories, regard, standing, site states, notices, letters, door flags, and — r
 - **NPCs**: 25 scheduled in the first region, each with 3 schedule variants (weekday, Stillday, condition override) of 4–6 hour-blocks: about 375 schedule rows. Folk are unscheduled until promoted; a promoted folk NPC gets the generic schedule for their role (10 role schedules).
 - **Memory**: 8 slots × (25 named + up to 60 promoted) = 680 memory slots maximum; trivial to hold and to save.
 - **Population and the standing ceiling**: the Rudd valley holds about **1,020 people** — Sallowford 31, Fenn's Mill 6, Gorse End 14, Hobb's Cross 9, eleven farms ~90, Wickery 400, Thrum 400, the Wrack ~60 on the Shelf, ~12 Ulder in the Wend and at the ring. The simulation instantiates 85 of them (25 named + 60 promoted). Summing the named NPCs' reach ([FIRST_REGION](../slice/FIRST_REGION.md) §3) gives **368**; sixty promoted folk at reach 1–2 give **60–120**; High Reeve Tull, reachable from the valley by letter, gives 100. **The absolute renown a hero can hold in region one is therefore 528–588, and about 450 in practice.** Every tier floor in [CLASSES_AND_STANDING](CLASSES_AND_STANDING.md) §5 is set against that number rather than against the fiction, which is why Force (900) cannot be reached in one valley.
-- **Deed table**: 64 entries printed in §4 (26 for, 29 against, 9 witnessed), each with weight, receivers, regard, state and surfacing. Round one estimated 64 with a 26/26/12 split; the printed table came out 26/29/9 — the count held, the split moved, because the failure states of the twelve field verbs ([CLASSES_AND_STANDING](CLASSES_AND_STANDING.md) §2.5) each needed a row of their own and four "witnessed" ideas turned out to be one parameterised row (`seen_in_company`).
+- **Deed table**: 64 entries printed in §4 (26 for, 30 against, 8 witnessed), each with weight, receivers, regard, state and surfacing. Round one estimated 64 with a 26/26/12 split; the printed table came out 26/30/8 — the count held, the split moved, because the failure states of the twelve field verbs ([CLASSES_AND_STANDING](CLASSES_AND_STANDING.md) §2.5) each needed a row of their own and four "witnessed" ideas turned out to be one parameterised row (`seen_in_company`), which moved four entries from the witnessed column into the against column.
 - **Powers**: 5 planners × ~14 moves × ~40 sites in the region: the dawn tick evaluates about 2,800 move-site pairs per day, cheap; the offline cap of seven days bounds it.
 - **Runaway risk**: a power could win the region while the hero is away. Dampers: the offline cap; clash odds are `own/(own+other)`, so nobody wins a run of clashes cheaply; `Raise band` costs coin the Wrack and Moot mostly lack; and a town's wall (defence 30) means a town needs three bands against a garrison of one. The Wrack cannot take Wickery on its own in one season; that is by construction, and the season's arc ([FIRST_REGION](../slice/FIRST_REGION.md) §5) shows what it does instead.
 - **Legibility risk**: the player must be able to see why the world changed. Every map event carries a plain-language line written from a 60-entry template table per event type, filled with the names involved; the away page lists at most seven lines, prioritised by proximity to the hero's home and by the hero's regard with the powers involved.
@@ -252,4 +252,4 @@ Memories, regard, standing, site states, notices, letters, door flags, and — r
 3. **The promoted pool is sixty per region and evicts its weakest memory.** This turns the memory budget from a save-file note into the design's standing ceiling.
 4. **The leader rule.** Reach-100 NPCs take memories only from deeds at their seat, deeds that move their goals, or letters they wrote. Without it, one rumour reaching Brakka was worth a hundred heads and the tiers collapsed.
 5. **The deed table is authoritative over every other file.** Where a quest in ADVENTURE_ENGINE §7 or the trace in FIRST_REGION §7 prints a regard or renown figure that the table does not produce, the table governs and the figure is a draft. The two regard multipliers (×2 at a power's goal site, ×3 for ending a goal) reproduce the showcase quests' larger numbers — Vo1's Stair −50 is `sold_the_road`-scale base −15 against a goal ended, N1's Quiet +20 is `kept_the_charge` base +20 at a goal site.
-6. **The deed table is 64 entries, as counted in round one, but split 26/29/9 rather than 26/26/12.** Stated here because the count in FIRST_REGION §8 is still right and its split, if it is ever printed there, is not.
+6. **The deed table is 64 entries, as counted in round one, but split 26/30/8 rather than 26/26/12.** Stated here because the count in FIRST_REGION §8 is still right and its split, if it is ever printed there, is not.
