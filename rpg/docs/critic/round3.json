@@ -1,0 +1,82 @@
+{
+  "round": 3,
+  "scores": {
+    "world": 8.0,
+    "living_world": 8.5,
+    "adventure_engine": 8.0,
+    "classes_standing": 8.5,
+    "combat_dungeons_autobattle": 7.5,
+    "economy_session_ux": 8.0,
+    "feasibility_honesty": 8.0,
+    "design_smells": 8.5
+  },
+  "pass": false,
+  "smell_hits": [],
+  "holes": [
+    {"session": "3-minute, Fighter, Thaw 1 06:00", "missing": "The Firstwater override has no hours: LIVING_WORLD §1 lists festival_today as a season flag and FIRST_REGION §3 says schedules take season-flag overrides, but not one of the 25 schedules prints a festival variant, so who is at the well at 07:00 is unknowable."},
+    {"session": "3-minute, Fighter, Thaw 1 06:00", "missing": "The hour-one three-minute session still ends with no world change: FIRST_REGION §7.2 gives a quest accepted, a journal name and a map marker, but no deed, no site state and no memory, against SESSION_UX §3's own rule and the brief's."},
+    {"session": "15-minute, Rogue, V1, Thaw 6-7", "missing": "Hild Marrow cannot deliver V1's second cause: FIRST_REGION §3 row 6 puts her at the Ford Inn 18-20 'on rain days, else her house', and Thaw 6 dusk is fog in all three printings of the away page."},
+    {"session": "15-minute, Rogue, V1, Thaw 6-7", "missing": "The Rogue has no answer to the verb break: ADVENTURE_ENGINE V1 says 'cut the slide-ropes at night', §3.8 says 'cut the right rope at the right hour', CLASSES §2 says 'pick the lock instead', and CLASSES §2.5 gives the Rogue four verbs, none of which touches a breakable."},
+    {"session": "15-minute, Rogue, V1, Thaw 6-7", "missing": "No wait or pass-time rule: SESSION_UX §1 Zone A specifies the screen and cites LIVING_WORLD §1, whose Tick still lists only open play, map travel and rest to the next dawn."},
+    {"session": "evening, Mage, Thaw 20-23, the Sunk Court", "missing": "Fling has no rate of fire anywhere: COMBAT §1 gives damage, CLASSES §2 gives cost, range and slow, and no cooldown or cast time, while COMBAT §7's Encounter B implies two different rates in one fight. A Mage's damage per second, and therefore her water per fight, is not computable."},
+    {"session": "evening, Mage, Thaw 20-23, the Sunk Court", "missing": "The descent's oil budget cannot be checked: no layer states its own oil rate or the hours a descent through it takes, and the trace's own sixteen hours below ground come to five flasks at best against the four it buys."}
+  ],
+  "ledger_verified": true,
+  "arithmetic_errors": [
+    "PROGRESSION_ECONOMY §1: the level curve is wrong against its own 60 x L^1.6 in twelve printed figures - per-level 553/786/1057/1352/1681/2020 should be 551/788/1055/1350/1671/2018, cumulative 1143/4338/8039/13210/24135/52143/94397 should be 1141/4334/8023/13194/24119/52127/94381.",
+    "FIRST_REGION §7.3b: level 8 is cited at 4,338 (should be 4,334, 'thirty-six to spare' not thirty-two) and cited to COMBAT §9, which contains no experience curve.",
+    "SESSION_UX §3, three-minute session: 'Renown 70, Hand since dawn on the 9th' and 'Renown 70 -> 100' with heads Idony 20 / Pell 5 / Osk 5, against FIRST_REGION §7.3a's 128 -> 139 with Pell 5 / Osk 5 / Dell Sallow 1 and Name at dawn on the 10th.",
+    "SESSION_UX §3, evening session: 'Renown 179 -> 281' and 'Renown 294' against the ledger's 175 -> 277 and 297.",
+    "PROGRESSION_ECONOMY §5 'Two honest notes' and Decision 1: renown 179 / 281 / 294 against 175 / 277 / 297, printed directly under a table that gets 175 right.",
+    "FIRST_REGION §7.2 and §7.3a (three places): Drusk returns 'eleven hours after decaying out of it'; the decay is booked at the Thaw 33 dawn and the deed is at Thaw 34 07:00, which is twenty-five hours.",
+    "FIRST_REGION §7.3a: 'Five heads that were once in the ledger are not in it' - it is thirteen; the eight promoted folk of the Thaw 23 notice fell on the 33rd and were never rewritten.",
+    "FIRST_REGION §7.3b: the fights column sums to 530 but three of nine engagements do not reproduce from threat x 1.5 - a lone salt-hound at 30 where 14 x 1.5 = 21, the Drowned Steps 79 against about 64, the Salt Hall door 50 against about 41.",
+    "FIRST_REGION §6: layer 3's encounter is called Even where PR about 156 against ER 110 is Fair by COMBAT §1's own definition (Fair if ER <= PR).",
+    "ADVENTURE_ENGINE §3.4: (13/30)^4 = 3.5%, printed as 3.4%; and that 3.4% plain-quest rate stands against §3.12 step 6's 'about a third are'.",
+    "LIVING_WORLD §4c row 62 is printed at weight 3 and written at weight 4 by both renown ledgers.",
+    "COMBAT §7 Encounter C: the Slip-Mark on a zero-armour slinger is printed at 26 where the file's own multiply-then-subtract order (67 = 70-3, 26 = 27-1, 25 = 27-2, 16 = 18-2) gives 27.",
+    "PROGRESSION_ECONOMY §4: H3's income adds 'plus Reyne's mark' where FIRST_REGION §7.2 says the 2-mark witness-fee 'is the whole of it'.",
+    "FIRST_REGION §8 lists nine screens; SESSION_UX §8 lists eleven.",
+    "docs/STATUS.json: round-two scores over round-one word counts (total 39,693 against an actual 101,180; ADVENTURE_ENGINE 6,001 against 30,021) and round-one open issues."
+  ],
+  "round2_status": {
+    "fixed": [
+      "1. The renown ledger now reproduces from the deed table: nineteen day-end totals identical across FIRST_REGION §7.3a and CLASSES §6, and both reproduce under independent hand arithmetic to 402 from both ends.",
+      "2. All 110 trigger->motive draws checked against all 48 cause lists: 0 broken. Fourteen fixed by adding the trigger, one by correcting the draw (TR19 M35 -> M29).",
+      "4. The showcase speaks the deed table: 92 'row N tag' citations across all ten files, all correct; two contradicted weights corrected.",
+      "5. Rows 65 moved_them, 66 broke_word and 67 came_and_looked added and appended so no citation moved; the count restated honestly as 67 (27/31/9) in three files.",
+      "11. Twist families rebalanced to nine of two to five; §3.4's 'the line is a sense, not a script' plus step 9's rewrite answers the one-line-per-twist finding.",
+      "15. The Thaw 39 away page now has a cause the run supports (the hero's own broken sluice), and all three schedule contradictions are fixed plus Osk's hurt window closed to Thaw 2-10."
+    ],
+    "improved": [
+      "3. §6 rule 3 now holds (22 verb slots, max 3 against a cap of 4, break at 1) and rule 1 holds across all 66 pairs; rule 2 clears only by converting days to offers, and place still sits two apart in the printed order.",
+      "6. SESSION_UX and PROGRESSION_ECONOMY were rebuilt at more than double length, and the clock, the season formula, creation, the verb-failure screen and the fairness table are new and correct - but six renown figures across the two files are still round two's.",
+      "8. The pass-time action has a screen (SESSION_UX §1 Zone A); LIVING_WORLD §1's Tick still lists three advances and no wait.",
+      "10. The Mage's break is resolved, and elegantly, by SESSION_UX §3's greyed petals; ADVENTURE_ENGINE V1 and §3.8 still print 'Draw the water through', and Mist, Rally-as-answer and the Rogue lock-pick are unresolved.",
+      "13. STATUS.json's round and scores are current; its word counts and open issues are still round one's."
+    ],
+    "unchanged": [
+      "7. COMBAT.md untouched for a third round: the armour/multiplier order is still not a rule, and §2 rule 2 still contradicts §1's husk row with three answers now in three files. Fling's missing rate of fire found this round.",
+      "9. ADVENTURE_ENGINE §4's down-scale rule is still never worked, and is now broken three times by FIRST_REGION §7.2's own trace and answered differently by PROGRESSION_ECONOMY §1.",
+      "12. WORLD.md untouched for a third round: 543 words against 474 claimed, 'the only way anyone gets in', 'the Stair' ambiguous, and no cause for the Still's continued fall.",
+      "14. Vo3's Parley shape is still one clause with no journal text and no outcomes, and it is the ending the twenty-hour trace sets up."
+    ]
+  },
+  "top_issues": [
+    "COMBAT.md, three rounds unopened: Fling has no rate of fire so a Mage's damage and water-per-fight are not computable; the armour/multiplier order is still not stated and one of its five worked instances contradicts the other four; §2 rule 2 still contradicts §1's husk row.",
+    "SESSION_UX §3 and PROGRESSION_ECONOMY §5 still print round two's renown: 70 -> 100 and 'Hand since dawn on the 9th' in the three-minute session, 179 / 281 / 294 in the evening session and in §5's notes and Decision 1.",
+    "ADVENTURE_ENGINE §6 has no defined shape signature for a plain quest and §3.12 says about a third are plain; §3.4's 3.4% and §3.12's 'about a third' are two rates for one event; §3.4's blocking model ignores precondition failure, which is what actually fails.",
+    "ADVENTURE_ENGINE §4's down-scale rule is unworked and is broken three times by FIRST_REGION §7.2's own trace, while PROGRESSION_ECONOMY §1 states the opposite resolution.",
+    "WORLD.md, three rounds unopened: 543 words against 474; 'the only way anyone gets in' against §2.2's Skerrow and repeated in PITCH.md; 'the Stair' naming a road and a company on the page; no cause anywhere for the Still's continued fall.",
+    "docs/STATUS.json carries round-two scores over round-one word counts and round-one open issues; the brief requires it current.",
+    "LIVING_WORLD §2's worked example contradicts its own §4 table (helped_find_flock at w6 against row 1's found_stock at w8; Reyne holding no memory on Thaw 1); row 62 is written at w4 against its printed w3; and the 60 map-event templates are still counted and never printed.",
+    "FIRST_REGION §7.2 has Reyne use the heard line on Thaw 2, the morning after standing in his own yard with a lamp holding row 1's w6; CLASSES §5's worked example still says 15:00 and the forge door.",
+    "Vo3's Parley shape is one clause and layer 3 is designed and never played, its encounter called Even where PR 156 against ER 110 is Fair - the two watch items under smell 11, both two rounds old.",
+    "FIRST_REGION §3: Hild's Ford Inn block is rain-only and Thaw 6 is fog, so V1's second cause has no mouth; and no schedule carries a festival_today variant, so the Firstwater override still has no hours.",
+    "CLASSES §2's three 'Growth 1-40' headers against §3's 'Levels 1-25' (the Mage's 200-water skin sits at level 30); the verb table's Mist, Rally-as-answer and Rogue lock-pick are unresolved and disagree with ADVENTURE_ENGINE §3.8; §2.5 names four deeds with no rows.",
+    "PROGRESSION_ECONOMY §1's level curve is wrong against its own formula in twelve figures, and FIRST_REGION §7.3b cites COMBAT §9 for a threshold COMBAT does not contain.",
+    "FIRST_REGION §7.3b's fights column sums to 530 but three of nine engagements do not reproduce from threat x 1.5; 'eleven hours' is twenty-five; 'five heads' is thirteen.",
+    "LIVING_WORLD §1's Tick has no fourth advance, so SESSION_UX §1's pass-time screen cites a rule that does not exist.",
+    "All four companion twists require a companion whose agenda names the site or is the stake, so the family is dead for many parties; and there is still no deed row for a truth told at the hero's own cost, which is M04's whole want and half of stake type ST6."
+  ]
+}

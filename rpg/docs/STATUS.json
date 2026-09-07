@@ -1,5 +1,5 @@
 {
-  "round": 2,
+  "round": 3,
   "files": [
     {
       "path": "rpg/PITCH.md",
@@ -52,13 +52,13 @@
   ],
   "scores": {
     "world": 8.0,
-    "living_world": 8.0,
+    "living_world": 8.5,
     "adventure_engine": 8.0,
-    "classes_standing": 8.0,
+    "classes_standing": 8.5,
     "combat_dungeons_autobattle": 7.5,
-    "economy_session_ux": 7.0,
+    "economy_session_ux": 8.0,
     "feasibility_honesty": 8.0,
-    "design_smells": 8.0
+    "design_smells": 8.5
   },
   "pass": false
 }
